@@ -11,7 +11,7 @@ func StaticController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	filePath := strings.TrimPrefix(r.URL.Path, "/resources/")
-	fullPath := "resources/" + filePath
+	fullPath := "frontend/" + filePath
 
 	info, err := os.Stat(fullPath)
 	if err != nil {
