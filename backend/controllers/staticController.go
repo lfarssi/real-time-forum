@@ -10,7 +10,7 @@ func StaticController(w http.ResponseWriter, r *http.Request) {
 		ErrorController(w, r, http.StatusMethodNotAllowed, "")
 		return
 	}
-	filePath := strings.TrimPrefix(r.URL.Path, "/resources/")
+	filePath := strings.TrimPrefix(r.URL.Path, "/frontend/")
 	fullPath := "frontend/" + filePath
 
 	info, err := os.Stat(fullPath)
@@ -27,7 +27,7 @@ func StaticController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fs := http.Dir("resources")
-	http.StripPrefix("/resources/", http.FileServer(fs)).ServeHTTP(w, r)
+	fs := http.Dir("frontend")
+	http.StripPrefix("/frontend/", http.FileServer(fs)).ServeHTTP(w, r)
 
 }
