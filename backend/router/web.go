@@ -1,10 +1,10 @@
-package router 
+package router
 
 import (
-
 	"net/http"
+	"real_time_forum/backend/controllers"
 )
 
 func WebRouter()  {
-	http.HandleFunc("/",controller)
-}
+	http.HandleFunc("/",controllers.HomePage)
+}	

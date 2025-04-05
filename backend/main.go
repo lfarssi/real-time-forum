@@ -1,5 +1,12 @@
 package main
 
+import (
+	"fmt"
+	"net/http"
+	"real_time_forum/backend/database"
+	"real_time_forum/backend/router"
+)
+
 func main()  {
 	database.DatabaseExecution()
 	defer database.CloseDatabase()
