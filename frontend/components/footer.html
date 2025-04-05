@@ -1,0 +1,2 @@
+{{define "footer"}}
+{{end}}
