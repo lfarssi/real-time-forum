@@ -15,7 +15,7 @@ type Post struct {
 	Likes         int       `json:"likes"`
 	Dislikes      int       `json:"dislikes"`
 	CreatedAt     string    `json:"created_at"`
-	// Comments      []Comment `json:"comments"`
+	Comments      []Comment `json:"comments"`
 	CommentsCount int       `json:"comments_count"`
 	Username      string    `json:"username"`
 	IsLiked       bool      `json:"IsLiked"`
