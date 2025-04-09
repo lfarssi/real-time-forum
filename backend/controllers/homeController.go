@@ -6,7 +6,7 @@ import (
 	"text/template"
 )
 
-func HomePage(w http.ResponseWriter, r *http.Request)  {
+func HomePageController(w http.ResponseWriter, r *http.Request)  {
 	posts , err:= models.GetPost()
 	if err!= nil{
 		ErrorController(w, r, http.StatusInternalServerError, "Cannot Fetch Post")
@@ -22,7 +22,7 @@ func ParseFileController(w http.ResponseWriter, r *http.Request, filename string
 	components := []string{
 		"./frontend/components/header.html",
 		"./frontend/components/footer.html",
-		"./frontend/components/menu.html",
+		// "./frontend/components/menu.html",
 		"./frontend/components/posts.html",
 		"./frontend/components/messages.html",
 		// "./frontend/components/register.html",
