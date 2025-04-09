@@ -6,5 +6,5 @@ import (
 )
 
 func WebRouter()  {
-	http.HandleFunc("/",controllers.HomePage)
+	http.HandleFunc("/",controllers.HomePageController)
 }	
