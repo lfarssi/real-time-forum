@@ -2,46 +2,53 @@ package database
 
 import (
 	"database/sql"
-	"fmt"
-	"io/ioutil"
-
-	_ "github.com/mattn/go-sqlite3"
-
+	"io"
+	"log"
+	"os"
 )
 
-var Database *sql.DB
-
-func DatabaseExecution() {
-	err := error(nil)
-	Database, err = sql.Open("sqlite3", "./db/schema.db")
+// OpenDB connects to the SQLite database, runs migrations, and returns the database connection or an error.
+func OpenDB() (*sql.DB, error) {
+	db, err := sql.Open("sqlite3", "backend/database/forum.db")
 	if err != nil {
-		fmt.Println(" failed to open database: ", err)
-		return
+		log.Printf("Error opening database: %v", err)
+		return nil, err
 	}
 
-	// Read the schema SQL file
-	schema, err := ioutil.ReadFile("./backend/database/migration.sql")
+	err = db.Ping()
 	if err != nil {
-		fmt.Println(" failed to read schema file: ", err)
-		return
+		log.Printf("Error pinging database: %v", err)
+		return nil, err
 	}
 
-	// Execute the SQL commands in the schema file
-	_, err = Database.Exec(string(schema))
+	err = Migrate(db)
 	if err != nil {
-		fmt.Println(" failed to execute schema:", err)
-		return
+		log.Printf("Error running migration: %v", err)
+		return nil, err
 	}
+
+	return db, nil
 }
 
-
-func CloseDatabase() {
-	if Database != nil {
-		err := Database.Close()
-		if err != nil {
-			fmt.Println("Error closing database:", err)
-		} else {
-			fmt.Println("Database closed successfully.")
-		}
+// Migrate reads and executes SQL migration scripts from "sqlite.sql" to set up the database schema.
+func Migrate(db *sql.DB) error {
+	file, err := os.Open("backend/database/migration.sql")
+	if err != nil {
+		return err
 	}
+	defer file.Close()
+
+	dataBytes, err := io.ReadAll(file)
+	if err != nil {
+		return err
+	}
+
+	dataString := string(dataBytes)
+
+	_, err = db.Exec(dataString)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
