@@ -1,10 +1,12 @@
 package router
 
 import (
+	"database/sql"
 	"net/http"
-	"real_time_forum/backend/controllers"
 )
 
-func WebRouter()  {
-	http.HandleFunc("/",controllers.HomePageController)
-}	
+func WebRouter(db *sql.DB) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("hello world"))
+	})
+}
