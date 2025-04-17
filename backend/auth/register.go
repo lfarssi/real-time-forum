@@ -111,7 +111,6 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "User registered successfully!",
 		"status":  http.StatusOK,
-		"token":   token,
 	})
 }
 
