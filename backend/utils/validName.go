@@ -1,6 +1,10 @@
 package utils
 
-func ValidName(UserName string) bool {
+func IsValidName(UserName string) bool {
+	if len(UserName) == 0 {
+		return false
+	}
+
 	for _, ele := range UserName {
 		if ele == '_' {
 			continue
@@ -10,5 +14,6 @@ func ValidName(UserName string) bool {
 		}
 
 	}
+	
 	return true
 }

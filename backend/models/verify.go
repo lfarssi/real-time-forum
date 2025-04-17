@@ -2,7 +2,6 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 // UserExists checks if a user exists in the database based on the given value and search criteria.
@@ -13,12 +12,7 @@ func UserExists(db *sql.DB, value string, searchBy string) (bool, error) {
 	}
 	defer rows.Close()
 
-	fmt.Println(rows.Next())
-	if rows.Next() {
-		return false, nil
-	}
-
-	return true, nil
+	return rows.Next(), nil
 }
 
 // VerifyEmail checks if the given email exists in the database and returns the user ID if found.
