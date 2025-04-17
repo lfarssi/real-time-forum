@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"real_time_forum/backend/controllers"
 	"real_time_forum/backend/middleware"
@@ -28,7 +29,7 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	if !verify(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Password, user.Age) {
+	if !verify(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Age, user.Password) {
 		return
 	}
 
@@ -97,7 +98,7 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	})
 }
 
-func verify(w http.ResponseWriter, userName, email, firstName, lastName, gender, password string, age int) bool {
+func verify(w http.ResponseWriter, userName, email, firstName, lastName, gender, age, password string) bool {
 	if len([]rune(firstName)) > 30 || len([]rune(lastName)) > 30 {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "First name and last name must be less than 30 characters.",
@@ -136,6 +137,21 @@ func verify(w http.ResponseWriter, userName, email, firstName, lastName, gender,
 	if !utils.IsValidEmail(email) {
 		utils.ResponseJSON(w, http.StatusUnprocessableEntity, map[string]any{
 			"message": "Email must be in the format: john@example.com",
+		})
+		return false
+	}
+
+	_, err := strconv.Atoi(age)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "The age must be a number",
+		})
+		return false
+	}
+
+	if gender != "Male" && gender != "Female" {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "The gender must be male or female",
 		})
 		return false
 	}
