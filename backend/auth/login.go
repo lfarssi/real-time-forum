@@ -34,9 +34,9 @@ func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	if ID == -1 {
-		e := models.ErrorRegister{ErrEmail: "Incorrect email"}
-		controllers.RenderTemplate(w, "login.html", e, http.StatusConflict)
-		return
+		// e := models.ErrorRegister{ErrEmail: "Incorrect email"}
+		// controllers.RenderTemplate(w, "login.html", e, http.StatusConflict)
+		// return
 	}
 
 	PasswordDatabase, err := models.GetPassword(db, int(ID))
@@ -47,9 +47,9 @@ func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	err = bcrypt.CompareHashAndPassword([]byte(PasswordDatabase), []byte(Pass))
 	if err != nil {
-		e := models.ErrorRegister{ErrPassword: "Incorrect Password"}
-		controllers.RenderTemplate(w, "login.html", e, http.StatusConflict)
-		return
+		// e := models.ErrorRegister{ErrPassword: "Incorrect Password"}
+		// controllers.RenderTemplate(w, "login.html", e, http.StatusConflict)
+		// return
 	}
 
 	token, err := models.GenerateToken(int(ID), db)
