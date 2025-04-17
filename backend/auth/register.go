@@ -99,67 +99,59 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 }
 
 func verify(w http.ResponseWriter, userName, email, firstName, lastName, gender, age, password string) bool {
-	if len([]rune(firstName)) > 30 || len([]rune(lastName)) > 30 {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "First name and last name must be less than 30 characters.",
-		})
-		return false
+	var messages models.ValidationMessages
+	hasError := false
+
+	if len([]rune(firstName)) > 30 {
+		messages.FirstNameMessage = "First name must be less than 30 characters."
+		hasError = true
+	} else if !utils.IsValidName(firstName) {
+		messages.FirstNameMessage = "First name must contain printable characters and numbers."
+		hasError = true
 	}
 
-	if !utils.IsValidName(firstName) || !utils.IsValidName(lastName) {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "The first name and last name must contain printable characters and numbers.",
-		})
-		return false
+	if len([]rune(lastName)) > 30 {
+		messages.LastNameMessage = "Last name must be less than 30 characters."
+		hasError = true
+	} else if !utils.IsValidName(lastName) {
+		messages.LastNameMessage = "Last name must contain printable characters and numbers."
+		hasError = true
 	}
 
 	if len([]rune(userName)) > 30 {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "Username must be less than 30 characters.",
-		})
-		return false
-	}
-
-	if !utils.IsValidName(userName) {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "The username must contain printable characters and numbers.",
-		})
-		return false
+		messages.UserNameMessage = "Username must be less than 30 characters."
+		hasError = true
+	} else if !utils.IsValidName(userName) {
+		messages.UserNameMessage = "Username must contain printable characters and numbers."
+		hasError = true
 	}
 
 	if len([]rune(email)) > 50 {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "Email must be less than 50 characters.",
-		})
-		return false
+		messages.EmailMessage = "Email must be less than 50 characters."
+		hasError = true
+	} else if !utils.IsValidEmail(email) {
+		messages.EmailMessage = "Email must be in the format: john@example.com"
+		hasError = true
 	}
 
-	if !utils.IsValidEmail(email) {
-		utils.ResponseJSON(w, http.StatusUnprocessableEntity, map[string]any{
-			"message": "Email must be in the format: john@example.com",
-		})
-		return false
-	}
-
-	_, err := strconv.Atoi(age)
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "The age must be a number",
-		})
-		return false
+	if _, err := strconv.Atoi(age); err != nil {
+		messages.AgeMessage = "The age must be a number."
+		hasError = true
 	}
 
 	if gender != "male" && gender != "female" {
-		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-			"message": "The gender must be male or female",
-		})
-		return false
+		messages.GenderMessage = "The gender must be male or female."
+		hasError = true
 	}
 
-	if len([]rune(password)) < 8 || len([]rune(password)) > 40 {
-		utils.ResponseJSON(w, http.StatusUnprocessableEntity, map[string]any{
-			"message": "Password must be greater than 8 characters and less than 40 characters",
-		})
+	passLen := len([]rune(password))
+	if passLen < 8 || passLen > 40 {
+		messages.PasswordMessage = "Password must be between 8 and 40 characters."
+		hasError = true
+	}
+
+	if hasError {
+		utils.ResponseJSON(w, http.StatusBadRequest, messages)
 		return false
 	}
 
