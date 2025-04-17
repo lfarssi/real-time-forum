@@ -6,10 +6,13 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"real_time_forum/backend/controllers"
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // Register handles the user registration process, validates the inputs, checks for unique username and email,
@@ -64,34 +67,51 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	// password, _ := bcrypt.GenerateFromPassword([]byte(r.FormValue("Password")), 10)
+	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server error",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
 
-	// result, err := db.Exec("INSERT INTO Users (UserName, Email, Password, Created_At, Session, Expared_At) VALUES ( ?,?,?,?,?,?)", UserName, Email, string(password), time.Now(), "", nil)
-	// if err != nil {
-	// 	controllers.RenderError(w, http.StatusInternalServerError)
-	// 	return
-	// }
+	result, err := db.Exec(`INSERT INTO users (UserName, Email, First_Name, Last_Name, Age, Gender, Password, Created_At, Session, Expared_At) 
+	VALUES ( ?,?,?,?,?,?,?,?,?,?)`,
+		user.UserName, user.Email, user.FirstName, user.LastName, user.Age, user.Gender, password, time.Now().UTC(), "", nil)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server error",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
 
-	// ID, err := result.LastInsertId()
-	// if err != nil {
-	// 	controllers.RenderError(w, http.StatusInternalServerError)
-	// 	return
-	// }
+	ID, err := result.LastInsertId()
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server error",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
 
-	// token, err := models.GenerateToken(int(ID), db)
-	// if err != nil {
-	// 	controllers.RenderError(w, http.StatusInternalServerError)
-	// 	return
-	// }
+	token, err := models.GenerateToken(int(ID), db)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server error",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
 
-	// cookie := &http.Cookie{Name: "Token", Value: token, MaxAge: 3600, HttpOnly: true}
-
-	// http.SetCookie(w, cookie)
-	// http.Redirect(w, r, "/", http.StatusSeeOther)
+	cookie := &http.Cookie{Name: "Token", Value: token, MaxAge: 3600, HttpOnly: true}
+	http.SetCookie(w, cookie)
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "User registered successfully!",
 		"status":  http.StatusOK,
+		"token":   token,
 	})
 }
 
