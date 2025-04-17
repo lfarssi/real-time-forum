@@ -149,7 +149,7 @@ func verify(w http.ResponseWriter, userName, email, firstName, lastName, gender,
 		return false
 	}
 
-	if gender != "Male" && gender != "Female" {
+	if gender != "male" && gender != "female" {
 		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
 			"message": "The gender must be male or female",
 		})
