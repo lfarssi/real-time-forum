@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"real_time_forum/backend/controllers"
-	"real_time_forum/backend/middleware"
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
 )
@@ -121,7 +121,7 @@ func verify(w http.ResponseWriter, userName, email, firstName, lastName, gender,
 	if len([]rune(userName)) > 30 {
 		messages.UserNameMessage = "Username must be less than 30 characters."
 		hasError = true
-	} else if !utils.IsValidName(userName) {
+	} else if !utils.IsValidName(userName) || strings.Contains(userName, " ") {
 		messages.UserNameMessage = "Username must contain printable characters and numbers."
 		hasError = true
 	}
@@ -156,23 +156,4 @@ func verify(w http.ResponseWriter, userName, email, firstName, lastName, gender,
 	}
 
 	return true
-}
-
-func RegisterPage(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-	if r.Method != http.MethodGet {
-		controllers.RenderError(w, http.StatusMethodNotAllowed)
-		return
-	}
-
-	_, err := middleware.VerifyCookie(r, db)
-	if err == nil {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
-
-	err = controllers.RenderTemplate(w, "register.html", nil, http.StatusOK)
-	if err != nil {
-		controllers.RenderError(w, http.StatusInternalServerError)
-		return
-	}
 }
