@@ -28,7 +28,11 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	isUniqueUserName, err := models.UserExists(db, user.UserName, " UserName")
+	if !verify(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Password, user.Age) {
+		return
+	}
+
+	isExistsUserName, err := models.UserExists(db, user.UserName, " UserName")
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Server error",
@@ -37,19 +41,27 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	if isUniqueUserName {
+	if isExistsUserName {
 		utils.ResponseJSON(w, http.StatusConflict, map[string]any{
-			"message": "Username Already taken please chose Another",
-			"status": http.StatusConflict,
+			"message": "Username Already taken",
+			"status":  http.StatusConflict,
 		})
 		return
 	}
 
-	// isUniqueEmail, err := models.UserExists(db, Email, " Email ")
-	// if err != nil {
-	// 	controllers.RenderError(w, http.StatusServiceUnavailable)
-	// 	return
-	// }
+	isExistsEmail, err := models.UserExists(db, user.Email, "Email")
+	if err != nil {
+		controllers.RenderError(w, http.StatusServiceUnavailable)
+		return
+	}
+
+	if isExistsEmail {
+		utils.ResponseJSON(w, http.StatusConflict, map[string]any{
+			"message": "Email Already taken",
+			"status":  http.StatusConflict,
+		})
+		return
+	}
 
 	// if !Verify(w, isUniqueUserName, isUniqueEmail, Email, UserName, r.FormValue("Password")) {
 	// 	return
@@ -85,32 +97,56 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	})
 }
 
-func Verify(w http.ResponseWriter, isUniqueUserName, isUniqueEmail bool, Email, UserName, Password string) bool {
-	if Email == "" {
-		// e.ErrName = "Username cannot be emty"
+func verify(w http.ResponseWriter, userName, email, firstName, lastName, gender, password string, age int) bool {
+	if len([]rune(firstName)) > 30 || len([]rune(lastName)) > 30 {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "First name and last name must be less than 30 characters.",
+		})
+		return false
 	}
-	if UserName == "" {
-		// e.ErrName = "Username cannot be emty"
+
+	if !utils.IsValidName(firstName) || !utils.IsValidName(lastName) {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "The first name and last name must contain printable characters and numbers.",
+		})
+		return false
 	}
-	if !utils.ValidName(UserName) {
-		// e.ErrName = "Username cannot conatains a special charachters like: \"@()-.,;...\" except: _"
+
+	if len([]rune(userName)) > 30 {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Username must be less than 30 characters.",
+		})
+		return false
 	}
-	if len([]rune(Password)) < 8 || len([]rune(Password)) > 20 {
-		// e.ErrPassword = "Password must be greater than 8 characters and less than 20 characters"
+
+	if !utils.IsValidName(userName) {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "The username must contain printable characters and numbers.",
+		})
+		return false
 	}
-	if !isUniqueUserName {
-		// e.ErrName = "Username Already taken please chose Another"
+
+	if len([]rune(email)) > 50 {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Email must be less than 50 characters.",
+		})
+		return false
 	}
-	if !isUniqueEmail {
-		// e.ErrEmail = "Email Already taken please chose Another"
+
+	if !utils.IsValidEmail(email) {
+		utils.ResponseJSON(w, http.StatusUnprocessableEntity, map[string]any{
+			"message": "Email must be in the format: john@example.com",
+		})
+		return false
 	}
-	if !utils.IsValidEmail(Email) || len([]rune(Email)) > 200 {
-		// e.ErrEmail = "Email must be in the format: example@example.example"
+
+	if len([]rune(password)) < 8 || len([]rune(password)) > 40 {
+		utils.ResponseJSON(w, http.StatusUnprocessableEntity, map[string]any{
+			"message": "Password must be greater than 8 characters and less than 40 characters",
+		})
+		return false
 	}
-	// if e.ErrEmail != "" || e.ErrName != "" || e.ErrPassword != "" {
-	// 	controllers.RenderTemplate(w, "register.html", e, http.StatusConflict)
-	// 	return false
-	// }
+
 	return true
 }
 
