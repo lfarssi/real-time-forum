@@ -1,15 +1,19 @@
 package models
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+)
 
 // UserExists checks if a user exists in the database based on the given value and search criteria.
 func UserExists(db *sql.DB, value string, searchBy string) (bool, error) {
-	rows, err := db.Query("SELECT ID from Users where"+searchBy+" =?", value)
+	rows, err := db.Query("SELECT ID from users where "+searchBy+" =?", value)
 	if err != nil {
 		return false, err
 	}
 	defer rows.Close()
 
+	fmt.Println(rows.Next())
 	if rows.Next() {
 		return false, nil
 	}
