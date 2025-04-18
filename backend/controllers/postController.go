@@ -16,6 +16,7 @@ func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			"message": "Method not allowed",
 			"status":  http.StatusMethodNotAllowed,
 		})
+		return
 	}
 
 	var post *models.Post
@@ -24,6 +25,7 @@ func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			"message": "Server error",
 			"status":  http.StatusInternalServerError,
 		})
+		return 
 	}
 
 	fmt.Println(post)
