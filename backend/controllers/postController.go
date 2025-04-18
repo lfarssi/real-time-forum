@@ -2,8 +2,11 @@ package controllers
 
 import (
 	"database/sql"
+	"encoding/json"
+	"fmt"
 	"net/http"
 
+	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
 )
 
@@ -14,7 +17,16 @@ func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			"status":  http.StatusMethodNotAllowed,
 		})
 	}
-	
+
+	var post *models.Post
+	if err := json.NewDecoder(r.Body).Decode(&post); err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server error",
+			"status":  http.StatusInternalServerError,
+		})
+	}
+
+	fmt.Println(post)
 
 	// ID := r.Context().Value("userId").(int)
 	// title := r.FormValue("title")
@@ -41,4 +53,9 @@ func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	// 	}
 	// }
 	// http.Redirect(w, r, referer, http.StatusFound)
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Post added successfully!",
+		"status":  http.StatusOK,
+	})
 }

@@ -78,7 +78,7 @@ func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	http.SetCookie(w, cookie)
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message": "User registered successfully!",
+		"message": "User logged in successfully!",
 		"status":  http.StatusOK,
 	})
 }
