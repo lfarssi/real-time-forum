@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"real_time_forum/backend/controllers"
-	"real_time_forum/backend/middleware"
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
 
@@ -16,7 +15,10 @@ import (
 // LoginPage renders the login page, or redirects if the user is already authenticated.
 func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if r.Method != http.MethodPost {
-		http.Redirect(w, r, "/sign-in", http.StatusSeeOther)
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
 		return
 	}
 
@@ -64,38 +66,17 @@ func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	// token, err := models.GenerateToken(int(ID), db)
-	// if err != nil {
-	// 	controllers.RenderError(w, http.StatusInternalServerError)
-	// 	return
-	// }
+	token, err := models.GenerateToken(int(ID), db)
+	if err != nil {
+		controllers.RenderError(w, http.StatusInternalServerError)
+		return
+	}
 
-	// cookie := &http.Cookie{Name: "Token", Value: token, MaxAge: 3600, HttpOnly: true}
-
-	// http.SetCookie(w, cookie)
-	// http.Redirect(w, r, "/", http.StatusSeeOther)
+	cookie := &http.Cookie{Name: "Token", Value: token, MaxAge: 3600, HttpOnly: true}
+	http.SetCookie(w, cookie)
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "User registered successfully!",
 		"status":  http.StatusOK,
 	})
-}
-
-func LoginPage(w http.ResponseWriter, r *http.Request, db *sql.DB) {
-	if r.Method != http.MethodGet {
-		controllers.RenderError(w, http.StatusMethodNotAllowed)
-		return
-	}
-
-	_, err := middleware.VerifyCookie(r, db)
-	if err == nil {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	}
-
-	err = controllers.RenderTemplate(w, "login.html", nil, http.StatusOK)
-	if err != nil {
-		controllers.RenderError(w, http.StatusInternalServerError)
-		return
-	}
 }
