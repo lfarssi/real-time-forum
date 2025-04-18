@@ -19,3 +19,9 @@ type ValidationMessages struct {
 	AgeMessage       string `json:"age,omitempty"`
 	PasswordMessage  string `json:"password,omitempty"`
 }
+
+type Post struct {
+	Title      string   `json:"title"`
+	Content    string   `json:"content"`
+	Categories []string `json:"category"`
+}
