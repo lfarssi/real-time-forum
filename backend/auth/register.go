@@ -19,7 +19,10 @@ import (
 // hashes the password, inserts the user into the database, generates a session token, and sets it as a secure cookie.
 func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	if r.Method != http.MethodPost {
-		http.Redirect(w, r, "/sign-up", http.StatusSeeOther)
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method not allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
 		return
 	}
 
