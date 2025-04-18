@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"real_time_forum/backend/controllers"
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
 
@@ -68,7 +67,10 @@ func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	token, err := models.GenerateToken(int(ID), db)
 	if err != nil {
-		controllers.RenderError(w, http.StatusInternalServerError)
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server error",
+			"status":  http.StatusInternalServerError,
+		})
 		return
 	}
 

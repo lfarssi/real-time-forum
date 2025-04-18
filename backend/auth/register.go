@@ -35,7 +35,7 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	if !verify(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Age, user.Password) {
+	if !verifyData(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Age, user.Password) {
 		return
 	}
 
@@ -117,7 +117,7 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	})
 }
 
-func verify(w http.ResponseWriter, userName, email, firstName, lastName, gender, age, password string) bool {
+func verifyData(w http.ResponseWriter, userName, email, firstName, lastName, gender, age, password string) bool {
 	var messages models.ValidationMessages
 	hasError := false
 
