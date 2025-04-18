@@ -14,6 +14,7 @@ func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			"status":  http.StatusMethodNotAllowed,
 		})
 	}
+	
 
 	// ID := r.Context().Value("userId").(int)
 	// title := r.FormValue("title")
