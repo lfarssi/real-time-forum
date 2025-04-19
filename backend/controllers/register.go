@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"real_time_forum/backend/database"
@@ -37,40 +38,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isExistsUserName, err := models.UserExists(user.UserName, " UserName")
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
-			"status":  http.StatusInternalServerError,
-		})
-		return
-	}
-
-	if isExistsUserName {
-		utils.ResponseJSON(w, http.StatusConflict, map[string]any{
-			"message": "Username Already taken",
-			"status":  http.StatusConflict,
-		})
-		return
-	}
-
-	isExistsEmail, err := models.UserExists(user.Email, "Email")
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
-			"status":  http.StatusInternalServerError,
-		})
-		return
-	}
-
-	if isExistsEmail {
-		utils.ResponseJSON(w, http.StatusConflict, map[string]any{
-			"message": "Email Already taken",
-			"status":  http.StatusConflict,
-		})
-		return
-	}
-
 	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
@@ -80,19 +47,25 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := database.DB.Exec(`INSERT INTO users (UserName, Email, First_Name, Last_Name, Age, Gender, Password, Created_At, Session, Expared_At) 
-	VALUES ( ?,?,?,?,?,?,?,?,?,?)`,
-		user.UserName, user.Email, user.FirstName, user.LastName, user.Age, user.Gender, password, time.Now().UTC(), "", nil)
+	var ID int
+	err = database.DB.QueryRow(`INSERT INTO users (Email, UserName, First_Name, Last_Name, Age, Gender, Password, Created_At, Session, Expared_At) 
+	VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING ID`,
+		user.Email, user.UserName, user.FirstName, user.LastName, user.Age, user.Gender, password, time.Now().UTC(), "", nil).Scan(&ID)
 	if err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
-			"status":  http.StatusInternalServerError,
-		})
-		return
-	}
+		if strings.Contains(err.Error(), "UserName") {
+			utils.ResponseJSON(w, http.StatusConflict, map[string]any{
+				"message": "Username already exists",
+				"status":  http.StatusConflict,
+			})
+			return
+		} else if strings.Contains(err.Error(), "Email") {
+			utils.ResponseJSON(w, http.StatusConflict, map[string]any{
+				"message": "Email already exists",
+				"status":  http.StatusConflict,
+			})
+			return
+		}
 
-	ID, err := result.LastInsertId()
-	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Server error",
 			"status":  http.StatusInternalServerError,
