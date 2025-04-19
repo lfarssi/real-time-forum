@@ -1,6 +1,6 @@
 package models
 
-func AddUser() {
+func Register() {
 	
 }
 

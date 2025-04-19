@@ -8,8 +8,8 @@ import (
 )
 
 func ApiRouter() {
-	http.HandleFunc("/api/login", controllers.Login)
-	http.HandleFunc("/api/register", controllers.Register)
+	http.HandleFunc("/api/login", controllers.LoginController)
+	http.HandleFunc("/api/register", controllers.RegisterController)
 
 	http.HandleFunc("/api/addPost", middleware.Authorization(http.HandlerFunc(controllers.AddPost)))
 }

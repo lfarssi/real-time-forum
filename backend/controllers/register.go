@@ -16,7 +16,7 @@ import (
 
 // Register handles the user registration process, validates the inputs, checks for unique username and email,
 // hashes the password, inserts the user into the database, generates a session token, and sets it as a secure cookie.
-func Register(w http.ResponseWriter, r *http.Request) {
+func RegisterController(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
