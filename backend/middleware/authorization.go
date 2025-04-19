@@ -3,7 +3,6 @@ package middleware
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -15,7 +14,6 @@ import (
 func Authorization(next http.Handler, db *sql.DB) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("Token")
-		fmt.Println(cookie, "||", err)
 		if err != nil {
 			utils.ResponseJSON(w, http.StatusForbidden, map[string]any{
 				"message": "Missing authentication token",

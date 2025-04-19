@@ -10,7 +10,7 @@ type UserAuth struct {
 	Password  string `json:"password"`
 }
 
-type ValidationMessages struct {
+type ValidationMessagesRegister struct {
 	UserNameMessage  string `json:"username,omitempty"`
 	EmailMessage     string `json:"email,omitempty"`
 	FirstNameMessage string `json:"firstName,omitempty"`
@@ -24,4 +24,10 @@ type Post struct {
 	Title      string   `json:"title"`
 	Content    string   `json:"content"`
 	Categories []string `json:"category"`
+}
+
+type ValidationMessagesAddPost struct {
+	TitleMessage    string `json:"title,omitempty"`
+	ContentMessage  string `json:"content,omitempty"`
+	CategoryMessage string `json:"category,omitempty"`
 }
