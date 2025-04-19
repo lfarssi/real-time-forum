@@ -37,7 +37,14 @@ func AddPost(w http.ResponseWriter, r *http.Request) {
 
 	ID := r.Context().Value("userId").(int)
 
-	models.AddPost(w, post.Title, post.Content, post.Categories, ID)
+	err := models.AddPost(w, post.Title, post.Content, post.Categories, ID)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server error",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Post added successfully!",

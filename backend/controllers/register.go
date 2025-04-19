@@ -5,9 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
-	"real_time_forum/backend/database"
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
 
@@ -47,10 +45,7 @@ func RegisterController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var ID int
-	err = database.DB.QueryRow(`INSERT INTO users (Email, UserName, First_Name, Last_Name, Age, Gender, Password, Created_At, Session, Expared_At) 
-	VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING ID`,
-		user.Email, user.UserName, user.FirstName, user.LastName, user.Age, user.Gender, password, time.Now().UTC(), "", nil).Scan(&ID)
+	ID, err := models.Register(user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, string(password), user.Age)
 	if err != nil {
 		if strings.Contains(err.Error(), "UserName") {
 			utils.ResponseJSON(w, http.StatusConflict, map[string]any{
