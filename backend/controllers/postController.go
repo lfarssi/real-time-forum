@@ -3,8 +3,9 @@ package controllers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
@@ -28,28 +29,16 @@ func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	if !verifyData(w, post.Title, post.Content, post.Categories) {
+	post.Title = strings.TrimSpace(post.Title)
+	post.Content = strings.TrimSpace(post.Content)
+
+	if !verifyData(w, db, post.Title, post.Content, post.Categories) {
 		return
 	}
 
 	ID := r.Context().Value("userId").(int)
 
-	fmt.Println(ID)
-
-	// result, err := db.Exec("INSERT INTO Posts (Title, Content, DateCreation, Image,ID_User) VALUES (?,?,?,?,?)", title, content, time.Now(), image, ID)
-	// if err != nil {
-	// 	handlers.RenderError(w, http.StatusInternalServerError)
-	// 	return
-	// }
-	// idPost, _ := result.LastInsertId()
-	// for _, categoryID := range categories {
-	// 	_, err := db.Exec("INSERT INTO PostCategory (ID_Post, ID_Category) VALUES (?, ?)", int(idPost), categoryID)
-	// 	if err != nil {
-	// 		handlers.RenderError(w, http.StatusInternalServerError)
-	// 		return
-	// 	}
-	// }
-	// http.Redirect(w, r, referer, http.StatusFound)
+	models.AddPost(w, post.Title, post.Content, post.Categories, ID, db)
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Post added successfully!",
@@ -57,7 +46,7 @@ func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	})
 }
 
-func verifyData(w http.ResponseWriter, title, content string, categories []string) bool {
+func verifyData(w http.ResponseWriter, db *sql.DB, title, content string, categories []string) bool {
 	var message models.ValidationMessagesAddPost
 	isValid := true
 
@@ -85,8 +74,15 @@ func verifyData(w http.ResponseWriter, title, content string, categories []strin
 		isValid = false
 	} else {
 		for _, category := range categories {
-			if len([]rune(category)) > 50 {
-				message.CategoryMessage = "Each category must be less than or equal to 50 characters."
+			categoryID, err := strconv.Atoi(category)
+			if err != nil {
+				message.CategoryMessage = "Each category must be a valid number."
+				isValid = false
+				break
+			}
+
+			if !models.IsExistsCategory(categoryID, db) {
+				message.CategoryMessage = "One or more selected categories do not exist."
 				isValid = false
 				break
 			}
