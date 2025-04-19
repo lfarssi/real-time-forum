@@ -9,8 +9,22 @@ import (
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
 )
+func GetPostController(w http.ResponseWriter, r *http.Request) {
+	posts, err := models.GetPosts()
+	if err != nil {
+		ErrorController(w, r, http.StatusInternalServerError, "Failed to retrieve posts")
+		return
+	}
 
-func AddPost(w http.ResponseWriter, r *http.Request) {
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Posts retrieved successfully",
+		"status":  http.StatusOK,
+		"data":    posts,
+	})
+}
+
+
+func AddPostController(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
