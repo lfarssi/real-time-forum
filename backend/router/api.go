@@ -6,6 +6,7 @@ import (
 
 	"real_time_forum/backend/auth"
 	"real_time_forum/backend/controllers"
+	"real_time_forum/backend/middleware"
 )
 
 func ApiRouter(db *sql.DB) {
@@ -17,7 +18,8 @@ func ApiRouter(db *sql.DB) {
 		auth.Register(w, r, db)
 	})
 
-	http.HandleFunc("/addPost", func(w http.ResponseWriter, r *http.Request) {
-		controllers.AddPost(w, r, db)
-	})
+	http.HandleFunc("/addPost", middleware.Authorization(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			controllers.AddPost(w, r, db)
+		}), db))
 }

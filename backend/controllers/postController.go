@@ -25,12 +25,13 @@ func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			"message": "Server error",
 			"status":  http.StatusInternalServerError,
 		})
-		return 
+		return
 	}
-
+	
+	ID := r.Context().Value("userId").(int)
+	fmt.Println(ID)
 	fmt.Println(post)
 
-	// ID := r.Context().Value("userId").(int)
 	// title := r.FormValue("title")
 	// content := r.FormValue("content")
 	// categories := r.Form["category"]
