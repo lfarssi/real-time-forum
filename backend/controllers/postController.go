@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -11,7 +10,7 @@ import (
 	"real_time_forum/backend/utils"
 )
 
-func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+func AddPost(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
@@ -32,13 +31,13 @@ func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	post.Title = strings.TrimSpace(post.Title)
 	post.Content = strings.TrimSpace(post.Content)
 
-	if !verifyData(w, db, post.Title, post.Content, post.Categories) {
+	if !verifyPostData(w, post.Title, post.Content, post.Categories) {
 		return
 	}
 
 	ID := r.Context().Value("userId").(int)
 
-	models.AddPost(w, post.Title, post.Content, post.Categories, ID, db)
+	models.AddPost(w, post.Title, post.Content, post.Categories, ID)
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Post added successfully!",
@@ -46,7 +45,7 @@ func AddPost(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	})
 }
 
-func verifyData(w http.ResponseWriter, db *sql.DB, title, content string, categories []string) bool {
+func verifyPostData(w http.ResponseWriter, title, content string, categories []string) bool {
 	var message models.ValidationMessagesAddPost
 	isValid := true
 
@@ -81,7 +80,7 @@ func verifyData(w http.ResponseWriter, db *sql.DB, title, content string, catego
 				break
 			}
 
-			if !models.IsExistsCategory(categoryID, db) {
+			if !models.IsExistsCategory(categoryID) {
 				message.CategoryMessage = "One or more selected categories do not exist."
 				isValid = false
 				break

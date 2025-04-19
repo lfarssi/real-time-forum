@@ -1,15 +1,16 @@
 package models
 
 import (
-	"database/sql"
 	"time"
+
+	"real_time_forum/backend/database"
 
 	"github.com/gofrs/uuid"
 )
 
 // GenerateToken generates a new session token for a user, updates the user's session in the database,
 // and returns the generated token along with the expiration time.
-func GenerateToken(id int, db *sql.DB) (string, error) {
+func GenerateToken(id int) (string, error) {
 	u2, err := uuid.NewV6()
 	if err != nil {
 		return "", err
@@ -18,7 +19,7 @@ func GenerateToken(id int, db *sql.DB) (string, error) {
 	token := u2.String()
 	expirationTime := time.Now().UTC().Add(time.Hour)
 
-	_, err = db.Exec("UPDATE users set Session=? , Expared_At=?  WHERE ID=?", token, expirationTime, id)
+	_, err = database.DB.Exec("UPDATE users set Session=? , Expared_At=?  WHERE ID=?", token, expirationTime, id)
 	if err != nil {
 		return "", err
 	}

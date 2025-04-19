@@ -1,11 +1,10 @@
 package router
 
 import (
-	"database/sql"
 	"net/http"
 )
 
-func WebRouter(db *sql.DB) {
+func WebRouter() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hello world"))
 	})

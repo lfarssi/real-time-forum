@@ -1,12 +1,12 @@
 package models
 
 import (
-	"database/sql"
+	"real_time_forum/backend/database"
 )
 
 // UserExists checks if a user exists in the database based on the given value and search criteria.
-func UserExists(db *sql.DB, value string, searchBy string) (bool, error) {
-	rows, err := db.Query("SELECT ID from users where "+searchBy+" =?", value)
+func UserExists(value string, searchBy string) (bool, error) {
+	rows, err := database.DB.Query("SELECT ID from users where "+searchBy+" =?", value)
 	if err != nil {
 		return false, err
 	}
@@ -16,8 +16,8 @@ func UserExists(db *sql.DB, value string, searchBy string) (bool, error) {
 }
 
 // VerifyEmail checks if the given email exists in the database and returns the user ID if found.
-func VerifyEmail(db *sql.DB, Email string) (int64, int, error) {
-	rows, err := db.Query("SELECT ID, AuthType FROM users WHERE Email = ?", Email)
+func VerifyEmail(Email string) (int64, int, error) {
+	rows, err := database.DB.Query("SELECT ID, AuthType FROM users WHERE Email = ?", Email)
 	if err != nil {
 		return -1, 0, err
 	}
@@ -37,8 +37,8 @@ func VerifyEmail(db *sql.DB, Email string) (int64, int, error) {
 }
 
 // GetPassword retrieves the hashed password for a given user ID from the database.
-func GetPassword(db *sql.DB, id int) (string, error) {
-	rows, err := db.Query("SELECT Password FROM users WHERE ID = ?", id)
+func GetPassword(id int) (string, error) {
+	rows, err := database.DB.Query("SELECT Password FROM users WHERE ID = ?", id)
 	if err != nil {
 		return "", err
 	}

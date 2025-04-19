@@ -1,25 +1,15 @@
 package router
 
 import (
-	"database/sql"
 	"net/http"
 
-	"real_time_forum/backend/auth"
 	"real_time_forum/backend/controllers"
 	"real_time_forum/backend/middleware"
 )
 
-func ApiRouter(db *sql.DB) {
-	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-		auth.Login(w, r, db)
-	})
+func ApiRouter() {
+	http.HandleFunc("/api/login", controllers.Login)
+	http.HandleFunc("/api/register", controllers.Register)
 
-	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
-		auth.Register(w, r, db)
-	})
-
-	http.HandleFunc("/addPost", middleware.Authorization(
-		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			controllers.AddPost(w, r, db)
-		}), db))
+	http.HandleFunc("/api/addPost", middleware.Authorization(http.HandlerFunc(controllers.AddPost)))
 }

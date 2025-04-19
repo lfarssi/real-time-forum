@@ -7,31 +7,34 @@ import (
 	"os"
 )
 
+var DB *sql.DB
+
 // OpenDB connects to the SQLite database, runs migrations, and returns the database connection or an error.
-func OpenDB() (*sql.DB, error) {
-	db, err := sql.Open("sqlite3", "backend/database/forum.db")
+func OpenDB() error {
+	var err error
+	DB, err = sql.Open("sqlite3", "backend/database/forum.db")
 	if err != nil {
 		log.Printf("Error opening database: %v", err)
-		return nil, err
+		return err
 	}
 
-	err = db.Ping()
+	err = DB.Ping()
 	if err != nil {
 		log.Printf("Error pinging database: %v", err)
-		return nil, err
+		return err
 	}
 
-	err = Migrate(db)
+	err = Migrate()
 	if err != nil {
 		log.Printf("Error running migration: %v", err)
-		return nil, err
+		return err
 	}
 
-	return db, nil
+	return nil
 }
 
 // Migrate reads and executes SQL migration scripts from "sqlite.sql" to set up the database schema.
-func Migrate(db *sql.DB) error {
+func Migrate() error {
 	file, err := os.Open("backend/database/migration.sql")
 	if err != nil {
 		return err
@@ -45,7 +48,7 @@ func Migrate(db *sql.DB) error {
 
 	dataString := string(dataBytes)
 
-	_, err = db.Exec(dataString)
+	_, err = DB.Exec(dataString)
 	if err != nil {
 		return err
 	}

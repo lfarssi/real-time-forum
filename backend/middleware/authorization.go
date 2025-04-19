@@ -2,16 +2,16 @@ package middleware
 
 import (
 	"context"
-	"database/sql"
 	"net/http"
 	"time"
 
+	"real_time_forum/backend/database"
 	"real_time_forum/backend/utils"
 )
 
 // Authorization checks if the user is logged in by verifying the session token and expiration time
 // from the database. If valid, it attaches user details to the request context and proceeds to the next handler.
-func Authorization(next http.Handler, db *sql.DB) http.HandlerFunc {
+func Authorization(next http.Handler) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("Token")
 		if err != nil {
@@ -25,7 +25,7 @@ func Authorization(next http.Handler, db *sql.DB) http.HandlerFunc {
 		var userId int
 		var userName string
 		var expired time.Time
-		err = db.QueryRow("SELECT ID, UserName, Expared_At FROM Users WHERE Session=?", cookie.Value).Scan(&userId, &userName, &expired)
+		err = database.DB.QueryRow("SELECT ID, UserName, Expared_At FROM Users WHERE Session=?", cookie.Value).Scan(&userId, &userName, &expired)
 		if err != nil || userId == 0 {
 			utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
 				"message": "Invalid session",
@@ -35,7 +35,7 @@ func Authorization(next http.Handler, db *sql.DB) http.HandlerFunc {
 		}
 
 		if time.Now().UTC().After(expired) {
-			db.Exec("UPDATE users SET Session=? WHERE ID=?", "", userId)
+			database.DB.Exec("UPDATE users SET Session=? WHERE ID=?", "", userId)
 			utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
 				"message": "Session expired",
 				"status":  http.StatusUnauthorized,
