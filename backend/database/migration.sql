@@ -1,6 +1,6 @@
 CREATE TABLE IF not EXISTS users (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    UserName char(30) UNIQUE NOT NULL,
+    UserName char(13) UNIQUE NOT NULL,
     Email char(50) UNIQUE NOT NULL,
     First_Name char(30) NOT NULL,
     Last_Name char(30) NOT NULL,

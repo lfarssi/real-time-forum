@@ -1,7 +1,6 @@
-package auth
+package controllers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 
@@ -12,7 +11,7 @@ import (
 )
 
 // LoginPage renders the login page, or redirects if the user is already authenticated.
-func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+func Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
@@ -30,7 +29,7 @@ func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	ID, _, err := models.VerifyEmail(db, user.Email)
+	ID, _, err := models.VerifyEmail(user.Email)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Server error",
@@ -47,7 +46,7 @@ func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	password, err := models.GetPassword(db, int(ID))
+	password, err := models.GetPassword(int(ID))
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Server error",
@@ -65,7 +64,7 @@ func Login(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	token, err := models.GenerateToken(int(ID), db)
+	token, err := models.GenerateToken(int(ID))
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Server error",

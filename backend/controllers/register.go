@@ -1,14 +1,12 @@
-package auth
+package controllers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
-	"real_time_forum/backend/controllers"
+	"real_time_forum/backend/database"
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
 
@@ -17,7 +15,7 @@ import (
 
 // Register handles the user registration process, validates the inputs, checks for unique username and email,
 // hashes the password, inserts the user into the database, generates a session token, and sets it as a secure cookie.
-func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
+func Register(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
@@ -35,11 +33,11 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	if !verifyData(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Age, user.Password) {
+	if !verifyRegisterData(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Age, user.Password) {
 		return
 	}
 
-	isExistsUserName, err := models.UserExists(db, user.UserName, " UserName")
+	isExistsUserName, err := models.UserExists(user.UserName, " UserName")
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Server error",
@@ -56,9 +54,12 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	isExistsEmail, err := models.UserExists(db, user.Email, "Email")
+	isExistsEmail, err := models.UserExists(user.Email, "Email")
 	if err != nil {
-		controllers.RenderError(w, http.StatusServiceUnavailable)
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server error",
+			"status":  http.StatusInternalServerError,
+		})
 		return
 	}
 
@@ -79,7 +80,7 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	result, err := db.Exec(`INSERT INTO users (UserName, Email, First_Name, Last_Name, Age, Gender, Password, Created_At, Session, Expared_At) 
+	result, err := database.DB.Exec(`INSERT INTO users (UserName, Email, First_Name, Last_Name, Age, Gender, Password, Created_At, Session, Expared_At) 
 	VALUES ( ?,?,?,?,?,?,?,?,?,?)`,
 		user.UserName, user.Email, user.FirstName, user.LastName, user.Age, user.Gender, password, time.Now().UTC(), "", nil)
 	if err != nil {
@@ -99,7 +100,7 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	token, err := models.GenerateToken(int(ID), db)
+	token, err := models.GenerateToken(int(ID))
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Server error",
@@ -117,7 +118,7 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	})
 }
 
-func verifyData(w http.ResponseWriter, userName, email, firstName, lastName, gender, age, password string) bool {
+func verifyRegisterData(w http.ResponseWriter, userName, email, firstName, lastName, gender, age, password string) bool {
 	var messages models.ValidationMessagesRegister
 	hasError := false
 
@@ -137,11 +138,8 @@ func verifyData(w http.ResponseWriter, userName, email, firstName, lastName, gen
 		hasError = true
 	}
 
-	if len([]rune(userName)) > 30 {
-		messages.UserNameMessage = "Username must be less than 30 characters."
-		hasError = true
-	} else if !utils.IsValidName(userName) || strings.Contains(userName, " ") {
-		messages.UserNameMessage = "Username must contain printable characters and numbers."
+	if !utils.IsValidUserName(userName) {
+		messages.UserNameMessage = "Username must contain printable characters and numbers and between 3 and 13 character."
 		hasError = true
 	}
 

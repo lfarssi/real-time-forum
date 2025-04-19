@@ -1,7 +1,9 @@
 package utils
 
+import "regexp"
+
 func IsValidName(UserName string) bool {
-	if len(UserName) == 0 {
+	if len(UserName) < 3 {
 		return false
 	}
 
@@ -16,4 +18,12 @@ func IsValidName(UserName string) bool {
 	}
 	
 	return true
+}
+
+func IsValidUserName(username string) bool  {
+	regex := `^[a-zA-Z0-9_-]{3,13}$`
+
+	regulierExpr := regexp.MustCompile(regex)
+
+	return regulierExpr.MatchString(username)  
 }

@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	db, err := database.OpenDB()
+	err := database.OpenDB()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -24,13 +24,13 @@ func main() {
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
-		db.Close()
+		database.DB.Close()
 		fmt.Println("\nServer closed succesfully")
 		os.Exit(0)
 	}()
 
-	router.WebRouter(db)
-	router.ApiRouter(db)
+	router.WebRouter()
+	router.ApiRouter()
 	fmt.Println("http://localhost:8080/")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

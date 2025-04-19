@@ -1,12 +1,10 @@
 package models
 
-import (
-	"database/sql"
-)
+import "real_time_forum/backend/database"
 
-func IsExistsCategory(categoryID int, db *sql.DB) bool {
+func IsExistsCategory(categoryID int) bool {
 	var id int
-	err := db.QueryRow("SELECT ID FROM Category WHERE ID = ?", categoryID).Scan(&id)
+	err := database.DB.QueryRow("SELECT ID FROM Category WHERE ID = ?", categoryID).Scan(&id)
 	if err != nil {
 		return false
 	}
