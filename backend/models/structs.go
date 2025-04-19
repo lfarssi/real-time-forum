@@ -1,7 +1,7 @@
 package models
 
 type UserAuth struct {
-	UserName  string `json:"userName"`
+	UserName  string `json:"username"`
 	Email     string `json:"email"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
