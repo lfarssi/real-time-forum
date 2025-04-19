@@ -8,7 +8,7 @@ func IsValidName(UserName string) bool {
 	}
 
 	for _, ele := range UserName {
-		if ele == '_' || ele == ' ' {
+		if ele == '_' || ele == ' ' || ele == '-' {
 			continue
 		}
 		if !(ele >= 'a' && ele <= 'z') && !(ele >= 'A' && ele <= 'Z') && !(ele >= '0' && ele <= '9') {
@@ -16,14 +16,14 @@ func IsValidName(UserName string) bool {
 		}
 
 	}
-	
+
 	return true
 }
 
-func IsValidUserName(username string) bool  {
+func IsValidUserName(username string) bool {
 	regex := `^[a-zA-Z0-9_-]{3,13}$`
 
 	regulierExpr := regexp.MustCompile(regex)
 
-	return regulierExpr.MatchString(username)  
+	return regulierExpr.MatchString(username)
 }
