@@ -11,7 +11,7 @@ import (
 )
 
 // LoginPage renders the login page, or redirects if the user is already authenticated.
-func Login(w http.ResponseWriter, r *http.Request) {
+func LoginController(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method not allowed",
