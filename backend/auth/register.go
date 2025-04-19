@@ -118,7 +118,7 @@ func Register(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 }
 
 func verifyData(w http.ResponseWriter, userName, email, firstName, lastName, gender, age, password string) bool {
-	var messages models.ValidationMessages
+	var messages models.ValidationMessagesRegister
 	hasError := false
 
 	if len([]rune(firstName)) > 30 {
