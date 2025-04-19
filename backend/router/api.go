@@ -11,5 +11,5 @@ func ApiRouter() {
 	http.HandleFunc("/api/login", controllers.LoginController)
 	http.HandleFunc("/api/register", controllers.RegisterController)
 
-	http.HandleFunc("/api/addPost", middleware.Authorization(http.HandlerFunc(controllers.AddPost)))
+	http.HandleFunc("/api/addPost", middleware.Authorization(http.HandlerFunc(controllers.AddPostController)))
 }
