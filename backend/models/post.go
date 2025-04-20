@@ -7,10 +7,10 @@ import (
 	"real_time_forum/backend/database"
 
 )
-func GetPosts() ([]Post, error) {
+func GetPosts() ([]*Post, error) {
 	query := `
     SELECT p.id, p.user_id, p.title, p.content, GROUP_CONCAT(c.name) AS categories, p.creat_at, u.username
-    FROM Posts p
+    FROM posts p
     INNER JOIN users u ON p.user_id = u.id
     INNER JOIN post_categorie pc ON p.id = pc.post_id
     INNER JOIN categories c ON pc.categorie_id = c.id
@@ -23,9 +23,9 @@ func GetPosts() ([]Post, error) {
 	}
 	defer rows.Close()
 
-	var posts []Post
+	var posts []*Post
 	for rows.Next() {
-		var post Post
+		var post *Post
 		var CreatedAt time.Time
 		var categorie string
 		err = rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content,  &categorie, &CreatedAt, &post.Username)

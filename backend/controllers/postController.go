@@ -10,9 +10,19 @@ import (
 	"real_time_forum/backend/utils"
 )
 func GetPostController(w http.ResponseWriter, r *http.Request) {
+	if r.Method!= http.MethodGet {
+		utils.ResponseJSON(w, http.StatusOK, map[string]any{
+			"message": "Method Not Allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+	}
 	posts, err := models.GetPosts()
 	if err != nil {
-		ErrorController(w, r, http.StatusInternalServerError, "Failed to retrieve posts")
+		utils.ResponseJSON(w, http.StatusOK, map[string]any{
+			"message": "Error Creation Post",
+			"status":  http.StatusOK,
+			"data":    posts,
+		})
 		return
 	}
 
