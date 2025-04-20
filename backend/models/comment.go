@@ -35,3 +35,7 @@ func GetCommnets(postID int) ([]*Comment, error) {
 
 	return comments, nil
 }
+
+// func AddComment() error {
+
+// }
