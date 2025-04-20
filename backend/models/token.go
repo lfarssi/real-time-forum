@@ -17,7 +17,7 @@ func GenerateToken(id int) (string, error) {
 	}
 
 	token := u2.String()
-	expirationTime := time.Now().UTC().Add(time.Hour)
+	expirationTime := time.Now().UTC().Add(time.Hour * 24)
 
 	_, err = database.DB.Exec("UPDATE users set session=? , expiredAt=?  WHERE id=?", token, expirationTime, id)
 	if err != nil {

@@ -57,4 +57,9 @@ func AddCommentController(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(userID)
 	fmt.Println(comment)
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Comment added successfully!",
+		"status":  http.StatusOK,
+	})
 }
