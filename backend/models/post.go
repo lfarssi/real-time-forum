@@ -126,13 +126,13 @@ func CreatedPost(iduser int) ([]Post, error) {
 
 func GetPostsByCategory(idCategorie int) ([]Post, error) {
 	query := `
-	SELECT   p.id, p.title, p.content,p.image, c.name, p.creat_at, u.username
+	SELECT   p.id, p.title, p.content, c.name, p.dateCreation, u.username
 	FROM post p
-	INNER JOIN users u ON p.user_id = u.id
-	INNER JOIN post_categorie pc ON p.id = pc.post_id
-	INNER JOIN categories c ON pc.categorie_id = c.id
-	WHERE pc.categorie_id =?
-	ORDER BY p.creat_at DESC;
+	INNER JOIN users u ON p.userID = u.id
+	INNER JOIN postCategory pc ON p.id = pc.post_id
+	INNER JOIN category c ON pc.categoryID = c.id
+	WHERE pc.categoryID =?
+	ORDER BY p.dateCreation DESC;
 	`
 	rows, err := database.DB.Query(query, idCategorie)
 	if err != nil {
@@ -151,8 +151,7 @@ func GetPostsByCategory(idCategorie int) ([]Post, error) {
 		if temposts, ok := tempPosts[post.ID]; ok {
 			temposts.Categories = append(temposts.Categories, categorie)
 		} else {
-			post.Categories = CorrectCategories(post.ID)
-
+			// post.Categories = CorrectCategories(post.ID)
 			tempPosts[post.ID] = &post
 		}
 
