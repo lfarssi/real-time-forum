@@ -60,7 +60,7 @@ func AddCommentController(w http.ResponseWriter, r *http.Request) {
 	err := models.AddComment(comment)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
+			"message": err.Error(),
 			"status":  http.StatusInternalServerError,
 		})
 		return
