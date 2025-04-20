@@ -1,74 +1,73 @@
 CREATE TABLE IF not EXISTS users (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    
-    Email char(50) UNIQUE NOT NULL,
-    UserName char(13) UNIQUE NOT NULL,
-    First_Name char(30) NOT NULL,
-    Last_Name char(30) NOT NULL,
-    Age INTEGER,
-    Gender char(20) NOT NULL,
-    Password char(40),
-    Created_At DATE NOT NULL,
-    Session TEXT ,
-    Expared_At DATE,
-    AuthType INTEGER DEFAULT 0
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email char(50) UNIQUE NOT NULL,
+    username char(13) UNIQUE NOT NULL,
+    firstName char(30) NOT NULL,
+    lastName char(30) NOT NULL,
+    age INTEGER,
+    gender char(20) NOT NULL,
+    password char(40),
+    createdAt DATE NOT NULL,
+    session TEXT ,
+    expiredAt DATE,
+    authType INTEGER DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS Posts (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    Title char(50),
-    Content TEXT, 
-    DateCreation DATE,
-    Image BLOB,
-    ID_User INTEGER,
-    FOREIGN KEY (ID_User) REFERENCES users(ID) ON DELETE CASCADE ON UPDATE CASCADE 
+CREATE TABLE IF NOT EXISTS posts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title char(50),
+    content TEXT, 
+    dateCreation DATE,
+    image BLOB,
+    userID INTEGER,
+    FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE 
 );
 
-CREATE TABLE IF NOT EXISTS Category(
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    Name_Category varchar(20) UNIQUE
+CREATE TABLE IF NOT EXISTS category(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name varchar(20) UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS PostCategory(
-    ID_Post INTEGER,
-    ID_Category INTEGER,
-    PRIMARY KEY (ID_Post, ID_Category),
-    FOREIGN KEY (ID_Post) REFERENCES Posts(ID) ON DELETE CASCADE ON UPDATE CASCADE, 
-    FOREIGN KEY (ID_Category) REFERENCES Category(ID) ON DELETE CASCADE ON UPDATE CASCADE 
+CREATE TABLE IF NOT EXISTS postCategory(
+    postID INTEGER,
+    categoryID INTEGER,
+    PRIMARY KEY (postID, categoryID),
+    FOREIGN KEY (postID) REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (categoryID) REFERENCES category(id) ON DELETE CASCADE ON UPDATE CASCADE 
 );
 
-CREATE TABLE IF NOT EXISTS Post_Like(
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS postLike(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     status varchar(10),
-    ID_User INTEGER,   
-    ID_Post INTEGER,
-    FOREIGN KEY (ID_User) REFERENCES users(ID) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (ID_Post) REFERENCES Posts(ID) ON DELETE CASCADE ON UPDATE CASCADE
+    userID INTEGER,   
+    postID INTEGER,
+    FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (postID) REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Comment(
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    Content TEXT,
-    DateCreation DATE,
-    ID_User INTEGER,    
-    ID_Post INTEGER,
-    FOREIGN KEY (ID_User) REFERENCES users(ID) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (ID_Post) REFERENCES Posts(ID) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE IF NOT EXISTS comment(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    content TEXT,
+    dateCreation DATE,
+    userID INTEGER,    
+    postID INTEGER,
+    FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (postID) REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS Comment_Like(
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS commentLike(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     status varchar(10),
-    ID_User INTEGER,    
-    ID_Comment INTEGER,
-    FOREIGN KEY (ID_User) REFERENCES users(ID) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (ID_Comment) REFERENCES Comment(ID) ON DELETE CASCADE ON UPDATE CASCADE
+    userID INTEGER,    
+    commentID INTEGER,
+    FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (commentID) REFERENCES comment(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-INSERT OR IGNORE INTO Category (Name_Category) VALUES ('Coding');
-INSERT OR IGNORE INTO Category (Name_Category) VALUES ('Innovation');
-INSERT OR IGNORE INTO Category (Name_Category) VALUES ('Betcoin');
-INSERT OR IGNORE INTO Category (Name_Category) VALUES ('kids');
-INSERT OR IGNORE INTO Category (Name_Category) VALUES ('movie');
-INSERT OR IGNORE INTO Category (Name_Category) VALUES ('sport');
-INSERT OR IGNORE INTO Category (Name_Category) VALUES ('food');
+INSERT OR IGNORE INTO category (name) VALUES ('Coding');
+INSERT OR IGNORE INTO category (name) VALUES ('Innovation');
+INSERT OR IGNORE INTO category (name) VALUES ('Betcoin');
+INSERT OR IGNORE INTO category (name) VALUES ('kids');
+INSERT OR IGNORE INTO category (name) VALUES ('movie');
+INSERT OR IGNORE INTO category (name) VALUES ('sport');
+INSERT OR IGNORE INTO category (name) VALUES ('food');
