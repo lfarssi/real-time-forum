@@ -44,3 +44,11 @@ type Comment struct {
 	Content      string `json:"content"`
 	DateCreation string `json:"dateCreation"`
 }
+
+
+type React struct {
+	PostID    int
+	CommentID int
+	UserID    int
+	Status    string
+}
