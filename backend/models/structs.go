@@ -5,7 +5,7 @@ type UserAuth struct {
 	Email     string `json:"email"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
-	Age       string `json:"age"`
+	Age       int `json:"age"`
 	Gender    string `json:"gender"`
 	Password  string `json:"password"`
 }
@@ -21,8 +21,8 @@ type ValidationMessagesRegister struct {
 }
 
 type Post struct {
-	ID           string   `json:"id"`
-	UserID       string   `json:"userID"`
+	ID           int      `json:"id"`
+	UserID       int      `json:"userID"`
 	Title        string   `json:"title"`
 	Content      string   `json:"content"`
 	Username     string   `json:"username"`
@@ -37,10 +37,10 @@ type ValidationMessagesAddPost struct {
 }
 
 type Comment struct {
-	ID string `json:"id"`
-	UserID int `json:"userID"`
-	PostID int `json:"postID"`
-	Username string `json:"username"`
-	Content string `json:"content"`
+	ID           int    `json:"id"`
+	UserID       int    `json:"userID"`
+	PostID       int    `json:"postID"`
+	Username     string `json:"username"`
+	Content      string `json:"content"`
 	DateCreation string `json:"dateCreation"`
 }

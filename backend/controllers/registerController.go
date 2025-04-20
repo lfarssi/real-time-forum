@@ -3,7 +3,6 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"real_time_forum/backend/models"
@@ -32,7 +31,7 @@ func RegisterController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !verifyRegisterData(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Age, user.Password) {
+	if !verifyRegisterData(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Password) {
 		return
 	}
 
@@ -86,7 +85,7 @@ func RegisterController(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func verifyRegisterData(w http.ResponseWriter, userName, email, firstName, lastName, gender, age, password string) bool {
+func verifyRegisterData(w http.ResponseWriter, userName, email, firstName, lastName, gender, password string) bool {
 	var messages models.ValidationMessagesRegister
 	hasError := false
 
@@ -116,11 +115,6 @@ func verifyRegisterData(w http.ResponseWriter, userName, email, firstName, lastN
 		hasError = true
 	} else if !utils.IsValidEmail(email) {
 		messages.EmailMessage = "Email must be in the format: john@example.com"
-		hasError = true
-	}
-
-	if _, err := strconv.Atoi(age); err != nil {
-		messages.AgeMessage = "The age must be a number."
 		hasError = true
 	}
 
