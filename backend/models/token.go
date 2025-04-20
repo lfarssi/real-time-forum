@@ -19,7 +19,7 @@ func GenerateToken(id int) (string, error) {
 	token := u2.String()
 	expirationTime := time.Now().UTC().Add(time.Hour)
 
-	_, err = database.DB.Exec("UPDATE users set Session=? , Expared_At=?  WHERE ID=?", token, expirationTime, id)
+	_, err = database.DB.Exec("UPDATE users set session=? , expiredAt=?  WHERE id=?", token, expirationTime, id)
 	if err != nil {
 		return "", err
 	}
