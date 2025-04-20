@@ -46,9 +46,8 @@ func AddCommentController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	userID := r.Context().Value("userId").(int)
 	var comment *models.Comment
-	
+
 	if err := json.NewDecoder(r.Body).Decode(&comment); err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Server error",
@@ -56,9 +55,9 @@ func AddCommentController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	comment.UserID= userID
+	comment.UserID = r.Context().Value("userId").(int)
 
-	err:= models.AddComment(comment)
+	err := models.AddComment(comment)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Server error",
