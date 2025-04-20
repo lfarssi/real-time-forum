@@ -55,3 +55,39 @@ func AddPost(w http.ResponseWriter, title, content string, categories []string, 
 
 	return nil
 }
+
+
+
+func LikedPost(userID int) ([]*Post, error) {
+	query := `
+	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories
+	FROM posts p 
+	INNER JOIN users u ON u.id=p.userID
+	INNER JOIN reactPost r ON p.id = r.postID
+	  INNER JOIN post_categorie pc ON p.id = pc.postID
+    INNER JOIN categories c ON pc.categorie_id = c.id
+	WHERE react_type='like' AND r.userID=?
+	GROUP BY p.id
+	ORDER BY p.creat_at DESC
+	`
+	rows, err := database.DB.Query(query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var LikedPost []*Post
+	for rows.Next() {
+		var post Post
+		var categorie string
+		var CreatedAt time.Time
+		err = rows.Scan(&post.ID, &post.Title, &post.Content, &CreatedAt, &post.Username, &categorie)
+		if err != nil {
+			return nil, err
+		}
+		post.Categories = append(post.Categories, categorie)
+		post.CreatedAt = CreatedAt.Format("2006-01-02 15:04:05")
+		LikedPost = append(LikedPost, &post)
+	}
+	return LikedPost, nil
+
+}
