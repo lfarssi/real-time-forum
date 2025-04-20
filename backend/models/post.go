@@ -68,7 +68,7 @@ func LikedPost(userID int) ([]*Post, error) {
 	INNER JOIN reactPost r ON p.id = r.postID
 	  INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
-	WHERE react_type='like' AND r.userID=?
+	WHERE status='like' AND r.userID=?
 	GROUP BY p.id
 	ORDER BY p.dateCreation DESC
 	`
@@ -87,9 +87,44 @@ func LikedPost(userID int) ([]*Post, error) {
 			return nil, err
 		}
 		post.Categories = append(post.Categories, categorie)
-		post.DateCreation = CreatedAt.Format("2006-01-02 15:04:05")
+		post.DateCreation = CreatedAt.Format(time.DateTime)
 		LikedPost = append(LikedPost, &post)
 	}
 	return LikedPost, nil
 
+}
+
+
+
+
+func CreatedPost(iduser int) ([]Post, error) {
+	query := `
+	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories
+	FROM posts p 
+	INNER JOIN users u ON u.id=p.userID
+	  INNER JOIN postCategory pc ON p.id = pc.postID
+    INNER JOIN category c ON pc.categoryID = c.id
+	WHERE p.userID=?
+	GROUP BY p.id
+	ORDER BY p.dateCreation DESC
+	`
+	rows, err := database.DB.Query(query, iduser)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var createdPost []Post
+	for rows.Next() {
+		var post Post
+		var categorie string
+		var CreatedAt time.Time
+		err = rows.Scan(&post.ID, &post.Title, &post.Content,  &CreatedAt, &post.Username, &categorie)
+		if err != nil {
+			return nil, err
+		}
+		post.Categories = append(post.Categories, categorie)
+		post.DateCreation = CreatedAt.Format(time.DateTime)
+		createdPost = append(createdPost, post)
+	}
+	return createdPost, nil
 }
