@@ -39,6 +39,7 @@ type ValidationMessagesAddPost struct {
 type Comment struct {
 	ID string `json:"id"`
 	UserID int `json:"userID"`
+	PostID int `json:"postID"`
 	Username string `json:"username"`
 	Content string `json:"content"`
 	DateCreation string `json:"dateCreation"`
