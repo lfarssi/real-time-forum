@@ -35,6 +35,103 @@ func GetPostController(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func GetLikedPostController(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method Not Allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	userID := r.Context().Value("userId").(int)
+	posts, err := models.LikedPost(userID)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error Getting Post",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Posts retrieved successfully",
+		"status":  http.StatusOK,
+		"data":    posts,
+	})
+}
+
+func GetCreatedPostController(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method Not Allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	userID := r.Context().Value("userId").(int)
+	posts, err := models.CreatedPost(userID)
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error Getting Post",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Posts retrieved successfully",
+		"status":  http.StatusOK,
+		"data":    posts,
+	})
+}
+
+func GetPostByCategoryController(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method Not Allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+	categories:= r.Form["categories"]
+	postSet := make(map[int]struct{})
+	var posts []models.Post
+
+	for _, category := range categories {
+		idCategorie, err := strconv.Atoi(category)
+		if err != nil {
+			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+				"message": "Error converting categorie id",
+				"status":  http.StatusInternalServerError,
+			})
+			return
+		}
+		postTemp, err := models.GetPostsByCategory(idCategorie)
+		if err != nil {
+			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+				"message": "Error Getting Post",
+				"status":  http.StatusInternalServerError,
+			})
+			return
+		}
+
+		// Avoid duplicate posts by using a map
+		for _, post := range postTemp {
+			if _, exist := postSet[post.ID]; !exist {
+				posts = append(posts, post)
+				postSet[post.ID] = struct{}{}
+			}
+		}
+	}
+	
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Posts retrieved successfully",
+		"status":  http.StatusOK,
+		"data":    posts,
+	})
+}
+
 func AddPostController(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
