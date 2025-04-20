@@ -14,6 +14,7 @@ func GetCommnetsController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	
 
 	// comments, err := models.GetCommnets()
 	// if err != nil {
