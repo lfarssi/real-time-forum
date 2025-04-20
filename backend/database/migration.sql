@@ -63,21 +63,15 @@ CREATE TABLE IF NOT EXISTS commentLike(
     FOREIGN KEY (userID) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (commentID) REFERENCES comment(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-CREATE OR REPLACE FUNCTION check_post_exists()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Check if the post exists
-    IF NOT EXISTS (SELECT 1 FROM posts WHERE id = NEW.postID) THEN
-        RAISE EXCEPTION 'Post does not exist';
-    END IF;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
 CREATE TRIGGER check_post_exists_trigger
 BEFORE INSERT ON comment
 FOR EACH ROW
-EXECUTE FUNCTION check_post_exists();
+BEGIN
+    SELECT CASE
+        WHEN NOT EXISTS (SELECT 1 FROM posts WHERE id = NEW.postID) 
+        THEN RAISE(ABORT, 'Post does not exist')
+    END;
+END;
 
 INSERT OR IGNORE INTO category (name) VALUES ('Coding');
 INSERT OR IGNORE INTO category (name) VALUES ('Innovation');
