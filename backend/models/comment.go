@@ -36,6 +36,16 @@ func GetCommnets(postID string) ([]*Comment, error) {
 	return comments, nil
 }
 
-// func AddComment() error {
-
-// }
+func AddComment(Comment *Comment) error {
+	query := `
+		INSERT INTO comment
+		(content , userID, dateCreation, postID)
+		VALUES (?,?,?,?);
+	
+	`
+	_, err := database.DB.Exec(query, Comment.Content, Comment.UserID, Comment.DateCreation, Comment.PostID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
