@@ -16,8 +16,11 @@ func ApiRouter() {
 	http.HandleFunc("/api/getLikedPosts", middleware.Authorization(http.HandlerFunc(controllers.GetLikedPostController)))
 	http.HandleFunc("/api/getCreatedPosts", middleware.Authorization(http.HandlerFunc(controllers.GetCreatedPostController)))
 	http.HandleFunc("/api/getPostsByCategory", middleware.Authorization(http.HandlerFunc(controllers.GetPostByCategoryController)))
-	http.HandleFunc("/api/addLike", middleware.Authorization(http.HandlerFunc(controllers.ReactPostController)))
 
+	
 	http.HandleFunc("/api/addComment", middleware.Authorization(http.HandlerFunc(controllers.AddCommentController)))
 	http.HandleFunc("/api/getComments", middleware.Authorization(http.HandlerFunc(controllers.GetCommnetsController)))
+
+	
+	http.HandleFunc("/api/addLike", middleware.Authorization(http.HandlerFunc(controllers.ReactPostController)))
 }
