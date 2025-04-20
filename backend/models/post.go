@@ -34,10 +34,10 @@ func GetPosts() ([]*Post, error) {
 		}
 
 		post.Categories = append(post.Categories, categorie)
-		post.DateCreation = CreatedAt.Format("2006-01-02 15:04:05")
+		post.DateCreation = CreatedAt.Format(time.DateTime)
 		posts = append(posts, &post)
 	}
-	
+
 	return posts, nil
 }
 
