@@ -91,7 +91,7 @@ func InsertReactComment(react React) error {
 	react_type, err := ExistReactComment(react.UserID, react.CommentID)
 	if err == sql.ErrNoRows {
 		query := `
-		INSERT INTO reactComment (userID, commentID, status)
+		INSERT INTO commentLike (userID, commentID, status)
 		VALUES(?, ?, ?)
 		`
 		_, err = database.DB.Exec(query, react.UserID, react.CommentID, react.Status)

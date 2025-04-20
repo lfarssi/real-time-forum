@@ -55,12 +55,29 @@ func AddCommentController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	if comment.Content == "" {
+		utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
+			"message": "Comment cannot be empty",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
+
 	comment.UserID = r.Context().Value("userId").(int)
 
 	err := models.AddComment(comment)
 	if err != nil {
+		if err.Error() == "Post does not exist" {
+			utils.ResponseJSON(w, http.StatusUnprocessableEntity, map[string]any{
+				"message": err.Error(),
+				"status":  http.StatusUnprocessableEntity,
+			})
+			return
+		}
+
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": err.Error(),
+			"message": "Server Error",
 			"status":  http.StatusInternalServerError,
 		})
 		return
