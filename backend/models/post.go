@@ -1,7 +1,6 @@
 package models
 
 import (
-	"net/http"
 	"time"
 
 	"real_time_forum/backend/database"
@@ -41,14 +40,14 @@ func GetPosts() ([]*Post, error) {
 	return posts, nil
 }
 
-func AddPost(w http.ResponseWriter, title, content string, categories []string, ID int) error {
+func AddPost(post *Post) error {
 	var postID int
-	err := database.DB.QueryRow("INSERT INTO posts (title, content, dateCreation, userID) VALUES ($1, $2, $3, $4) RETURNING id", title, content, time.Now().UTC(), ID).Scan(&postID)
+	err := database.DB.QueryRow("INSERT INTO posts (title, content, dateCreation, userID) VALUES ($1, $2, $3, $4) RETURNING id", post.Title, post.Content, time.Now().UTC(), post.UserID).Scan(&postID)
 	if err != nil {
 		return err
 	}
 
-	for _, categoryID := range categories {
+	for _, categoryID := range post.Categories {
 		_, err := database.DB.Exec("INSERT INTO postCategory (postID, categoryID) VALUES (?, ?)", postID, categoryID)
 		if err != nil {
 			return err
