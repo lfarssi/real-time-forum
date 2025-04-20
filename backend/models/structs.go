@@ -21,13 +21,13 @@ type ValidationMessagesRegister struct {
 }
 
 type Post struct {
-	ID  string    `json:ID`
-	UserID  string    `json:UserID`
-	Title      string   `json:"title"`
-	Content    string   `json:"content"`
-	Username  string    `json:Username`
-	CreatedAt  string    `json:createdAt	`
-	Categories []string `json:"category"`
+	ID           string   `json:"id"`
+	UserID       string   `json:"userID"`
+	Title        string   `json:"title"`
+	Content      string   `json:"content"`
+	Username     string   `json:"username"`
+	DateCreation string   `json:"dateCreation"`
+	Categories   []string `json:"categories"`
 }
 
 type ValidationMessagesAddPost struct {
@@ -36,9 +36,10 @@ type ValidationMessagesAddPost struct {
 	CategoryMessage string `json:"category,omitempty"`
 }
 
-
-
-type ErrorType struct {
-	Message string
-	Code int
+type Comment struct {
+	ID string `json:"id"`
+	UserID int `json:"userID"`
+	Username string `json:"username"`
+	Content string `json:"content"`
+	DateCreation string `json:"dateCreation"`
 }
