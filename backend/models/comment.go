@@ -43,7 +43,7 @@ func AddComment(Comment *Comment) error {
 		VALUES (?,?,?,?);
 	
 	`
-	_, err := database.DB.Exec(query, Comment.Content, Comment.UserID, Comment.DateCreation, Comment.PostID)
+	_, err := database.DB.Exec(query, Comment.Content, Comment.UserID, time.Now().UTC(), Comment.PostID)
 	if err != nil {
 		return err
 	}
