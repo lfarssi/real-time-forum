@@ -35,3 +35,11 @@ type ValidationMessagesAddPost struct {
 	ContentMessage  string `json:"content,omitempty"`
 	CategoryMessage string `json:"category,omitempty"`
 }
+
+type Comment struct {
+	ID string `json:"id"`
+	UserID int `json:"userID"`
+	Username string `json:"username"`
+	Content string `json:"content"`
+	DateCreation string `json:"dateCreation"`
+}
