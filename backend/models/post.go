@@ -58,8 +58,6 @@ func AddPost(w http.ResponseWriter, title, content string, categories []string, 
 	return nil
 }
 
-
-
 func LikedPost(userID int) ([]*Post, error) {
 	query := `
 	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories
@@ -94,9 +92,6 @@ func LikedPost(userID int) ([]*Post, error) {
 
 }
 
-
-
-
 func CreatedPost(iduser int) ([]Post, error) {
 	query := `
 	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories
@@ -118,7 +113,7 @@ func CreatedPost(iduser int) ([]Post, error) {
 		var post Post
 		var categorie string
 		var CreatedAt time.Time
-		err = rows.Scan(&post.ID, &post.Title, &post.Content,  &CreatedAt, &post.Username, &categorie)
+		err = rows.Scan(&post.ID, &post.Title, &post.Content, &CreatedAt, &post.Username, &categorie)
 		if err != nil {
 			return nil, err
 		}
@@ -127,4 +122,44 @@ func CreatedPost(iduser int) ([]Post, error) {
 		createdPost = append(createdPost, post)
 	}
 	return createdPost, nil
+}
+
+func GetPostsByCategory(idCategorie int) ([]Post, error) {
+	query := `
+	SELECT   p.id, p.title, p.content,p.image, c.name, p.creat_at, u.username
+	FROM post p
+	INNER JOIN users u ON p.user_id = u.id
+	INNER JOIN post_categorie pc ON p.id = pc.post_id
+	INNER JOIN categories c ON pc.categorie_id = c.id
+	WHERE pc.categorie_id =?
+	ORDER BY p.creat_at DESC;
+	`
+	rows, err := database.DB.Query(query, idCategorie)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var posts []Post
+	tempPosts := make(map[int]*Post)
+	for rows.Next() {
+		var post Post
+		var categorie string
+		err = rows.Scan(&post.ID, &post.Title, &post.Content, &categorie, &post.DateCreation, &post.Username)
+		if err != nil {
+			return nil, err
+		}
+		if temposts, ok := tempPosts[post.ID]; ok {
+			temposts.Categories = append(temposts.Categories, categorie)
+		} else {
+			post.Categories = CorrectCategories(post.ID)
+
+			tempPosts[post.ID] = &post
+		}
+
+	}
+	for _, post := range tempPosts {
+		posts = append(posts, *post)
+	}
+	return posts, nil
+
 }
