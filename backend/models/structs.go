@@ -21,8 +21,8 @@ type ValidationMessagesRegister struct {
 }
 
 type Post struct {
-	ID           string   `json:"id"`
-	UserID       string   `json:"userID"`
+	ID           int   `json:"id"`
+	UserID       int   `json:"userID"`
 	Title        string   `json:"title"`
 	Content      string   `json:"content"`
 	Username     string   `json:"username"`
@@ -37,8 +37,9 @@ type ValidationMessagesAddPost struct {
 }
 
 type Comment struct {
-	ID string `json:"id"`
+	ID int `json:"id"`
 	UserID int `json:"userID"`
+	PostID int `json:"postID"`
 	Username string `json:"username"`
 	Content string `json:"content"`
 	DateCreation string `json:"dateCreation"`
