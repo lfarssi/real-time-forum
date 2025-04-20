@@ -92,7 +92,7 @@ func LikedPost(userID int) ([]*Post, error) {
 
 }
 
-func CreatedPost(iduser int) ([]Post, error) {
+func CreatedPost(userID int) ([]Post, error) {
 	query := `
 	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories
 	FROM posts p 
@@ -103,7 +103,7 @@ func CreatedPost(iduser int) ([]Post, error) {
 	GROUP BY p.id
 	ORDER BY p.dateCreation DESC
 	`
-	rows, err := database.DB.Query(query, iduser)
+	rows, err := database.DB.Query(query, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +124,7 @@ func CreatedPost(iduser int) ([]Post, error) {
 	return createdPost, nil
 }
 
-func GetPostsByCategory(idCategorie int) ([]Post, error) {
+func GetPostsByCategory(idCategory int) ([]Post, error) {
 	query := `
 	SELECT   p.id, p.title, p.content, c.name, p.dateCreation, u.username
 	FROM post p
@@ -134,7 +134,7 @@ func GetPostsByCategory(idCategorie int) ([]Post, error) {
 	WHERE pc.categoryID =?
 	ORDER BY p.dateCreation DESC;
 	`
-	rows, err := database.DB.Query(query, idCategorie)
+	rows, err := database.DB.Query(query, idCategory)
 	if err != nil {
 		return nil, err
 	}
