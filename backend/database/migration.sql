@@ -75,6 +75,36 @@ BEGIN
     END;
 END;
 
+
+
+
+DROP TRIGGER IF EXISTS check_post_like_target;
+
+CREATE TRIGGER check_post_like_target
+BEFORE INSERT ON postLike
+FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NOT EXISTS (SELECT 1 FROM posts WHERE id = NEW.postID)
+        THEN RAISE(ABORT, 'Post does not exist')
+    END;
+END;
+
+
+
+DROP TRIGGER IF EXISTS check_comment_like_target;
+
+CREATE TRIGGER check_comment_like_target
+BEFORE INSERT ON commentLike
+FOR EACH ROW
+BEGIN
+    SELECT CASE
+        WHEN NOT EXISTS (SELECT 1 FROM comment WHERE id = NEW.commentID)
+        THEN RAISE(ABORT, 'Comment does not exist')
+    END;
+END;
+
+
 INSERT OR IGNORE INTO category (name) VALUES ('Coding');
 INSERT OR IGNORE INTO category (name) VALUES ('Innovation');
 INSERT OR IGNORE INTO category (name) VALUES ('Bitcoin');
