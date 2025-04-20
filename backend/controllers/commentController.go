@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -10,7 +11,7 @@ import (
 
 func GetCommnetsController(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method Not Allowed",
 			"status":  http.StatusMethodNotAllowed,
 		})
@@ -18,6 +19,7 @@ func GetCommnetsController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	postID := r.URL.Query().Get("postID")
+
 	fmt.Println(postID)
 	comments, err := models.GetCommnets(postID)
 	if err != nil {
@@ -33,4 +35,26 @@ func GetCommnetsController(w http.ResponseWriter, r *http.Request) {
 		"status":  http.StatusOK,
 		"data":    comments,
 	})
+}
+
+func AddCommentController(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
+			"message": "Method Not Allowed",
+			"status":  http.StatusMethodNotAllowed,
+		})
+		return
+	}
+
+	userID := r.Context().Value("userId").(int)
+	var comment *models.Comment
+	if err := json.NewDecoder(r.Body).Decode(&comment); err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server error",
+			"status":  http.StatusInternalServerError,
+		})
+	}
+
+	fmt.Println(userID)
+	fmt.Println(comment)
 }
