@@ -6,7 +6,7 @@ import (
 	"real_time_forum/backend/database"
 )
 
-func GetCommnets(postID int) ([]*Comment, error) {
+func GetCommnets(postID string) ([]*Comment, error) {
 	query := `
 	SELECT u.username, c.id, c.content, c.dateCreation
 	FROM comment c

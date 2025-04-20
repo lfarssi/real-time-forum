@@ -12,7 +12,7 @@ import (
 
 func GetPostController(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		utils.ResponseJSON(w, http.StatusMethodNotAllowed, map[string]any{
 			"message": "Method Not Allowed",
 			"status":  http.StatusMethodNotAllowed,
 		})
