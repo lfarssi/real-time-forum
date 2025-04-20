@@ -38,7 +38,6 @@ type ValidationMessagesAddPost struct {
 
 
 
-
 type ErrorType struct {
 	Message string
 	Code int
