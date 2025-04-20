@@ -28,10 +28,10 @@ type Post struct {
 	Username     string   `json:"username"`
 	DateCreation string   `json:"dateCreation"`
 	Categories   []string `json:"categories"`
-	Likes			int 
-	Dislikes			int 
-	IsLiked			bool
-	IsDisliked			bool
+	Likes        int
+	Dislikes     int
+	IsLiked      bool
+	IsDisliked   bool
 }
 
 type ValidationMessagesAddPost struct {
@@ -47,17 +47,16 @@ type Comment struct {
 	Username     string `json:"username"`
 	Content      string `json:"content"`
 	DateCreation string `json:"dateCreation"`
-	Likes			int 
-	Dislikes			int 
-	IsLiked			bool
-	IsDisliked			bool
+	Likes        int
+	Dislikes     int
+	IsLiked      bool
+	IsDisliked   bool
 }
 
-
 type React struct {
-	PostID    int
-	CommentID int
-	UserID    int
-	Sender 	  string
-	Status    string
+	PostID    int    `json:"postID"`
+	CommentID int    `json:"commentID"`
+	UserID    int    `json:"userID"`
+	Sender    string `json:"sender"`
+	Status    string `json:"status"`
 }

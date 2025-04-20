@@ -1,8 +1,8 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
-	"strconv"
 
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
@@ -16,24 +16,21 @@ func ReactPostController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
 	var react models.React
-
 	var err error
-	iduser := r.Context().Value("userId").(int)
-	react.UserID = iduser
-	react.Status = r.URL.Query().Get("status")
-	react.Sender =r.URL.Query().Get("sender")
-	if react.Sender == "post" {
-		postID, err := strconv.Atoi(r.URL.Query().Get("postID"))
-		if err != nil {
-			utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-				"message": "post id not an integer",
-				"status":  http.StatusBadRequest,
-			})
-			return
-		}
-		react.PostID = postID
 
+	if err = json.NewDecoder(r.Body).Decode(&react); err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Server error",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+
+	react.UserID = r.Context().Value("userId").(int)
+
+	if react.Sender == "post" {
 		err = models.InsertReactPost(react)
 		if err != nil {
 			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
@@ -44,14 +41,6 @@ func ReactPostController(w http.ResponseWriter, r *http.Request) {
 		}
 
 	} else if react.Sender == "comment" {
-		react.CommentID,err = strconv.Atoi(r.URL.Query().Get("commentID"))
-		if err != nil {
-			utils.ResponseJSON(w, http.StatusBadRequest, map[string]any{
-				"message": "comment id not an integer",
-				"status":  http.StatusBadRequest,
-			})
-			return
-		}
 		err = models.InsertReactComment(react)
 		if err != nil {
 			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
@@ -62,4 +51,9 @@ func ReactPostController(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "React added successfully!",
+		"status":  http.StatusOK,
+	})
 }
