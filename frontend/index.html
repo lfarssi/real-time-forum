@@ -6,8 +6,12 @@
     <title>Document</title>
 </head>
 <body>
-    {{template "header" . }}
-    {{template "main" . }}
-    {{template "footer" . }}
+    <nav class="nav">
+        <a href="/" class="navLink" data-link>Home</a>
+        <a href="/posts" class="navLink" data-link>Posts</a>
+        <a href="/settings" class="navLink" data-link>Settings</a>
+    </nav>
+    
+    <script type="module" src="frontend/static/js/app.js"></script>
 </body>
 </html>
