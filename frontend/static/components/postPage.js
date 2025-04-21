@@ -26,28 +26,44 @@ export async function PostsPage() {
 
     `
 }
-export function PostForm() {
-    return /*html*/`
-          <form id="postForm">
-              <h2>Register</h2>
-            <input type="text" name="title"     placeholder="title"    />
-            <span class="errPost" id="title"></span>
-            <input type="text" name="content"        placeholder="content"       />
-            <span class="errPost" id="content"></span>
-            
-            <button type="submit">Register</button>
-          </form>
-      `
+export async function PostForm() {
+  const response = await fetch("/getCategory");
+  const categories = await response.json();
+
+  const categoriesInputs = categories.map(category => `
+    <label>
+      <input type="checkbox" name="categories" value="${category.id}" />
+      ${category.name}
+    </label>
+  `).join("");
+
+  return /*html*/`
+    <form id="postForm">
+      <h2>Register</h2>
+      
+      <input type="text" name="title" placeholder="title" />
+      <span class="errPost" id="title"></span>
+      
+      <input type="text" name="content" placeholder="content" />
+      <span class="errPost" id="content"></span>
+      
+      <div class="category-section">
+        <h3>Categories</h3>
+        ${categoriesInputs}
+      </div>
+      
+      <button type="submit">Register</button>
+    </form>
+  `;
 }
 
-async function GetCategories() {
-  const response = await fetch("/api/getCategory");
-    const data= await response.json()
-}
 
- function AddPosts() {
+
+
+export function AddPosts() {
     const form = document.querySelector("#postForm");
-    form.addEventListener("click",async e=>{
+    const spans = document.querySelector("#errPost");
+    form.addEventListener("submit",async e=>{
         e.preventDefault()
         const formData = Object.fromEntries(new FormData(form).entries());
         try{
@@ -65,6 +81,8 @@ async function GetCategories() {
                       navigateTo("/");
                     }
         }catch(err){
+          console.log(err);
+          
             document.body.innerHTML = errorPage("Something went wrong!", 500)
 
         }

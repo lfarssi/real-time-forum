@@ -60,3 +60,9 @@ type React struct {
 	Sender    string `json:"sender"`
 	Status    string `json:"status"`
 }
+
+
+type Category struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
