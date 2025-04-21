@@ -1,13 +1,24 @@
+import { loginPage, register, registerPage } from "../components/authPage.js"
+import { errorPage } from "../components/errorPage.js"
+
 const navigateTo = url => {
     history.pushState(null, null, url)
     router()
 }
 
 const router = async () => {
+
+
     const routes = [
-        {path : "/", view: () => console.log('hello home page')},
-        {path : "/posts", view: () => console.log('hello posts page')},
-        {path : "/settings", view: () => console.log('hello settings page')}
+        {path : "/", view: async () => {
+            let response = await fetch("/api/isLogged")
+            if (!response.ok) {
+                navigateTo("/login")
+                return 
+            }
+        }},
+        {path : "/login", view: () => loginPage()},
+        {path : "/register", view: () => registerPage()}
     ]
 
     const potentialMatches = routes.map(route => {
@@ -19,11 +30,13 @@ const router = async () => {
     
     let match = potentialMatches.find(potentialMatche => potentialMatche.isMatch)
     if (!match) {
-        console.log("page not found")
+        document.body.innerHTML = errorPage("Page Not Found", 404)
         return
     } 
 
-    // console.log(match.route.view())
+    document.body.innerHTML = match.route.view()
+
+    register()
 }
 
 addEventListener("DOMContentLoaded", () => {
