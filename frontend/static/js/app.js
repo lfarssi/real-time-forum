@@ -1,6 +1,6 @@
 import { login, loginPage, logout, register, registerPage } from "../components/authPage.js"
 import { errorPage } from "../components/errorPage.js"
-import { AddPosts, CreatedPostsPage, LikedPostsPage, PostForm, PostsByCategoriesPage, PostsPage } from "../components/postPage.js"
+import { AddPosts, CreatedPostsPage, LikedPostsPage, PostForm, PostsByCategoriesPage, PostsPage, ReactPost } from "../components/postPage.js"
 export const navigateTo = url => {
     history.pushState(null, null, url)
     router()
@@ -17,10 +17,10 @@ const router = async () => {
     }
 
     const routes = [
-        { path: "/", view: PostsPage },
-        { path: "/likedPosts", view: LikedPostsPage },
-        { path: "/createdPosts", view: CreatedPostsPage },
-        { path: "/postsByCategory", view: PostsByCategoriesPage },
+        { path: "/", view: PostsPage , eventStart: ReactPost },
+        { path: "/likedPosts", view: LikedPostsPage,  eventStart: ReactPost},
+        { path: "/createdPosts", view: CreatedPostsPage ,  eventStart: ReactPost},
+        { path: "/postsByCategory", view: PostsByCategoriesPage ,  eventStart: ReactPost},
         { path: "/createPost", view: PostForm, eventStart: AddPosts },
         { path: "/login", view: loginPage, eventStart: login },
         { path: "/register", view: registerPage, eventStart: register },
