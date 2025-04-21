@@ -119,6 +119,17 @@ export function login() {
   })
 }
 
+export async function logout() {
+    try {
+      let response = await fetch("/api/logout")
+      alert(await response.json())
+      // navigateTo("/")
+    } catch (err) {
+      console.error(err)
+      document.body.innerHTML = errorPage("Something went wrong!", 500)
+    }
+}
+
 function showRegisterInputError(msg, span) {
   span.style.display = "block"
   span.style.color = "red"
