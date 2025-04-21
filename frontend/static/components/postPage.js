@@ -28,6 +28,12 @@ export async function PostsPage() {
     `
 }
 
-// async function posts() {
+export function AddPosts() {
+    const form = document.querySelector("#registerForm");
 
-// }
+    const response = await fetch("/api/addPost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fromData)
+      });
+}
