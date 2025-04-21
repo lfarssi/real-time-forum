@@ -3,7 +3,7 @@ package models
 import "real_time_forum/backend/database"
 
 func GetCategories() ([]Category, error) {
-	query := "SELECT id, name FROM categories"
+	query := "SELECT id, name FROM category"
     rows, err := database.DB.Query(query)
     if err != nil {
         return nil, err

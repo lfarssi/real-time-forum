@@ -1,5 +1,5 @@
 import { errorPage } from "./errorPage.js";
-
+import { navigateTo } from "../js/app.js";
 export async function CommentSection() {
     const response = await fetch("/api/getComments");
     const data= await response.json()
