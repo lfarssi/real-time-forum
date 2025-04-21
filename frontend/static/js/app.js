@@ -1,6 +1,6 @@
 import { loginPage, register, registerPage } from "../components/authPage.js"
 import { errorPage } from "../components/errorPage.js"
-
+import { AddPosts, PostsPage } from "../components/postPage.js"
 export const navigateTo = url => {
     history.pushState(null, null, url)
     router()
@@ -17,10 +17,11 @@ const router = async () => {
         }
 
         const routes = [
-            { path: "/", view: () => "home page" },
-            { path: "/login", view: () => loginPage() },
-            { path: "/register", view: () => registerPage(), eventStart: () => register() }
-        ]
+            { path: "/", view: PostsPage },
+            { path: "/createPost", view: AddPosts },
+            { path: "/login", view: loginPage },
+            { path: "/register", view: registerPage, eventStart: register }
+        ];
 
         const potentialMatches = routes.map(route => {
             return {
@@ -35,7 +36,7 @@ const router = async () => {
             return
         }
 
-        document.body.innerHTML = match.route.view()
+        document.body.innerHTML = await match.route.view()
 
         if (match.route.hasOwnProperty("eventStart")) {
             match.route.eventStart()
