@@ -26,6 +26,85 @@ export async function PostsPage() {
 
     `
 }
+
+export async function LikedPostsPage() {
+  const response = await fetch("/api/getLikedPosts");
+  const data= await response.json()
+    if (!data.data ) {        
+      return errorPage("No Post Available",404 )
+     
+  }
+  console.log(data.data);
+  
+  let posts=data.data.map(post=>{
+  return /*html*/`
+      <div class="post">
+          <div>${post.username}</div>
+          <div>${post.title}</div>
+          <div>${post.content}</div>
+      </div>
+  `
+  })
+  
+return /*html*/`
+      <div class="posts">
+          ${posts.join('')}
+      </div>
+
+  `
+}
+export async function CreatedPostsPage() {
+  const response = await fetch("/api/getCreatedPosts");
+  const data= await response.json()
+    if (!data.data ) {        
+      return errorPage("No Post Available",404 )
+     
+  }
+  console.log(data.data);
+  
+  let posts=data.data.map(post=>{
+  return /*html*/`
+      <div class="post">
+          <div>${post.username}</div>
+          <div>${post.title}</div>
+          <div>${post.content}</div>
+      </div>
+  `
+  })
+  
+return /*html*/`
+      <div class="posts">
+          ${posts.join('')}
+      </div>
+
+  `
+}
+export async function PostsByCategoriesPage() {
+  const response = await fetch("/api/getPostsByCategory");
+  const data= await response.json()
+    if (!data.data ) {        
+      return errorPage("No Post Available",404 )
+     
+  }
+  console.log(data.data);
+  
+  let posts=data.data.map(post=>{
+  return /*html*/`
+      <div class="post">
+          <div>${post.username}</div>
+          <div>${post.title}</div>
+          <div>${post.content}</div>
+      </div>
+  `
+  })
+  
+return /*html*/`
+      <div class="posts">
+          ${posts.join('')}
+      </div>
+
+  `
+}
 export async function PostForm() {
   const response = await fetch("/getCategory");
   const categories = await response.json();
