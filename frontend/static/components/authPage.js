@@ -32,6 +32,8 @@ export function register() {
     form.addEventListener("submit", async e => {
         e.preventDefault();
 
+        console.log(new FormData(form))
+
         const data = Object.fromEntries(new FormData(form).entries());
 
         console.log(data)
