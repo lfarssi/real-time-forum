@@ -21,5 +21,6 @@ func WebRouter() {
 		}
 	})
 
+	http.HandleFunc("/getCategory", controllers.CategoryController)
 	http.HandleFunc("/frontend/static/", controllers.StaticController)
 }

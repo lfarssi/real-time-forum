@@ -28,7 +28,7 @@ func VerifyEmail(Email string) (int64, int, error) {
 // GetPassword retrieves the hashed password for a given user ID from the database.
 func GetPassword(id int) (string, error) {
 	rows, err := database.DB.Query("SELECT password FROM users WHERE id = ?", id)
-	if err != nil {
+	if err != nil {	
 		return "", err
 	}
 	defer rows.Close()
