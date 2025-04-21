@@ -27,15 +27,16 @@ export async function PostsPage() {
     `
 }
 export async function PostForm() {
-  // const response = await fetch("/getCategory");
-  // const categories = await response.json();
-
-  // const categoriesInputs = categories.map(category => `
-  //   <label>
-  //     <input type="checkbox" name="categories" value="${category.id}" />
-  //     ${category.name}
-  //   </label>
-  // `).join("");
+  const response = await fetch("/getCategory");
+  const categories = await response.json();
+  console.log(categories);
+  
+  const categoriesInputs = categories.data.map(category => `
+    <label>
+      <input type="checkbox" name="categories" value="${category.id}" />
+      ${category.name}
+    </label>
+  `).join("");
 
   return /*html*/`
     <form id="postForm">
@@ -49,8 +50,7 @@ export async function PostForm() {
       
       <div class="category-section">
         <h3>Categories</h3>
-      <input type="checkbox" name="categories" value="1" />
-
+        ${categoriesInputs}
       </div>
       
       <button type="submit">Register</button>
