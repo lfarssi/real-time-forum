@@ -7,16 +7,16 @@ export const navigateTo = url => {
 }
 
 const router = async () => {
-
+    if (location.pathname !== "/login" && location.pathname !== "/register") {
+        let response = await fetch("/api/isLogged")
+        if (!response.ok) {
+            navigateTo("/login")
+            return 
+        }
+    }
 
     const routes = [
-        {path : "/", view: async () => {
-            let response = await fetch("/api/isLogged")
-            if (!response.ok) {
-                navigateTo("/login")
-                return 
-            }
-        }},
+        {path : "/", view: () => "home page"},
         {path : "/login", view: () => loginPage()},
         {path : "/register", view: () => registerPage()}
     ]

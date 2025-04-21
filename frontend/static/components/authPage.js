@@ -1,7 +1,7 @@
 import { navigateTo } from "../js/app.js";
 
 export function loginPage() {
-    return /*html*/`
+  return /*html*/`
         <input type="text" placeholder="Enter your email">
         <input type="password" placeholder="Enter your password">
         <button>Login</button>
@@ -9,7 +9,7 @@ export function loginPage() {
 }
 
 export function registerPage() {
-    return /*html*/`
+  return /*html*/`
         <form id="registerForm">
             <h2>Register</h2>
           <input type="text" name="username"     placeholder="Username"    />
@@ -42,45 +42,43 @@ export function registerPage() {
 }
 
 export function register() {
-    const form = document.querySelector("#registerForm");
-    const spans = document.querySelectorAll(".errRgister");
-    
-    form.addEventListener("submit", async e => {
-        e.preventDefault();
-        const fromData = Object.fromEntries(new FormData(form).entries());
+  const form = document.querySelector("#registerForm");
+  const spans = document.querySelectorAll(".errRgister");
 
-        fromData.age = parseInt(fromData.age)
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const fromData = Object.fromEntries(new FormData(form).entries());
 
-          try {
-            const response = await fetch("/api/register", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(fromData)
-            });
+    fromData.age = parseInt(fromData.age)
 
-            const data= await response.json()
+    try {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fromData)
+      });
 
-            console.log(data)
-            
-            if (!response.ok){
+      const data = await response.json()
 
-              for (let span of spans){
-                if (data.hasOwnProperty(span.id))
-                  showRegisterInputError(data[span.id], span)
-                  
-              }
+      console.log(data)
 
-          
-            }
-            // navigateTo("/");
-          } catch (err) {
-            console.log(err)
-          }
-    });
+      if (!response.ok) {
+
+        for (let span of spans) {
+          if (data.hasOwnProperty(span.id))
+            showRegisterInputError(data[span.id], span)
+
+        }
+      }
+      navigateTo("/");
+    } catch (err) {
+      console.log(err)
+    }
+  });
 }
 
 function showRegisterInputError(msg, span) {
-  span.style.display="block"
-  span.style.color="red"
-    span.innerHTML= msg
+  span.style.display = "block"
+  span.style.color = "red"
+  span.innerHTML = msg
 }
