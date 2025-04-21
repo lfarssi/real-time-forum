@@ -86,7 +86,7 @@ export function register() {
 export function login() {
   const form = document.querySelector("#loginForm");
 
-  form.addEventListener('submit', e => {
+  form.addEventListener('submit', async e => {
     e.preventDefault()
 
     console.log('first')
