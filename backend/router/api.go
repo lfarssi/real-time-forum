@@ -10,6 +10,7 @@ import (
 func ApiRouter() {
 	http.HandleFunc("/api/login", controllers.LoginController)
 	http.HandleFunc("/api/register", controllers.RegisterController)
+	http.HandleFunc("/api/logout", controllers.LogoutController)
 	http.HandleFunc("/api/isLogged", middleware.IsLogged)
 
 	http.HandleFunc("/api/addPost", middleware.Authorization(http.HandlerFunc(controllers.AddPostController)))
