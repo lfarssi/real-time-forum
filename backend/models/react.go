@@ -55,11 +55,12 @@ func InsertReactPost(react React) error {
 	react_type, err := ExistReact(react.UserID, react.PostID)
 	if err == sql.ErrNoRows {
 		query := `
-					INSERT INTO postLike (userID, postID, status)
+					INSERT INTO postLike (status,userID, postID)
 				VALUES(?, ?, ?)
 				`
-		_, err = database.DB.Exec(query, react.UserID, react.PostID, react.Status)
+		_, err = database.DB.Exec(query, react.Status, react.UserID, react.PostID)
 		if err != nil {
+
 			return err
 		}
 	} else if err == nil {
@@ -80,6 +81,7 @@ func InsertReactPost(react React) error {
 			`
 			_, err := database.DB.Exec(query, react.Status, react.UserID, react.PostID)
 			if err != nil {
+
 				return err
 			}
 		}

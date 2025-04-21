@@ -17,15 +17,15 @@ export async function PostsPage() {
             <div>${post.content}</div>
             <div>
               <span></span>
-              <button id="likePost">Like</button>
+              <button class="likePost"  data-id="${post.id}">Like</button>
             </div>
             <div>
               <span></span>
-            <button id="disLikePost">DisLike</button>
+            <button class="disLikePost"  data-id="${post.id}">DisLike</button>
             </div>
             <div>
               <span></span>
-            <button>Comment</button>
+            <button class="displayComment"  data-id="${post.id}">Comment</button>
             </div>
         </div>
     `
@@ -38,9 +38,46 @@ export async function PostsPage() {
 
     `
 }
+export function ReactPost() {
+  document.querySelectorAll(".likePost, .disLikePost").forEach(button => {
+    button.addEventListener("click", async () => {
+      const postId = parseInt(button.dataset.id); 
+      const status = button.classList.contains("likePost") ? "like" : "dislike";
 
-export function LikePost(){
+      try {
+        const response = await fetch(`/api/addLike`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ postID: postId, sender: "post", status })
+        });
 
+        if (response.ok) {
+          const result = await response.json();
+          console.log(`Post ${status}d:`, result.message);
+
+          if (status === "like") {
+            button.textContent = "Liked!";
+            // button.disabled = true; 
+          } else if (status === "dislike") {
+            button.textContent = "Disliked!";
+            // button.disabled = true; 
+          }
+        } else {
+          console.log(response);
+          
+          console.error(`Failed to ${status} post`);
+        }
+      } catch (err) {
+        console.error(`Error ${status}ing post:`, err);
+      }
+    });
+  });
+}
+
+export function ShowComment() {
+  document.querySelectorAll(".displayComment").forEach(button => {
+    button.addEventListener("click", CommentSection);
+  });
 }
 
 export async function LikedPostsPage() {

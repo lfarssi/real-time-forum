@@ -32,6 +32,7 @@ func ReactPostController(w http.ResponseWriter, r *http.Request) {
 
 	if react.Sender == "post" {
 		err = models.InsertReactPost(react)
+
 		if err != nil {
 			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 				"message": "Cannot react Try Again",
