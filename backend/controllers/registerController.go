@@ -25,7 +25,7 @@ func RegisterController(w http.ResponseWriter, r *http.Request) {
 	var user *models.UserAuth
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
+			"message": err.Error(),
 			"status":  http.StatusInternalServerError,
 		})
 		return
@@ -38,7 +38,7 @@ func RegisterController(w http.ResponseWriter, r *http.Request) {
 	password, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
+			"message": err.Error(),
 			"status":  http.StatusInternalServerError,
 		})
 		return
@@ -61,7 +61,7 @@ func RegisterController(w http.ResponseWriter, r *http.Request) {
 		}
 
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
+			"message": err.Error(),
 			"status":  http.StatusInternalServerError,
 		})
 		return
@@ -70,7 +70,7 @@ func RegisterController(w http.ResponseWriter, r *http.Request) {
 	token, err := models.GenerateToken(int(ID))
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
+			"message": err.Error(),
 			"status":  http.StatusInternalServerError,
 		})
 		return

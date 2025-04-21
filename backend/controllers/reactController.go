@@ -22,7 +22,7 @@ func ReactPostController(w http.ResponseWriter, r *http.Request) {
 
 	if err = json.NewDecoder(r.Body).Decode(&react); err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
+			"message": err.Error(),
 			"status":  http.StatusInternalServerError,
 		})
 		return
