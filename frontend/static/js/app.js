@@ -7,38 +7,39 @@ export const navigateTo = url => {
 }
 
 const router = async () => {
-    if (location.pathname !== "/login" && location.pathname !== "/register") {
-        let response = await fetch("/api/isLogged")
-        let data = await response.json()
-        console.log(data)
-        if (!response.ok) {
-            navigateTo("/login")
-            return 
+        const response = await fetch("/api/isLogged")
+        if (!response.ok && location.pathname !== "/login" && location.pathname !== "/register") {
+            navigateTo("/register")
+            return
+        } else if (response.ok && (location.pathname === "/login" || location.pathname === "/register")) {
+            navigateTo("/")
+            return
         }
-    }
 
-    const routes = [
-        {path : "/", view: () => "home page"},
-        {path : "/login", view: () => loginPage()},
-        {path : "/register", view: () => registerPage()}
-    ]
+        const routes = [
+            { path: "/", view: () => "home page" },
+            { path: "/login", view: () => loginPage() },
+            { path: "/register", view: () => registerPage(), eventStart: () => register() }
+        ]
 
-    const potentialMatches = routes.map(route => {
-        return {
-            route: route,
-            isMatch: location.pathname === route.path
+        const potentialMatches = routes.map(route => {
+            return {
+                route: route,
+                isMatch: location.pathname === route.path
+            }
+        })
+
+        let match = potentialMatches.find(p => p.isMatch)
+        if (!match) {
+            document.body.innerHTML = errorPage("Page not found", 404)
+            return
         }
-    })
-    
-    let match = potentialMatches.find(potentialMatche => potentialMatche.isMatch)
-    if (!match) {
-        document.body.innerHTML = errorPage("Page Not Found", 404)
-        return
-    } 
 
-    document.body.innerHTML = match.route.view()
+        document.body.innerHTML = match.route.view()
 
-    register()
+        if (match.route.hasOwnProperty("eventStart")) {
+            match.route.eventStart()
+        }
 }
 
 addEventListener("DOMContentLoaded", () => {
