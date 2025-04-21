@@ -1,7 +1,7 @@
 import { loginPage, register, registerPage } from "../components/authPage.js"
 import { errorPage } from "../components/errorPage.js"
 
-const navigateTo = url => {
+export const navigateTo = url => {
     history.pushState(null, null, url)
     router()
 }

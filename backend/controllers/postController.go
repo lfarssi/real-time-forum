@@ -144,7 +144,7 @@ func AddPostController(w http.ResponseWriter, r *http.Request) {
 	var post *models.Post
 	if err := json.NewDecoder(r.Body).Decode(&post); err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
+			"message": err.Error(),
 			"status":  http.StatusInternalServerError,
 		})
 		return
@@ -162,7 +162,7 @@ func AddPostController(w http.ResponseWriter, r *http.Request) {
 	err := models.AddPost(post)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Server error",
+			"message": err.Error(),
 			"status":  http.StatusInternalServerError,
 		})
 		return

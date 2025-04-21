@@ -1,3 +1,5 @@
+import { navigateTo } from "../js/app.js";
+
 export function loginPage() {
     return /*html*/`
         <input type="text" placeholder="Enter your email">
@@ -17,8 +19,8 @@ export function registerPage() {
           <input type="number" name="age"         placeholder="Age"         />
           <select name="gender"                   >
             <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
           </select>
           <input type="password" name="password" placeholder="Password"    />
           <button type="submit">Register</button>
@@ -31,23 +33,23 @@ export function register() {
     const form = document.querySelector("#registerForm");
     form.addEventListener("submit", async e => {
         e.preventDefault();
-
-        console.log(new FormData(form))
-
         const data = Object.fromEntries(new FormData(form).entries());
 
-        console.log(data)
-        //   try {
-        //     const res = await fetch("/api/register", {
-        //       method: "POST",
-        //       headers: { "Content-Type": "application/json" },
-        //       body: JSON.stringify(data)
-        //     });
-        //     if (!res.ok) throw await res.json();
-        //     alert("Registered successfully!");
-        //     navigateTo("/login");
-        //   } catch (err) {
-        //     alert("Error: " + (err.message || JSON.stringify(err)));
-        //   }
+        data.age = parseInt(data.age)
+
+          try {
+            const response = await fetch("/api/register", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data)
+            });
+
+            const res= await response.json()
+            
+            if (!response.ok) throw(res);
+            navigateTo("/");
+          } catch (err) {
+            console.log(err)
+          }
     });
 }
