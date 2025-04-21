@@ -9,6 +9,8 @@ export const navigateTo = url => {
 const router = async () => {
     if (location.pathname !== "/login" && location.pathname !== "/register") {
         let response = await fetch("/api/isLogged")
+        let data = await response.json()
+        console.log(data)
         if (!response.ok) {
             navigateTo("/login")
             return 
