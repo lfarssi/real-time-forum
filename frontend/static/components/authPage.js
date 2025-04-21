@@ -5,8 +5,11 @@ export function loginPage() {
   return /*html*/`
           <form id="loginForm">
             <h2>Login</h2>
-          <input type="text" placeholder="Enter your email">
-          <input type="password" placeholder="Enter your password">
+            <div class="errLogin"></div>
+          <input name="email" type="email" placeholder="Enter your email">
+          <span id="email"></span>
+          <input name="password" type="password" placeholder="Enter your password">
+          <span id="password"></span>
           <button type="submit">Login</button>
           </form>
       `
@@ -85,11 +88,34 @@ export function register() {
 
 export function login() {
   const form = document.querySelector("#loginForm");
+  const errLogin = document.querySelector(".errLogin");
+
+  errLogin.style.color = 'red'
 
   form.addEventListener('submit', async e => {
     e.preventDefault()
 
-    console.log('first')
+
+    const formData = Object.fromEntries(new FormData(form).entries());
+
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) { 
+        errLogin.innerHTML = data.message
+      } else {
+        navigateTo("/");
+      }
+    } catch (err) {
+      console.error(err)
+      document.body.innerHTML = errorPage("Something went wrong!", 500)
+    }
   })
 }
 
