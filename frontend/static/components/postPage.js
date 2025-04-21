@@ -30,10 +30,29 @@ export async function PostsPage() {
 
 export function AddPosts() {
     const form = document.querySelector("#registerForm");
+    form.addEventListener("click",async e=>{
+        e.preventDefault()
+        const formData = Object.fromEntries(new FormData(form).entries());
+        try{
+            const response = await fetch("/api/addPost", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
+              });
+              if (!response.ok) {
+                      for (let span of spans) {
+                        if (data.hasOwnProperty(span.id))
+                          showRegisterInputError(data[span.id], span)
+                      }
+                    } else {
+                      navigateTo("/");
+                    }
+        }catch(err){
+            document.body.innerHTML = errorPage("Something went wrong!", 500)
 
-    const response = await fetch("/api/addPost", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(fromData)
-      });
+        }
+       
+    })
+
+    
 }
