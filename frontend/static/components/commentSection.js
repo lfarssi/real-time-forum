@@ -42,7 +42,7 @@ export async function CommentForm() {
 
 
 
-export function AddComments() {
+export function AddComments () {
     const form = document.querySelector("#commentForm");
     const spans = document.querySelector("#errComment");
     form.addEventListener("submit",async e=>{

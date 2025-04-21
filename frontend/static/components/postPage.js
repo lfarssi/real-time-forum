@@ -1,5 +1,5 @@
 import { errorPage } from "./errorPage.js";
-
+import { navigateTo } from "../js/app.js";
 export async function PostsPage() {
     const response = await fetch("/api/getPosts");
     const data= await response.json()
@@ -27,19 +27,19 @@ export async function PostsPage() {
     `
 }
 export async function PostForm() {
-  const response = await fetch("/getCategory");
-  const categories = await response.json();
+  // const response = await fetch("/getCategory");
+  // const categories = await response.json();
 
-  const categoriesInputs = categories.map(category => `
-    <label>
-      <input type="checkbox" name="categories" value="${category.id}" />
-      ${category.name}
-    </label>
-  `).join("");
+  // const categoriesInputs = categories.map(category => `
+  //   <label>
+  //     <input type="checkbox" name="categories" value="${category.id}" />
+  //     ${category.name}
+  //   </label>
+  // `).join("");
 
   return /*html*/`
     <form id="postForm">
-      <h2>Register</h2>
+      <h2>Post</h2>
       
       <input type="text" name="title" placeholder="title" />
       <span class="errPost" id="title"></span>
@@ -49,7 +49,8 @@ export async function PostForm() {
       
       <div class="category-section">
         <h3>Categories</h3>
-        ${categoriesInputs}
+      <input type="checkbox" name="categories" value="1" />
+
       </div>
       
       <button type="submit">Register</button>
@@ -62,11 +63,14 @@ export async function PostForm() {
 
 export function AddPosts() {
     const form = document.querySelector("#postForm");
-    const spans = document.querySelector("#errPost");
+    const spans = document.querySelectorAll("#errPost");
     form.addEventListener("submit",async e=>{
         e.preventDefault()
-        const formData = Object.fromEntries(new FormData(form).entries());
-        try{
+        const formDataRaw = new FormData(form);
+        const formData = Object.fromEntries(formDataRaw.entries());
+    
+        // ✅ Fix: ensure "categories" is always an array
+        formData.categories = formDataRaw.getAll("categories");        try{
             const response = await fetch("/api/addPost", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
