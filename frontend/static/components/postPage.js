@@ -3,9 +3,8 @@ import { errorPage } from "./errorPage.js";
 export async function PostsPage() {
     const response = await fetch("/api/getPosts");
     const data= await response.json()
-      if (!data.data ) {
-        document.body.innerHTML= errorPage("No Post Available",404 )
-        return 
+      if (!data.data ) {        
+        return errorPage("No Post Available",404 )
        
     }
     console.log(data.data);
@@ -27,10 +26,44 @@ export async function PostsPage() {
 
     `
 }
+export async function PostForm() {
+  const response = await fetch("/getCategory");
+  const categories = await response.json();
+
+  const categoriesInputs = categories.map(category => `
+    <label>
+      <input type="checkbox" name="categories" value="${category.id}" />
+      ${category.name}
+    </label>
+  `).join("");
+
+  return /*html*/`
+    <form id="postForm">
+      <h2>Register</h2>
+      
+      <input type="text" name="title" placeholder="title" />
+      <span class="errPost" id="title"></span>
+      
+      <input type="text" name="content" placeholder="content" />
+      <span class="errPost" id="content"></span>
+      
+      <div class="category-section">
+        <h3>Categories</h3>
+        ${categoriesInputs}
+      </div>
+      
+      <button type="submit">Register</button>
+    </form>
+  `;
+}
+
+
+
 
 export function AddPosts() {
-    const form = document.querySelector("#registerForm");
-    form.addEventListener("click",async e=>{
+    const form = document.querySelector("#postForm");
+    const spans = document.querySelector("#errPost");
+    form.addEventListener("submit",async e=>{
         e.preventDefault()
         const formData = Object.fromEntries(new FormData(form).entries());
         try{
@@ -48,6 +81,8 @@ export function AddPosts() {
                       navigateTo("/");
                     }
         }catch(err){
+          console.log(err);
+          
             document.body.innerHTML = errorPage("Something went wrong!", 500)
 
         }
