@@ -15,6 +15,18 @@ export async function PostsPage() {
             <div>${post.username}</div>
             <div>${post.title}</div>
             <div>${post.content}</div>
+            <div>
+              <span></span>
+              <button id="likePost">Like</button>
+            </div>
+            <div>
+              <span></span>
+            <button id="disLikePost">DisLike</button>
+            </div>
+            <div>
+              <span></span>
+            <button>Comment</button>
+            </div>
         </div>
     `
     })
@@ -25,6 +37,10 @@ export async function PostsPage() {
         </div>
 
     `
+}
+
+export function LikePost(){
+
 }
 
 export async function LikedPostsPage() {
