@@ -3,11 +3,11 @@ import { errorPage } from "./errorPage.js";
 
 export function loginPage() {
   return /*html*/`
-          <form action="">
+          <form id="loginForm">
             <h2>Login</h2>
           <input type="text" placeholder="Enter your email">
           <input type="password" placeholder="Enter your password">
-          <button>Login</button>
+          <button type="submit">Login</button>
           </form>
       `
 }
@@ -56,14 +56,14 @@ export function register() {
       span.style.display = "none";
     });
 
-    const fromData = Object.fromEntries(new FormData(form).entries());
-    fromData.age = parseInt(fromData.age)
+    const formData = Object.fromEntries(new FormData(form).entries());
+    formData.age = parseInt(formData.age)
 
     try {
       const response = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(fromData)
+        body: JSON.stringify(formData)
       });
 
       const data = await response.json()
@@ -81,6 +81,16 @@ export function register() {
       document.body.innerHTML = errorPage("Something went wrong!", 500)
     }
   });
+}
+
+export function login() {
+  const form = document.querySelector("#loginForm");
+
+  form.addEventListener('submit', e => {
+    e.preventDefault()
+
+    console.log('first')
+  })
 }
 
 function showRegisterInputError(msg, span) {
