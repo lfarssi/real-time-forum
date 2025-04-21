@@ -13,16 +13,28 @@ export function registerPage() {
         <form id="registerForm">
             <h2>Register</h2>
           <input type="text" name="username"     placeholder="Username"    />
+          <span class="errRgister" id="username"></span>
           <input type="email" name="email"        placeholder="Email"       />
+          <span class="errRgister" id="email"></span>
           <input type="text" name="firstName"    placeholder="First Name"  />
+          <span class="errRgister" id="firstName"></span>
+
           <input type="text" name="lastName"     placeholder="Last Name"   />
+          <span class="errRgister" id="lastName"></span>
+
           <input type="number" name="age"         placeholder="Age"         />
+          <span class="errRgister" id="age"></span>
+
           <select name="gender"                   >
             <option value="">Select Gender</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
+          <span class="errRgister" id="gender"></span>
+
           <input type="password" name="password" placeholder="Password"    />
+          <span class="errRgister" id="password"></span>
+
           <button type="submit">Register</button>
         </form>
 
@@ -31,25 +43,44 @@ export function registerPage() {
 
 export function register() {
     const form = document.querySelector("#registerForm");
+    const spans = document.querySelectorAll(".errRgister");
+    
     form.addEventListener("submit", async e => {
         e.preventDefault();
-        const data = Object.fromEntries(new FormData(form).entries());
+        const fromData = Object.fromEntries(new FormData(form).entries());
 
-        data.age = parseInt(data.age)
+        fromData.age = parseInt(fromData.age)
 
           try {
             const response = await fetch("/api/register", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(data)
+              body: JSON.stringify(fromData)
             });
 
-            const res= await response.json()
+            const data= await response.json()
+
+            console.log(data)
             
-            if (!response.ok) throw(res);
-            navigateTo("/");
+            if (!response.ok){
+
+              for (let span of spans){
+                if (data.hasOwnProperty(span.id))
+                  showRegisterInputError(data[span.id], span)
+                  
+              }
+
+          
+            }
+            // navigateTo("/");
           } catch (err) {
             console.log(err)
           }
     });
+}
+
+function showRegisterInputError(msg, span) {
+  span.style.display="block"
+  span.style.color="red"
+    span.innerHTML= msg
 }
