@@ -17,10 +17,10 @@ const router = async () => {
         }
 
         const routes = [
-            { path: "/", view: () => PostsPage()},
-            { path: "/login", view: () => loginPage() },
-            { path: "/register", view: () => registerPage(), eventStart: () => register() }
-        ]
+            { path: "/", view: PostsPage },
+            { path: "/login", view: loginPage },
+            { path: "/register", view: registerPage, eventStart: register }
+        ];
 
         const potentialMatches = routes.map(route => {
             return {
@@ -35,7 +35,7 @@ const router = async () => {
             return
         }
 
-        document.body.innerHTML = match.route.view()
+        document.body.innerHTML = await match.route.view()
 
         if (match.route.hasOwnProperty("eventStart")) {
             match.route.eventStart()

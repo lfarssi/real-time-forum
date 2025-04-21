@@ -1,23 +1,33 @@
-
+import { errorPage } from "./errorPage.js";
 
 export async function PostsPage() {
     const response = await fetch("/api/getPosts");
     const data= await response.json()
-    console.log(data);
-    console.log(data.data==null);
-    console.log(!data.data);
-    
-    if (!data.data ) {
-        return /*html*/`
-            <div>There's No Post Right Now</div>
-        `;
+      if (!data.data ) {
+        document.body.innerHTML= errorPage("No Post Available",404 )
+        return 
+       
     }
+    console.log(data.data);
+    
+    let posts=data.data.map(post=>{
+    return /*html*/`
+        <div class="post">
+            <div>${post.username}</div>
+            <div>${post.title}</div>
+            <div>${post.content}</div>
+        </div>
+    `
+    })
     
   return /*html*/`
         <div class="posts">
-
+            ${posts.join('')}
         </div>
 
     `
 }
 
+// async function posts() {
+
+// }
