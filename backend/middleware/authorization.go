@@ -48,3 +48,40 @@ func Authorization(next http.Handler) http.HandlerFunc {
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
+
+func IsLogged(w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("Token")
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusForbidden, map[string]any{
+			"message": "Missing authentication token",
+			"status":  http.StatusForbidden,
+		})
+		return
+	}
+
+	var userId int
+	var userName string
+	var expired time.Time
+	err = database.DB.QueryRow("SELECT id, username, expiredAt FROM users WHERE session=?", cookie.Value).Scan(&userId, &userName, &expired)
+	if err != nil || userId == 0 {
+		utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
+			"message": "You are not authorized to do this",
+			"status":  http.StatusUnauthorized,
+		})
+		return
+	}
+
+	if time.Now().UTC().After(expired) {
+		database.DB.Exec("UPDATE users SET session=? WHERE id=?", "", userId)
+		utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
+			"message": "Session expired",
+			"status":  http.StatusUnauthorized,
+		})
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, map[string]any{
+		"message": "Valid token",
+		"status":  http.StatusOK,
+	})
+}
