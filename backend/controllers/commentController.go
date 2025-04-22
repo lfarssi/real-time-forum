@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"real_time_forum/backend/models"
@@ -20,7 +19,6 @@ func GetCommnetsController(w http.ResponseWriter, r *http.Request) {
 
 	postID := r.URL.Query().Get("postID")
 
-	fmt.Println(postID)
 	comments, err := models.GetCommnets(postID)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
