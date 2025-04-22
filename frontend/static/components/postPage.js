@@ -1,5 +1,6 @@
 import { errorPage } from "./errorPage.js";
 import { navigateTo } from "../js/app.js";
+import { CommentSection } from "./commentSection.js";
 export async function PostsPage() {
     const response = await fetch("/api/getPosts");
     const data= await response.json()
@@ -11,7 +12,7 @@ export async function PostsPage() {
     
     let posts=data.data.map(post=>{
     return /*html*/`
-        <div class="post">
+        <div class="post" data-id="${post.id}">
             <div>${post.username}</div>
             <div>${post.title}</div>
             <div>${post.content}</div>
@@ -25,7 +26,10 @@ export async function PostsPage() {
             </div>
             <div>
               <span></span>
-            <button class="displayComment"  data-id="${post.id}">Comment</button>
+            <button  class="displayComment"  data-id="${post.id}">Comment</button>
+            </div>
+            <div class="comments">
+
             </div>
         </div>
     `
