@@ -1,5 +1,5 @@
 import { errorPage } from "./errorPage.js";
-import { navigateTo } from "../js/app.js";
+import { navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
 export async function PostsPage() {
     const response = await fetch("/api/getPosts");
