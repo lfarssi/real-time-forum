@@ -43,9 +43,11 @@ export async function PostsPage() {
     `
 }
 export function ReactPost() {
+  
   document.querySelectorAll(".likePost, .disLikePost").forEach(button => {
     button.addEventListener("click", async () => {
       const postId = parseInt(button.dataset.id); 
+      
       const status = button.classList.contains("likePost") ? "like" : "dislike";
 
       try {
