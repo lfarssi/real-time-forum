@@ -121,9 +121,8 @@ export function login() {
 
 export async function logout() {
     try {
-      let response = await fetch("/api/logout")
-      alert(await response.json())
-      // navigateTo("/")
+      await fetch("/api/logout")
+      navigateTo("/")
     } catch (err) {
       console.error(err)
       document.body.innerHTML = errorPage("Something went wrong!", 500)
