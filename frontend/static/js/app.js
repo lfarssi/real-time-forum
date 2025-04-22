@@ -1,6 +1,6 @@
 import { login, loginPage, logout, register, registerPage } from "./authPage.js"
 import { errorPage } from "./errorPage.js"
-import { AddPosts, CreatedPostsPage, LikedPostsPage, PostForm, PostsByCategoriesPage, PostsPage, ReactPost , ShowComment } from "./postPage.js"
+import { AddPosts, CreatedPostsPage, LikedPostsPage, PostForm, PostsByCategoriesPage, PostsPage, ReactPost  } from "./postPage.js"
 export const navigateTo = url => {
     history.pushState(null, null, url)
     router()
