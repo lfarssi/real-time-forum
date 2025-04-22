@@ -1,31 +1,31 @@
 import { errorPage } from "./errorPage.js";
 export async function CommentSection(event) {
-  const postId = event.target.dataset.id; // Get the ID of the clicked post
+  const postElement = event.target.closest(".post");
+  const postId =  parseInt(postElement.dataset.id )// Get the ID of the clicked post
+
+  const commentsContainer = postElement.querySelector(".comments");
+  
+  // Check if the comments section already exists
+  if (commentsContainer) {
+    const isHidden = commentsContainer.style.display === "none";
+    commentsContainer.style.display = isHidden ? "block" : "none";
+  }
 
   try {
     const response = await fetch(`/api/getComments?postID=${postId}`);
     const data = await response.json();
-    const postElement = event.target.closest(".post");
-
-    if (!data.data) {
-      postElement.innerHTML += `
-      <div class="comments">
-        <h4>No Comment available</h4>
-      </div>
-    `;
-    }
-
 
     // Generate the comment HTML
-    const commentsHtml = data.data.map(comment => `
-      <div class="comment">
-        <div><strong>${comment.username}</strong></div>
-        <div>${comment.content}</div>
-      </div>
-    `).join("");
+    const commentsHtml = data.data
+      ? data.data.map(comment => `
+        <div class="comment">
+          <div><strong>${comment.username}</strong></div>
+          <div>${comment.content}</div>
+        </div>
+      `).join("")
+      : "<h4>No Comments available</h4>";
 
     // Add the comments and a comment form below the post
-    
     postElement.innerHTML += `
       <div class="comments">
         <h4>Comments</h4>
@@ -56,6 +56,7 @@ export async function CommentForm(postId) {
 
 
 export function AddComments(postId) {
+  
   const form = document.querySelector(`#commentForm-${postId}`); // Target the specific form for this post
   const errorSpan = document.querySelector(`#errComment-${postId}`); // Target the error span for this form
 
@@ -63,7 +64,7 @@ export function AddComments(postId) {
     e.preventDefault();
 
     const formData = Object.fromEntries(new FormData(form).entries());
-    formData.postID = postId; // Include the post ID in the payload
+    formData.postID  = postId; // Include the post ID in the payload
 
     try {
       const response = await fetch("/api/addComment", {
