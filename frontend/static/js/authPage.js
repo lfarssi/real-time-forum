@@ -1,4 +1,4 @@
-import { navigateTo } from "../js/app.js";
+import { navigateTo } from "./app.js";
 import { errorPage } from "./errorPage.js";
 
 export function loginPage() {
