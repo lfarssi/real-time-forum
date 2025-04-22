@@ -62,7 +62,7 @@ func LikedPost(userID int) ([]*Post, error) {
 	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories
 	FROM posts p 
 	INNER JOIN users u ON u.id=p.userID
-	INNER JOIN reactPost r ON p.id = r.postID
+	INNER JOIN postLike r ON p.id = r.postID
 	  INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
 	WHERE status='like' AND r.userID=?

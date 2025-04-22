@@ -46,6 +46,7 @@ func GetLikedPostController(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value("userId").(int)
 	posts, err := models.LikedPost(userID)
 	if err != nil {
+
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error Getting Post",
 			"status":  http.StatusInternalServerError,

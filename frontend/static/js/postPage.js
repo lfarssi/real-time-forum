@@ -26,7 +26,7 @@ export async function PostsPage() {
             </div>
             <div>
               <span></span>
-            <button  class="displayComment"  data-id="${post.id}">Comment</button>
+              <button class="displayComment">Comment</button>
             </div>
             <div class="comments">
 
@@ -78,18 +78,17 @@ export function ReactPost() {
       }
     });
   });
-}
-
-export function ShowComment() {
   document.querySelectorAll(".displayComment").forEach(button => {
     button.addEventListener("click", CommentSection);
   });
 }
 
+
 export async function LikedPostsPage() {
   const response = await fetch("/api/getLikedPosts");
   const data= await response.json()
-    if (!data.data ) {        
+    if (!data.data ) {   
+           
       return errorPage("No Post Available",404 )
      
   }

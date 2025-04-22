@@ -5,12 +5,16 @@ export async function CommentSection(event) {
   try {
     const response = await fetch(`/api/getComments?postID=${postId}`);
     const data = await response.json();
+    const postElement = event.target.closest(".post");
 
     if (!data.data) {
-      return errorPage("No Comments Available", 404);
+      postElement.innerHTML += `
+      <div class="comments">
+        <h4>No Comment available</h4>
+      </div>
+    `;
     }
 
-    console.log(data.data);
 
     // Generate the comment HTML
     const commentsHtml = data.data.map(comment => `
@@ -21,7 +25,6 @@ export async function CommentSection(event) {
     `).join("");
 
     // Add the comments and a comment form below the post
-    const postElement = event.target.closest(".post");
     
     postElement.innerHTML += `
       <div class="comments">
