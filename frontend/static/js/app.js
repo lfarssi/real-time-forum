@@ -8,10 +8,10 @@ export const navigateTo = url => {
 
 const router = async () => {
     const response = await fetch("/api/isLogged")
-    if (!response.ok && location.pathname !== "/login" && location.pathname !== "/register" && location.pathname !== "/logout") {
-        navigateTo("/login")
+    if (!response.ok && location.pathname !== "/login" && location.pathname !== "/register") {
+        navigateTo("/register")
         return
-    } else if (response.ok && (location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/logout")) {
+    } else if (response.ok && (location.pathname === "/login" || location.pathname === "/register")) {
         navigateTo("/")
         return
     }
