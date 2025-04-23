@@ -1,4 +1,4 @@
-import { PostForm, PostsPage } from "./postPage"
+import { PostForm, PostsPage } from "./postPage.js"
 
 export function header() {
     return /*html*/`
@@ -14,9 +14,9 @@ export function header() {
     `
 }
 
-export function homePage() {
+export async function homePage() {
     return `
-        ${header}
-        ${PostsPage}
+        ${header()}
+        ${await PostsPage()}
     `
 }
