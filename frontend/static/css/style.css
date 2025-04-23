@@ -41,6 +41,10 @@ header>nav {
     margin-top: 200px;
 }
 
+#postForm{
+    margin-top: 100px;
+}
+
 #logo {
     font-size: 1.9em;
     text-decoration: none;
