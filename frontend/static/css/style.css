@@ -19,6 +19,14 @@
     --radius: 8px;
 }
 
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    transition: .6s;
+}
 
 
 header {
@@ -147,8 +155,9 @@ nav>.logout:hover {
     background-color: var(--accent-dark);
 }
 
-
-
+main{
+    display: flex;
+}
 
 section {
     display: flex;
@@ -156,9 +165,13 @@ section {
     margin: auto;
     width: 50%;
     height: 100%;
-    padding: 100px 40px;
+    padding: 100px 120px;
+    flex: 1.5;
 }
 
+aside{
+    flex: 1;
+}
 
 #postForm {
     background-color: var(--card-dark);
@@ -203,7 +216,7 @@ section {
     gap: 0.5rem;
 }
 
-#postForm h3{
+#postForm h3 {
     color: var(--accent-dark);
     font-size: 1.1rem;
 }
@@ -218,6 +231,7 @@ section {
     align-items: center;
     gap: 0.5rem;
 }
+
 .category-section label:hover {
     color: var(--text-light);
     background-color: var(--accent);
@@ -228,6 +242,7 @@ section {
     align-items: center;
     gap: 0.5rem;
 }
+
 .category-section label:checked {
     color: var(--text-light);
     background-color: var(--accent);
@@ -269,32 +284,33 @@ section {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
     color: var(--text-light);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  
-  .post > div {
+}
+
+
+.post>div {
     font-size: 1rem;
     /* background-color: var(); */
     padding: 0.75rem 1rem;
     border-radius: var(--radius);
     line-height: 1.5;
     word-break: break-word;
-  }
-  
-  .post > div:first-child {
+}
+
+.post>div:first-child {
     font-weight: bold;
     color: var(--accent);
     font-size: 1.1rem;
     letter-spacing: 0.5px;
-  }
-  
-  .post .button-group {
+}
+
+.post .button-group {
     display: flex;
     gap: 1rem;
-    flex-wrap: wrap; /* optional: allows buttons to wrap on small screens */
-  }
-  
-  .post .button-group button {
+    flex-wrap: wrap;
+    /* optional: allows buttons to wrap on small screens */
+}
+
+.post .button-group button {
     background-color: transparent;
     color: var(--accent);
     border: none;
@@ -304,15 +320,46 @@ section {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s ease, transform 0.1s ease;
-  }
+}
 
-  .post .comments {
+.post .comments {
     background-color: var(--bg-dark);
     border-radius: var(--radius);
     padding: 0.75rem 1rem;
     color: var(--text-muted);
     font-size: 0.9rem;
-    display: none; /* default hidden */
+    display: none;
+    /* default hidden */
     border-left: 3px solid var(--accent);
-  }
-  
+}
+
+/* Responsive container */
+@media (min-width: 576px) {
+    .container {
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 100%;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        width: 100%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 100%;
+    }
+}
+
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+}
