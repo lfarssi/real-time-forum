@@ -3,48 +3,62 @@ import { errorPage } from "./errorPage.js";
 
 export function loginPage() {
   return /*html*/`
-          <form id="loginForm">
-            <h2>Login</h2>
-            <div class="errLogin"></div>
-          <input name="email" type="email" placeholder="Enter your email">
-          <span id="email"></span>
-          <input name="password" type="password" placeholder="Enter your password">
-          <span id="password"></span>
-          <button type="submit">Login</button>
-          </form>
-      `
+    <form id="loginForm">
+      <h2>Login</h2>
+      <div class="errLogin"></div>
+
+      <input name="email" type="email" placeholder="Enter your email" />
+      <span class="errLoginField" id="email"></span>
+
+      <input name="password" type="password" placeholder="Enter your password" />
+      <span class="errLoginField" id="password"></span>
+
+      <button type="submit">Login</button>
+
+      <p class="form-switch">Don't have an account? 
+        <a href="/register" data-link>Create New Account</a>
+      </p>
+    </form>
+  `
 }
 
 export function registerPage() {
   return /*html*/`
-          <form id="registerForm">
-              <h2>Register</h2>
-            <input type="text" name="username"     placeholder="Username"    />
-            <span class="errRgister" id="username"></span>
-            <input type="email" name="email"        placeholder="Email"       />
-            <span class="errRgister" id="email"></span>
-            <input type="text" name="firstName"    placeholder="First Name"  />
-            <span class="errRgister" id="firstName"></span>
+    <form id="registerForm">
+      <h2>Register</h2>
 
-            <input type="text" name="lastName"     placeholder="Last Name"   />
-            <span class="errRgister" id="lastName"></span>
+      <input type="text" name="username" placeholder="Username" />
+      <span class="errRgister" id="username"></span>
 
-            <input type="number" name="age"         placeholder="Age"         />
-            <span class="errRgister" id="age"></span>
+      <input type="email" name="email" placeholder="Email" />
+      <span class="errRgister" id="email"></span>
 
-            <select name="gender"                   >
-              <option value="">Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-            <span class="errRgister" id="gender"></span>
+      <input type="text" name="firstName" placeholder="First Name" />
+      <span class="errRgister" id="firstName"></span>
 
-            <input type="password" name="password" placeholder="Password"    />
-            <span class="errRgister" id="password"></span>
+      <input type="text" name="lastName" placeholder="Last Name" />
+      <span class="errRgister" id="lastName"></span>
 
-            <button type="submit">Register</button>
-          </form>
-      `
+      <input type="number" name="age" placeholder="Age" />
+      <span class="errRgister" id="age"></span>
+
+      <select name="gender">
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <span class="errRgister" id="gender"></span>
+
+      <input type="password" name="password" placeholder="Password" />
+      <span class="errRgister" id="password"></span>
+
+      <button type="submit">Register</button>
+
+      <p class="form-switch">Already have an account? 
+        <a href="/login" data-link>Login</a>
+      </p>
+    </form>
+  `
 }
 
 export function register() {

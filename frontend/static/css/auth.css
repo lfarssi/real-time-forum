@@ -1,0 +1,155 @@
+:root {
+    --bg-dark: #1E1E2F;
+    --card-dark: #2D2E3E;
+    --accent: #8CBA51;
+    --accent-dark: #6E9946;
+    --text-light: #F2F2F2;
+    --text-muted: #AAAAAA;
+    --error: #FF6B6B;
+    --radius: 8px;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+}
+
+form#registerForm {
+    background-color: var(--card-dark);
+    padding: 2rem;
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+form#registerForm h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--accent);
+}
+
+form#registerForm input,
+form#registerForm select {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 0.6rem;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    background-color: #fff;
+    color: #000;
+    font-weight: 500;
+}
+
+form#registerForm input::placeholder {
+    color: var(--text-muted);
+}
+
+.errRgister {
+    color: var(--error);
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    display: none;
+}
+
+form#registerForm button {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    border: none;
+    border-radius: var(--radius);
+    background-color: var(--accent);
+    color: var(--bg-dark);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form#registerForm button:hover {
+    background-color: var(--accent-dark);
+}
+
+form#loginForm {
+    background-color: var(--card-dark);
+    padding: 2rem;
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+form#loginForm h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--accent);
+}
+
+form#loginForm input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 0.6rem;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    background-color: #fff;
+    color: #000;
+    font-weight: 500;
+}
+
+form#loginForm input::placeholder {
+    color: var(--text-muted);
+}
+
+.errLogin {
+    color: var(--error);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.errLoginField {
+    color: var(--error);
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    display: none;
+}
+
+form#loginForm button {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 1rem;
+    border: none;
+    border-radius: var(--radius);
+    background-color: var(--accent);
+    color: var(--bg-dark);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form#loginForm button:hover {
+    background-color: var(--accent-dark);
+}
+
+.form-switch {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.form-switch a {
+    color: var(--accent);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.form-switch a:hover {
+    text-decoration: underline;
+}
