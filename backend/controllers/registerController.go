@@ -31,7 +31,7 @@ func RegisterController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !verifyRegisterData(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Password) {
+	if !verifyRegisterData(w, user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, user.Password, user.Age) {
 		return
 	}
 
@@ -85,7 +85,7 @@ func RegisterController(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func verifyRegisterData(w http.ResponseWriter, userName, email, firstName, lastName, gender, password string) bool {
+func verifyRegisterData(w http.ResponseWriter, userName, email, firstName, lastName, gender, password string, age int) bool {
 	var messages models.ValidationMessagesRegister
 	hasError := false
 
@@ -115,6 +115,11 @@ func verifyRegisterData(w http.ResponseWriter, userName, email, firstName, lastN
 		hasError = true
 	} else if !utils.IsValidEmail(email) {
 		messages.EmailMessage = "Email must be in the format: john@example.com"
+		hasError = true
+	}
+
+	if age < 18 || age > 90 {
+		messages.AgeMessage = "Age must be bertween 18 and 90"
 		hasError = true
 	}
 
