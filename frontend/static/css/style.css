@@ -8,3 +8,35 @@
     font-family: "Poppins", sans-serif;
 }
 
+:root {
+    --bg-dark: #1E1E2F;
+    --card-dark: #2D2E3E;
+    --accent: #8CBA51;
+    --accent-dark: #6E9946;
+    --text-light: #F2F2F2;
+    --text-muted: #AAAAAA;
+    --error: #FF6B6B;
+    --radius: 8px;
+}
+
+header{
+    display: flex;
+    padding: 20px 40px;
+    width: 100%;
+    position: fixed;
+    background-color: red;
+    top: 0;
+    left: 0;
+}
+
+
+header > nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.posts{
+    margin-top: 200px;
+}

@@ -6,9 +6,12 @@ export function header() {
             <nav>
                 <a href="/">FORUM</a>
                 <ul>
-                    <a href="/"></a>
-                    <a href="/logout"></a>
+                    <a href="/"><i class="fa fa-home"></i></a>
+                    <a href="/createdPosts"><i class="fa-solid fa-pen"></i></a>
+                    <a href="/likedPosts" ><i class="fa-solid fa-thumbs-up"></i></a>
+                    <button><i class="fa-solid fa-tag"></i></button>
                 </ul>
+                <a href="/logout">logout</a>
             </nav>
         </header>
     `

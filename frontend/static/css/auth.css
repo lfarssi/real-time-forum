@@ -11,17 +11,21 @@
 
 body {
     background-color: var(--bg-dark);
-    color: var(--text-light);
+    min-height: 100vh;
+    width: 100%;
+}
+
+.auth {
     margin: 0;
     padding: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
     width: 100%;
+    min-height: 100vh ;
 }
 
-form#registerForm {
+form.authForm {
     background-color: var(--card-dark);
     padding: 2rem;
     border-radius: var(--radius);
@@ -30,25 +34,31 @@ form#registerForm {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
-form#registerForm h2 {
+form.authForm h2 {
     text-align: center;
     margin-bottom: 1.5rem;
     color: var(--accent);
 }
 
-form#registerForm input,
-form#registerForm select {
+form.authForm input,
+form.authForm select {
     width: 100%;
     padding: 0.8rem;
     margin-bottom: 0.6rem;
-    border: 1px solid var(--accent);
+    border: none;
     border-radius: var(--radius);
-    background-color: #fff;
-    color: #000;
+    background-color: var(--bg-dark);
+    color: var(--text-muted);
+    outline: none;
     font-weight: 500;
 }
 
-form#registerForm input::placeholder {
+form.authForm input:focus{
+    border-bottom: 1px solid var(--accent-dark);
+
+}
+
+form.authForm input::placeholder {
     color: var(--text-muted);
 }
 
@@ -59,7 +69,7 @@ form#registerForm input::placeholder {
     display: none;
 }
 
-form#registerForm button {
+form.authForm button {
     width: 100%;
     padding: 0.8rem;
     margin-top: 1rem;
@@ -72,11 +82,11 @@ form#registerForm button {
     transition: background-color 0.3s;
 }
 
-form#registerForm button:hover {
+form.authForm button:hover {
     background-color: var(--accent-dark);
 }
 
-form#loginForm {
+form.authForm {
     background-color: var(--card-dark);
     padding: 2rem;
     border-radius: var(--radius);
@@ -85,25 +95,21 @@ form#loginForm {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
-form#loginForm h2 {
+form.authForm h2 {
     text-align: center;
     margin-bottom: 1.5rem;
     color: var(--accent);
 }
 
-form#loginForm input {
-    width: 100%;
-    padding: 0.8rem;
-    margin-bottom: 0.6rem;
-    border: 1px solid var(--accent);
-    border-radius: var(--radius);
-    background-color: #fff;
-    color: #000;
-    font-weight: 500;
+g
+
+form.authForm input::placeholder {
+    color: var(--text-muted);
 }
 
-form#loginForm input::placeholder {
-    color: var(--text-muted);
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 
 .errLogin {
@@ -120,20 +126,19 @@ form#loginForm input::placeholder {
     display: none;
 }
 
-form#loginForm button {
+form.authForm button {
     width: 100%;
     padding: 0.8rem;
     margin-top: 1rem;
     border: none;
     border-radius: var(--radius);
     background-color: var(--accent);
-    color: var(--bg-dark);
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-form#loginForm button:hover {
+form.authForm button:hover {
     background-color: var(--accent-dark);
 }
 
