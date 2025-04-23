@@ -92,7 +92,7 @@ export function register() {
       if (!response.ok) {
         for (let span of spans) {
           if (data.hasOwnProperty(span.id))
-            showRegisterInputError(data[span.id], span)
+            showInputError(data[span.id], span)
         }
       } else {
         navigateTo("/");
@@ -147,7 +147,7 @@ export async function logout() {
   }
 }
 
-function showRegisterInputError(msg, span) {
+export function showInputError(msg, span) {
   span.style.display = "block"
   span.style.color = "red"
   span.innerHTML = msg
