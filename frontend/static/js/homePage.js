@@ -4,14 +4,14 @@ export function header() {
     return /*html*/`
         <header>
             <nav>
-                <a href="/">FORUM</a>
+                <a id="logo" href="/">FOR<span class="U">U</span>M</a>
                 <ul>
-                    <a href="/"><i class="fa fa-home"></i></a>
-                    <a href="/createdPosts"><i class="fa-solid fa-pen"></i></a>
-                    <a href="/likedPosts" ><i class="fa-solid fa-thumbs-up"></i></a>
-                    <button><i class="fa-solid fa-tag"></i></button>
+                    <li><a class="home" href="/"><i class="fa fa-home"></i></a></li>
+                    <li><a class="createdPosts" href="/createdPosts"><i class="fa-solid fa-pen"></i></a></li>
+                    <li><a class="likedPosts" href="/likedPosts" ><i class="fa-solid fa-thumbs-up"></i></a></li>
+                    <li><button class="postsByCategory"><i class="fa-solid fa-tag"></i></button></li>
                 </ul>
-                <a href="/logout">logout</a>
+                <a class="logout" href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a>
             </nav>
         </header>
     `
