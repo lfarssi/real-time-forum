@@ -22,21 +22,24 @@ export async function PostsPage(params) {
   let posts = data.data.map(post => {
     return /*html*/`
         <div class="post" id="${post.id}" data-id="${post.id}">
-            <div>${post.username}</div>
+            <div><i class="fa-solid fa-user"></i> ${post.username}</div>
             <div>${post.title}</div>
             <div>${post.content}</div>
-            <div>
-              <span></span>
-              <button class="likePost"  data-id="${post.id}">Like</button>
+            <div class="button-group">
+                <div>
+                  <span></span>
+                  <button class="likePost"  data-id="${post.id}"><i class="fa-regular fa-thumbs-up"></i></button>
+                </div>
+                <div>
+                  <span></span>
+                <button class="disLikePost"  data-id="${post.id}"><i class="fa-regular fa-thumbs-down"></i></button>
+                </div>
+                <div>
+                  <span></span>
+                  <button class="displayComment"><i class="fa-regular fa-comment"></i></button>
+                </div>
             </div>
-            <div>
-              <span></span>
-            <button class="disLikePost"  data-id="${post.id}">DisLike</button>
-            </div>
-            <div>
-              <span></span>
-              <button class="displayComment">Comment</button>
-            </div>
+            
             <div class="comments" style="display:none;">
 
             </div>
@@ -176,9 +179,9 @@ export async function PostForm() {
   const response = await fetch("/getCategory");
   const categories = await response.json();
 
-  const categoriesInputs = categories.data.map(category => `
-    <label>
-      <input type="checkbox" name="categories" value="${category.id}" />
+  const categoriesInputs = categories.data.map(category => /*html*/`
+      <label  for="${category.id}">
+        <input type="checkbox" name="categories" id="${category.id}" value="${category.id}" />
       ${category.name}
     </label>
   `).join("");
