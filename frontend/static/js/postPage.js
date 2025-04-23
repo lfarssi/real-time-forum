@@ -185,7 +185,7 @@ export async function PostForm() {
 
   return /*html*/`
     <form id="postForm">
-      <h2>Post</h2>
+      <h2>Create post</h2>
       
       <input type="text" name="title" placeholder="title" />
       <span class="errPost" id="title"></span>
@@ -193,8 +193,8 @@ export async function PostForm() {
       <input type="text" name="content" placeholder="content" />
       <span class="errPost" id="content"></span>
       
+      <h3>Categories</h3>
       <div class="category-section">
-        <h3>Categories</h3>
         ${categoriesInputs}
       </div>
       

@@ -126,22 +126,6 @@ input[type="number"]::-webkit-inner-spin-button {
     display: none;
 }
 
-form.authForm button {
-    width: 100%;
-    padding: 0.8rem;
-    margin-top: 1rem;
-    border: none;
-    border-radius: var(--radius);
-    background-color: var(--accent);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-form.authForm button:hover {
-    background-color: var(--accent-dark);
-}
-
 .form-switch {
     text-align: center;
     margin-top: 1rem;

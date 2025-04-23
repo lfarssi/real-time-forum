@@ -37,14 +37,6 @@ header>nav {
     align-items: center;
 }
 
-.posts {
-    margin-top: 200px;
-}
-
-#postForm{
-    margin-top: 100px;
-}
-
 #logo {
     font-size: 1.9em;
     text-decoration: none;
@@ -150,5 +142,99 @@ nav>.logout {
 }
 
 nav>.logout:hover {
+    background-color: var(--accent-dark);
+}
+
+
+
+main {
+    display: flex;
+    height: 100vh;
+}
+
+section {
+    height: 100%;
+    flex: 1.5;
+    padding: 100px 40px;
+}
+
+aside {
+    height: 100%;
+    flex: 1;
+}
+
+#postForm {
+    background-color: var(--card-dark);
+    color: var(--text-light);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+#postForm h2 {
+    color: var(--accent);
+    font-size: 1.3rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#postForm input[type="text"] {
+    width: 100%;
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--radius);
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+#postForm input[type="text"]::placeholder {
+    color: var(--text-muted);
+}
+
+.errPost {
+    color: var(--error);
+    font-size: 0.9rem;
+}
+
+.category-section {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#postForm h3{
+    color: var(--accent-dark);
+    font-size: 1.1rem;
+}
+
+
+.category-section label {
+    color: var(--text-light);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.category-section input[type="checkbox"] {
+    accent-color: var(--accent);
+}
+
+#postForm button[type="submit"] {
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: var(--accent);
+    color: var(--bg-dark);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+#postForm button[type="submit"]:hover {
     background-color: var(--accent-dark);
 }

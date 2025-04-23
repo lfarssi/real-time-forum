@@ -20,9 +20,17 @@ export function header() {
 
 
 export async function homePage(param) {
-    return `
+    return /*html*/`   
         ${header()}
-        ${await PostForm()}
-        ${await PostsPage(param)}
+        <main>
+            <section>
+                ${await PostForm()}
+                ${await PostsPage(param)}
+            </section>
+            <aside>
+
+            </aside>
+        </main>
+
     `
 }
