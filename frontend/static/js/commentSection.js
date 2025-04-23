@@ -1,22 +1,19 @@
 import { errorPage } from "./errorPage.js";
 export async function CommentSection(event) {
   const postElement = event.target.closest(".post");
-  const postId =  parseInt(postElement.dataset.id )// Get the ID of the clicked post
+  const postId = parseInt(postElement.dataset.id);
 
   const commentsContainer = postElement.querySelector(".comments");
-  
-  // Check if the comments section already exists
-  if (commentsContainer) {
-    const isHidden = commentsContainer.style.display === "none";
-    commentsContainer.style.display = isHidden ? "block" : "none";
-  }
+
+  // Toggle visibility
+  const isHidden = commentsContainer.style.display === "none";
+  commentsContainer.style.display = isHidden ? "block" : "none";
 
   try {
     const response = await fetch(`/api/getComments?postID=${postId}`);
     const data = await response.json();
 
-    // Generate the comment HTML
-    const commentsHtml = data.data
+    const commentsHtml = data.data && data.data.length > 0
       ? data.data.map(comment => `
         <div class="comment">
           <div><strong>${comment.username}</strong></div>
@@ -25,23 +22,21 @@ export async function CommentSection(event) {
       `).join("")
       : "<h4>No Comments available</h4>";
 
-    // Add the comments and a comment form below the post
-    postElement.innerHTML += `
-      <div class="comments">
-        <h4>Comments</h4>
-        ${commentsHtml}
-        ${CommentForm(postId)}
-        </div>
+    // Populate the existing comments container
+    commentsContainer.innerHTML = `
+      <h4>Comments</h4>
+      ${commentsHtml}
+      ${CommentForm(postId)}
     `;
 
-    // Attach the event listener for the comment form
+    // Add event listener to the comment form
     await AddComments(postId);
   } catch (err) {
     console.error("Error fetching comments:", err);
     errorPage("Something went wrong!", 500);
   }
 }
-
+                                                            
 export  function CommentForm(postId) {
   return `
     <form id="commentForm-${postId}" class="commentForm">
