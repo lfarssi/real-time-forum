@@ -24,7 +24,7 @@ header{
     padding: 20px 40px;
     width: 100%;
     position: fixed;
-    background-color: red;
+    background-color: var(--card-dark);
     top: 0;
     left: 0;
 }
@@ -39,4 +39,59 @@ header > nav {
 
 .posts{
     margin-top: 200px;
+}
+
+#logo{
+    font-size: 1.9em;
+    text-decoration: none;
+    color: var(--text-light);
+    letter-spacing: 3px;
+    font-weight: 700;
+}
+
+.U{
+    color: var(--accent);
+}
+
+nav > ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 60px;
+}
+
+nav > ul li{
+    list-style: none;
+    cursor: pointer;
+}
+
+nav > ul li i:hover{
+    color: var(--accent);
+}
+
+nav > ul li a{
+    color: var(--text-light);
+    font-size: 1.25em;
+}
+
+nav > ul li button{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-light);
+    font-size: 1.25em;
+    cursor: pointer;
+}
+
+nav > .logout{
+    background-color: var(--accent);
+    color: var(--bg-dark);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    transition: 0.6s;
+}
+
+nav > .logout:hover{
+    background-color: var(--accent-dark);
 }
