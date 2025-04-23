@@ -30,19 +30,19 @@ export async function CommentSection(event) {
       <div class="comments">
         <h4>Comments</h4>
         ${commentsHtml}
-        ${await CommentForm(postId)}
-      </div>
+        ${CommentForm(postId)}
+        </div>
     `;
 
     // Attach the event listener for the comment form
-    AddComments(postId);
+    await AddComments(postId);
   } catch (err) {
     console.error("Error fetching comments:", err);
     errorPage("Something went wrong!", 500);
   }
 }
 
-export async function CommentForm(postId) {
+export  function CommentForm(postId) {
   return `
     <form id="commentForm-${postId}" class="commentForm">
       <input type="text" name="content" placeholder="Write your comment..." required />
@@ -55,7 +55,7 @@ export async function CommentForm(postId) {
 
 
 
-export function AddComments(postId) {
+export async function AddComments(postId) {
   
   const form = document.querySelector(`#commentForm-${postId}`); // Target the specific form for this post
   const errorSpan = document.querySelector(`#errComment-${postId}`); // Target the error span for this form
@@ -86,7 +86,7 @@ export function AddComments(postId) {
           </div>
         `;
 
-        form.reset(); // Clear the form
+        // form.reset(); // Clear the form
       } else {
         const error = await response.json();
         errorSpan.textContent = error.message || "Failed to add comment.";
