@@ -1,7 +1,7 @@
 import { login, loginPage, logout, register, registerPage } from "./authPage.js"
 import { errorPage } from "./errorPage.js"
 import { homePage } from "./homePage.js"
-import { AddPosts, CreatedPostsPage, LikedPostsPage, PostForm, PostsByCategoriesPage, PostsPage, ReactPost  } from "./postPage.js"
+import { AddPosts, PostForm, ReactPost } from "./postPage.js"
 export const navigateTo = url => {
     history.pushState(null, null, url)
     router()
@@ -18,10 +18,10 @@ const router = async () => {
     }
 
     const routes = [
-        { path: "/", view: homePage , eventStart: ReactPost },
-        { path: "/likedPosts", view: LikedPostsPage,  eventStart: ReactPost},
-        { path: "/createdPosts", view: CreatedPostsPage ,  eventStart: ReactPost},
-        { path: "/postsByCategory", view: PostsByCategoriesPage ,  eventStart: ReactPost},
+        { path: "/", view: homePage, eventStart: ReactPost },
+        { path: "/likedPosts", view: homePage, eventStart: ReactPost },
+        { path: "/createdPosts", view: homePage, eventStart: ReactPost },
+        { path: "/postsByCategory", view: homePage, eventStart: ReactPost },
         { path: "/createPost", view: PostForm, eventStart: AddPosts },
         { path: "/login", view: loginPage, eventStart: login },
         { path: "/register", view: registerPage, eventStart: register },
@@ -42,7 +42,7 @@ const router = async () => {
     }
 
     if (match.route.hasOwnProperty("view")) {
-        document.body.innerHTML = await match.route.view()
+        document.body.innerHTML = await match.route.view(match.route.path.slice(1,))
     }
 
     if (match.route.hasOwnProperty("eventStart")) {
@@ -52,10 +52,12 @@ const router = async () => {
 
 addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", e => {
-        if (e.target.hasAttribute("data-link")) {
-            e.preventDefault()
-            navigateTo(e.target.href)
+        const link = e.target.closest("a[data-link]");
+        if (link) {
+            e.preventDefault();
+            navigateTo(link.href);
         }
-    })
-    router()
-})
+    });
+
+    router();
+});
