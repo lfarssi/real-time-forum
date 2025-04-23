@@ -24,7 +24,6 @@ export async function CommentSection(event) {
 
     // Populate the existing comments container
     commentsContainer.innerHTML = `
-      <h4>Comments</h4>
       ${commentsHtml}
       ${CommentForm(postId)}
     `;
@@ -50,9 +49,7 @@ export  function CommentForm(postId) {
 
 
  
-
 export async function AddComments(postId) {
-  
   const form = document.querySelector(`#commentForm-${postId}`); // Target the specific form for this post
   const errorSpan = document.querySelector(`#errComment-${postId}`); // Target the error span for this form
 
@@ -60,8 +57,9 @@ export async function AddComments(postId) {
     e.preventDefault();
 
     const formData = Object.fromEntries(new FormData(form).entries());
-    formData.postID  = postId; // Include the post ID in the payload
-
+    formData.postID = postId; // Include the post ID in the payload
+    const username = window.loggedInUsername || "Anonymous"; // Replace with actual logic to get the username
+    
     try {
       const response = await fetch("/api/addComment", {
         method: "POST",
@@ -73,16 +71,19 @@ export async function AddComments(postId) {
         const result = await response.json();
         console.log("Comment added:", result);
 
-        // Append the new comment dynamically
-        const commentsContainer = form.closest(".comments");
-        commentsContainer.innerHTML += `
+        // Create a new comment HTML element
+        const newCommentHtml = `
           <div class="comment">
-            <div><strong>You</strong></div>
+            <div><strong>${username}</strong></div>
             <div>${formData.content}</div>
           </div>
         `;
 
-        // form.reset(); // Clear the form
+        // Insert the new comment right before the form
+        form.insertAdjacentHTML("beforebegin", newCommentHtml);
+
+        form.reset(); // Clear the form
+        errorSpan.textContent = ""; // Clear any previous error message
       } else {
         const error = await response.json();
         errorSpan.textContent = error.message || "Failed to add comment.";
