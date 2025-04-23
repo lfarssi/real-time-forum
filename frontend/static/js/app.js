@@ -22,7 +22,6 @@ const router = async () => {
         { path: "/likedPosts", view: homePage, eventStart: ReactPost },
         { path: "/createdPosts", view: homePage, eventStart: ReactPost },
         { path: "/postsByCategory", view: homePage, eventStart: ReactPost },
-        // { path: "/createPost", view: homePage, eventStart: AddPosts },
         { path: "/login", view: loginPage, eventStart: login },
         { path: "/register", view: registerPage, eventStart: register },
         { path: "/logout", eventStart: logout }
