@@ -3,26 +3,23 @@ import { navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
 export async function PostsPage(params) {
   let response;
-  if (params==""){
+  if (params == "") {
     response = await fetch("/api/getPosts");
-  }else if (params=="likedPosts")
-    {
+  } else if (params == "likedPosts") {
     response = await fetch("/api/getLikedPosts");
 
   }
-  else if (params=="createdPosts")
-    {
+  else if (params == "createdPosts") {
     response = await fetch("/api/getCreatedPosts");
 
   }
-    const data= await response.json()
-      if (!data.data ) {        
-        return errorPage("No Post Available",404 )
-       
-    }
-    console.log(data.data);
-    
-    let posts=data.data.map(post=>{
+  const data = await response.json()
+  if (!data.data) {
+    return errorPage("No Post Available", 404)
+
+  }
+
+  let posts = data.data.map(post => {
     return /*html*/`
         <div class="post" id="${post.id}" data-id="${post.id}">
             <div>${post.username}</div>
@@ -45,8 +42,8 @@ export async function PostsPage(params) {
             </div>
         </div>
     `
-    })
-    
+  })
+
   return /*html*/`
         <div class="posts">
             ${posts.join('')}
@@ -55,11 +52,11 @@ export async function PostsPage(params) {
     `
 }
 export function ReactPost() {
-  
+
   document.querySelectorAll(".likePost, .disLikePost").forEach(button => {
     button.addEventListener("click", async () => {
-      const postId = parseInt(button.dataset.id); 
-      
+      const postId = parseInt(button.dataset.id);
+
       const status = button.classList.contains("likePost") ? "like" : "dislike";
 
       try {
@@ -82,7 +79,7 @@ export function ReactPost() {
           }
         } else {
           console.log(response);
-          
+
           console.error(`Failed to ${status} post`);
         }
       } catch (err) {
@@ -98,16 +95,16 @@ export function ReactPost() {
 
 export async function LikedPostsPage() {
   const response = await fetch("/api/getLikedPosts");
-  const data= await response.json()
-    if (!data.data ) {   
-           
-      return errorPage("No Post Available",404 )
-     
+  const data = await response.json()
+  if (!data.data) {
+
+    return errorPage("No Post Available", 404)
+
   }
   console.log(data.data);
-  
-  let posts=data.data.map(post=>{
-  return /*html*/`
+
+  let posts = data.data.map(post => {
+    return /*html*/`
       <div class="post">
           <div>${post.username}</div>
           <div>${post.title}</div>
@@ -115,8 +112,8 @@ export async function LikedPostsPage() {
       </div>
   `
   })
-  
-return /*html*/`
+
+  return /*html*/`
       <div class="posts">
           ${posts.join('')}
       </div>
@@ -125,15 +122,15 @@ return /*html*/`
 }
 export async function CreatedPostsPage() {
   const response = await fetch("/api/getCreatedPosts");
-  const data= await response.json()
-    if (!data.data ) {        
-      return errorPage("No Post Available",404 )
-     
+  const data = await response.json()
+  if (!data.data) {
+    return errorPage("No Post Available", 404)
+
   }
   console.log(data.data);
-  
-  let posts=data.data.map(post=>{
-  return /*html*/`
+
+  let posts = data.data.map(post => {
+    return /*html*/`
       <div class="post">
           <div>${post.username}</div>
           <div>${post.title}</div>
@@ -141,8 +138,8 @@ export async function CreatedPostsPage() {
       </div>
   `
   })
-  
-return /*html*/`
+
+  return /*html*/`
       <div class="posts">
           ${posts.join('')}
       </div>
@@ -151,15 +148,15 @@ return /*html*/`
 }
 export async function PostsByCategoriesPage() {
   const response = await fetch("/api/getPostsByCategory");
-  const data= await response.json()
-    if (!data.data ) {        
-      return errorPage("No Post Available",404 )
-     
+  const data = await response.json()
+  if (!data.data) {
+    return errorPage("No Post Available", 404)
+
   }
   console.log(data.data);
-  
-  let posts=data.data.map(post=>{
-  return /*html*/`
+
+  let posts = data.data.map(post => {
+    return /*html*/`
       <div class="post">
           <div>${post.username}</div>
           <div>${post.title}</div>
@@ -167,8 +164,8 @@ export async function PostsByCategoriesPage() {
       </div>
   `
   })
-  
-return /*html*/`
+
+  return /*html*/`
       <div class="posts">
           ${posts.join('')}
       </div>
@@ -178,8 +175,7 @@ return /*html*/`
 export async function PostForm() {
   const response = await fetch("/getCategory");
   const categories = await response.json();
-  console.log(categories);
-  
+
   const categoriesInputs = categories.data.map(category => `
     <label>
       <input type="checkbox" name="categories" value="${category.id}" />
@@ -202,45 +198,42 @@ export async function PostForm() {
         ${categoriesInputs}
       </div>
       
-      <button type="submit">Register</button>
+      <button type="submit">Create</button>
     </form>
   `;
 }
 
-
-
-
 export function AddPosts() {
-    const form = document.querySelector("#postForm");
-    const spans = document.querySelectorAll("#errPost");
-    form.addEventListener("submit",async e=>{
-        e.preventDefault()
-        const formDataRaw = new FormData(form);
-        const formData = Object.fromEntries(formDataRaw.entries());
-    
-        // ✅ Fix: ensure "categories" is always an array
-        formData.categories = formDataRaw.getAll("categories");        try{
-            const response = await fetch("/api/addPost", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
-              });
-              if (!response.ok) {
-                      for (let span of spans) {
-                        if (data.hasOwnProperty(span.id))
-                          showRegisterInputError(data[span.id], span)
-                      }
-                    } else {
-                      navigateTo("/");
-                    }
-        }catch(err){
-          console.log(err);
-          
-            document.body.innerHTML = errorPage("Something went wrong!", 500)
+  const form = document.querySelector("#postForm");
+  const spans = document.querySelectorAll("#errPost");
+  form.addEventListener("submit", async e => {
+    e.preventDefault()
+    const formDataRaw = new FormData(form);
+    const formData = Object.fromEntries(formDataRaw.entries());
 
+    // ✅ Fix: ensure "categories" is always an array
+    formData.categories = formDataRaw.getAll("categories"); try {
+      const response = await fetch("/api/addPost", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+      if (!response.ok) {
+        for (let span of spans) {
+          if (data.hasOwnProperty(span.id))
+            showRegisterInputError(data[span.id], span)
         }
-       
-    })
+      } else {
+        navigateTo(location.pathname);
+      }
+    } catch (err) {
+      console.log(err);
 
-    
+      document.body.innerHTML = errorPage("Something went wrong!", 500)
+
+    }
+
+  })
+
+
 }
