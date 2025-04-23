@@ -1,8 +1,20 @@
 import { errorPage } from "./errorPage.js";
 import { navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
-export async function PostsPage() {
-    const response = await fetch("/api/getPosts");
+export async function PostsPage(params) {
+  let response;
+  if (params==""){
+    response = await fetch("/api/getPosts");
+  }else if (params=="likedPosts")
+    {
+    response = await fetch("/api/getLikedPosts");
+
+  }
+  else if (params=="createdPosts")
+    {
+    response = await fetch("/api/getCreatedPosts");
+
+  }
     const data= await response.json()
       if (!data.data ) {        
         return errorPage("No Post Available",404 )
