@@ -12,7 +12,8 @@ export async function CommentSection(event) {
   try {
     const response = await fetch(`/api/getComments?postID=${postId}`);
     const data = await response.json();
-
+    console.log(data.data);
+    
     const commentsHtml = data.data && data.data.length > 0
       ? data.data.map(comment => `
         <div class="comment">
