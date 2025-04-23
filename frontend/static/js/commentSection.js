@@ -43,12 +43,13 @@ export  function CommentForm(postId) {
       <input type="text" name="content" placeholder="Write your comment..." required />
       <span class="errComment" id="errComment-${postId}"></span>
       <button type="submit">Add Comment</button>
-    </form>
+    </form> 
   `;
 }
 
 
 
+ 
 
 export async function AddComments(postId) {
   
