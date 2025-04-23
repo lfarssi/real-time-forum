@@ -3,7 +3,8 @@ import { errorPage } from "./errorPage.js";
 
 export function loginPage() {
   return /*html*/`
-    <form id="loginForm">
+    <div class="auth">
+    <form class="authForm" id="loginForm">
       <h2>Login</h2>
       <div class="errLogin"></div>
 
@@ -19,12 +20,14 @@ export function loginPage() {
         <a href="/register" data-link>Create New Account</a>
       </p>
     </form>
+    </div>
   `
 }
 
 export function registerPage() {
   return /*html*/`
-    <form id="registerForm">
+    <div class="auth">
+    <form class="authForm" id="registerForm">
       <h2>Register</h2>
 
       <input type="text" name="username" placeholder="Username" />
@@ -58,6 +61,7 @@ export function registerPage() {
         <a href="/login" data-link>Login</a>
       </p>
     </form>
+    </div>
   `
 }
 
@@ -121,7 +125,7 @@ export function login() {
 
       const data = await response.json()
 
-      if (!response.ok) { 
+      if (!response.ok) {
         errLogin.innerHTML = data.message
       } else {
         navigateTo("/");
@@ -134,13 +138,13 @@ export function login() {
 }
 
 export async function logout() {
-    try {
-      await fetch("/api/logout")
-      navigateTo("/")
-    } catch (err) {
-      console.error(err)
-      document.body.innerHTML = errorPage("Something went wrong!", 500)
-    }
+  try {
+    await fetch("/api/logout")
+    navigateTo("/")
+  } catch (err) {
+    console.error(err)
+    document.body.innerHTML = errorPage("Something went wrong!", 500)
+  }
 }
 
 function showRegisterInputError(msg, span) {
