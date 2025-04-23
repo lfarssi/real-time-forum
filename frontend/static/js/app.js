@@ -1,7 +1,7 @@
 import { login, loginPage, logout, register, registerPage } from "./authPage.js"
 import { errorPage } from "./errorPage.js"
 import { homePage } from "./homePage.js"
-import { AddPosts, PostForm, ReactPost  } from "./postPage.js"
+import { AddPosts, PostForm, ReactPost } from "./postPage.js"
 export const navigateTo = url => {
     history.pushState(null, null, url)
     router()
@@ -18,10 +18,10 @@ const router = async () => {
     }
 
     const routes = [
-        { path: "/", view: homePage , eventStart: ReactPost },
-        { path: "/likedPosts", view: homePage,  eventStart: ReactPost},
-        { path: "/createdPosts", view: homePage ,  eventStart: ReactPost},
-        { path: "/postsByCategory", view: homePage ,  eventStart: ReactPost},
+        { path: "/", view: homePage, eventStart: ReactPost },
+        { path: "/likedPosts", view: homePage, eventStart: ReactPost },
+        { path: "/createdPosts", view: homePage, eventStart: ReactPost },
+        { path: "/postsByCategory", view: homePage, eventStart: ReactPost },
         { path: "/createPost", view: PostForm, eventStart: AddPosts },
         { path: "/login", view: loginPage, eventStart: login },
         { path: "/register", view: registerPage, eventStart: register },
@@ -52,12 +52,12 @@ const router = async () => {
 
 addEventListener("DOMContentLoaded", () => {
     document.body.addEventListener("click", e => {
-        e.preventDefault()
-        console.log(e.target)
-        console.log(e.target.hasAttribute("data-link"))
-        if (e.target.hasAttribute("data-link")) {
-            navigateTo(e.target.href)
+        const link = e.target.closest("a[data-link]");
+        if (link) {
+            e.preventDefault();
+            navigateTo(link.href);
         }
-    })
-    router()
-})
+    });
+
+    router();
+});

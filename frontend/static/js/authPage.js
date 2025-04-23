@@ -71,7 +71,7 @@ export function register() {
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
-
+    
     spans.forEach(span => {
       span.innerHTML = "";
       span.style.display = "none";
