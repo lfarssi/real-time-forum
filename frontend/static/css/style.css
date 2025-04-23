@@ -37,6 +37,8 @@ header {
     background-color: var(--card-dark);
     top: 0;
     left: 0;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+
 }
 
 
@@ -91,32 +93,35 @@ nav>ul li .home:hover::after {
     font-size: 0.6em;
     border-radius: var(--radius);
     color: var(--bg-dark);
+    width: max-content;
 }
 
 nav>ul li .createdPosts:hover::after {
     content: 'Created posts';
     position: absolute;
     text-align: center;
-    bottom: -45px;
-    left: -20px;
+    bottom: -30px;
+    left: -40px;
     background-color: var(--accent);
     padding: 5px 10px;
     font-size: 0.5em;
     border-radius: var(--radius);
     color: var(--bg-dark);
+    width: max-content;
 }
 
 nav>ul li .likedPosts:hover::after {
     content: 'Liked posts';
     position: absolute;
     text-align: center;
-    bottom: -45px;
-    left: -15px;
+    bottom: -30px;
+    left: -30px;
     background-color: var(--accent);
     padding: 5px 10px;
     font-size: 0.5em;
     border-radius: var(--radius);
     color: var(--bg-dark);
+    width: max-content;
 }
 
 nav>ul li .postsByCategory:hover::after {
@@ -129,6 +134,7 @@ nav>ul li .postsByCategory:hover::after {
     font-size: 0.6em;
     border-radius: var(--radius);
     color: var(--bg-dark);
+    width: max-content;
 }
 
 
@@ -162,8 +168,6 @@ main{
 section {
     display: flex;
     flex-direction: column;
-    margin: auto;
-    width: 50%;
     height: 100%;
     padding: 100px 120px;
     flex: 1.5;
@@ -171,7 +175,21 @@ section {
 
 aside{
     flex: 1;
+    padding: 100px 0px;
 }
+
+aside > div{
+    background-color: var(--card-dark);
+    height: 50px;
+    width: 100%;
+    border-radius: var(--radius);
+}
+
+aside > .friends{
+    height: 100%;
+    margin-top: 20px;
+}
+
 
 #postForm {
     background-color: var(--card-dark);
@@ -211,10 +229,6 @@ aside{
     font-size: 0.9rem;
 }
 
-.category-section {
-    display: flex;
-    gap: 0.5rem;
-}
 
 #postForm h3 {
     color: var(--accent-dark);
@@ -222,44 +236,44 @@ aside{
 }
 
 
-.category-section label {
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: 5px;
-    font-size: 0.95rem;
+.category-section {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.category-section label:hover {
-    color: var(--text-light);
-    background-color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: 5px;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.category-section label:checked {
-    color: var(--text-light);
-    background-color: var(--accent);
-    border: 1px solid var(--accent);
-    padding: 5px;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.4rem;
+    border-radius: var(--radius);
+    justify-content: center;
 }
 
 .category-section input[type="checkbox"] {
     display: none;
 }
 
+.category-section label {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    color: var(--accent);
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.category-section input[type="checkbox"]:checked + label {
+    color: var(--text-light);
+    border-color: var(--accent-dark);
+    font-weight: 500;
+    background-color: var(--accent);
+    color: var(--bg-dark);
+}
+
+.category-section label:hover {
+    background-color: var(--accent);
+    color: var(--bg-dark);
+}
+
 #postForm button[type="submit"] {
-    padding: 0.75rem;
+    padding: 0.50rem;
     font-size: 1rem;
     background-color: var(--accent);
     color: var(--bg-dark);

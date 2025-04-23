@@ -4,19 +4,18 @@ export function header() {
     return /*html*/`
         <header>
             <nav class="container">
-                <a id="logo" href="/">FOR<span class="U">U</span>M</a>
+                <a id="logo" href="/" data-link>FOR<span class="U">U</span>M</a>
                 <ul>
                     <li><a class="home" href="/" data-link=""><i class="fa fa-home" ></i></a></li>
                     <li><a class="createdPosts" href="/createdPosts" data-link=""><i class="fa-solid fa-pen"></i></a></li>
                     <li><a class="likedPosts" href="/likedPosts" data-link="" ><i class="fa-solid fa-thumbs-up"></i></a></li>
                     <li><button class="postsByCategory"><i class="fa-solid fa-tag"></i></button></li>
                 </ul>
-                <a class="logout" href="/logout"><i class="fa-solid fa-right-from-bracket"></i></a>
+                <a class="logout" href="/logout" data-link><i class="fa-solid fa-right-from-bracket"></i></a>
             </nav>
         </header>
     `
 }
-
 
 
 export async function homePage(param) {
@@ -28,7 +27,12 @@ export async function homePage(param) {
                 ${await PostsPage(param)}
             </section>
             <aside>
-                
+                <div class="profile">
+        
+                </div>
+                <div class="friends">
+
+                </div>
             </aside>
         </main>
 
