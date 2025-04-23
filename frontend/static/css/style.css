@@ -19,7 +19,7 @@
     --radius: 8px;
 }
 
-header{
+header {
     display: flex;
     padding: 20px 40px;
     width: 100%;
@@ -30,18 +30,18 @@ header{
 }
 
 
-header > nav {
+header>nav {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.posts{
+.posts {
     margin-top: 200px;
 }
 
-#logo{
+#logo {
     font-size: 1.9em;
     text-decoration: none;
     color: var(--text-light);
@@ -49,41 +49,94 @@ header > nav {
     font-weight: 700;
 }
 
-.U{
+.U {
     color: var(--accent);
 }
 
-nav > ul {
+nav>ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 60px;
 }
 
-nav > ul li{
+nav>ul li {
     list-style: none;
     cursor: pointer;
 }
 
-nav > ul li i:hover{
+nav>ul li i:hover {
     color: var(--accent);
 }
 
-nav > ul li a{
+nav>ul li a {
     color: var(--text-light);
     font-size: 1.25em;
+    position: relative;
 }
 
-nav > ul li button{
+nav>ul li .home:hover::after {
+    content: 'Home';
+    position: absolute;
+    bottom: -30px;
+    left: -15px;
+    background-color: var(--accent);
+    padding: 4px 8px;
+    font-size: 0.6em;
+    border-radius: var(--radius);
+    color: var(--bg-dark);
+}
+
+nav>ul li .createdPosts:hover::after {
+    content: 'Created posts';
+    position: absolute;
+    text-align: center;
+    bottom: -45px;
+    left: -20px;
+    background-color: var(--accent);
+    padding: 5px 10px;
+    font-size: 0.5em;
+    border-radius: var(--radius);
+    color: var(--bg-dark);
+}
+
+nav>ul li .likedPosts:hover::after {
+    content: 'Liked posts';
+    position: absolute;
+    text-align: center;
+    bottom: -45px;
+    left: -15px;
+    background-color: var(--accent);
+    padding: 5px 10px;
+    font-size: 0.5em;
+    border-radius: var(--radius);
+    color: var(--bg-dark);
+}
+
+nav>ul li .postsByCategory:hover::after {
+    content: 'Categories';
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    background-color: var(--accent);
+    padding: 4px 8px;
+    font-size: 0.6em;
+    border-radius: var(--radius);
+    color: var(--bg-dark);
+}
+
+
+nav>ul li button {
     background-color: transparent;
     border: none;
     outline: none;
     color: var(--text-light);
     font-size: 1.25em;
     cursor: pointer;
+    position: relative;
 }
 
-nav > .logout{
+nav>.logout {
     background-color: var(--accent);
     color: var(--bg-dark);
     text-decoration: none;
@@ -92,6 +145,6 @@ nav > .logout{
     transition: 0.6s;
 }
 
-nav > .logout:hover{
+nav>.logout:hover {
     background-color: var(--accent-dark);
 }
