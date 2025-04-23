@@ -1,6 +1,7 @@
 import { errorPage } from "./errorPage.js";
 import { navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
+import { showInputError } from "./authPage.js";
 export async function PostsPage(params) {
   let response;
   if (params == "") {
@@ -19,23 +20,26 @@ export async function PostsPage(params) {
 
   }
 
+  console.log(data.data)
+
   let posts = data.data.map(post => {
     return /*html*/`
         <div class="post" id="${post.id}" data-id="${post.id}">
             <div><i class="fa-solid fa-user"></i> ${post.username}</div>
-            <div>${post.title}</div>
-            <div>${post.content}</div>
+            <p class="dateCreation">${post.dateCreation}</p>
+            <div class="title">${post.title}</div>
+            <div class="content">${post.content}</div>
+            <div class="categories">
+              #${post.categories[0].split(",").join(' #')}
+            </div>
             <div class="button-group">
                 <div>
-                  <span></span>
-                  <button class="likePost"  data-id="${post.id}"><i class="fa-regular fa-thumbs-up"></i></button>
+                  <button class="likePost"  data-id="${post.id}">${post.Likes} <i class="fa-regular fa-thumbs-up"></i></button>
                 </div>
                 <div>
-                  <span></span>
-                <button class="disLikePost"  data-id="${post.id}"><i class="fa-regular fa-thumbs-down"></i></button>
+                <button class="disLikePost"  data-id="${post.id}">${post.Dislikes} <i class="fa-regular fa-thumbs-down"></i></button>
                 </div>
                 <div>
-                  <span></span>
                   <button class="displayComment"><i class="fa-regular fa-comment"></i></button>
                 </div>
             </div>
@@ -190,10 +194,10 @@ export async function PostForm() {
     <form id="postForm">
       <h2>Create post</h2>
       
-      <input type="text" name="title" placeholder="title" />
+      <input maxlength="100" type="text" name="title" placeholder="title" />
       <span class="errPost" id="title"></span>
       
-      <input type="text" name="content" placeholder="content" />
+      <input maxlength="1000" type="text" name="content" placeholder="content" />
       <span class="errPost" id="content"></span>
       
       <h3>Categories</h3>
@@ -208,7 +212,7 @@ export async function PostForm() {
 
 export function AddPosts() {
   const form = document.querySelector("#postForm");
-  const spans = document.querySelectorAll("#errPost");
+  const spans = document.querySelectorAll(".errPost");
   form.addEventListener("submit", async e => {
     e.preventDefault()
     const formDataRaw = new FormData(form);
@@ -221,17 +225,17 @@ export function AddPosts() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
       });
+      const data = await response.json()
       if (!response.ok) {
         for (let span of spans) {
           if (data.hasOwnProperty(span.id))
-            showRegisterInputError(data[span.id], span)
+            showInputError(data[span.id], span)
         }
       } else {
         navigateTo(location.pathname);
       }
     } catch (err) {
       console.log(err);
-
       document.body.innerHTML = errorPage("Something went wrong!", 500)
 
     }
