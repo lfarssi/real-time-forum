@@ -180,8 +180,8 @@ export async function PostForm() {
   const categories = await response.json();
 
   const categoriesInputs = categories.data.map(category => /*html*/`
-      <label  for="${category.id}">
         <input type="checkbox" name="categories" id="${category.id}" value="${category.id}" />
+      <label  for="${category.id}">
       ${category.name}
     </label>
   `).join("");
