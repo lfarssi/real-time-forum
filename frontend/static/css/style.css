@@ -19,6 +19,8 @@
     --radius: 8px;
 }
 
+
+
 header {
     display: flex;
     padding: 20px 40px;
@@ -147,21 +149,16 @@ nav>.logout:hover {
 
 
 
-main {
-    display: flex;
-    height: 100vh;
-}
 
 section {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 50%;
     height: 100%;
-    flex: 1.5;
     padding: 100px 40px;
 }
 
-aside {
-    height: 100%;
-    flex: 1;
-}
 
 #postForm {
     background-color: var(--card-dark);
@@ -213,7 +210,29 @@ aside {
 
 
 .category-section label {
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 5px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.category-section label:hover {
     color: var(--text-light);
+    background-color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 5px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.category-section label:checked {
+    color: var(--text-light);
+    background-color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 5px;
     font-size: 0.95rem;
     display: flex;
     align-items: center;
@@ -221,7 +240,7 @@ aside {
 }
 
 .category-section input[type="checkbox"] {
-    accent-color: var(--accent);
+    display: none;
 }
 
 #postForm button[type="submit"] {
@@ -238,3 +257,62 @@ aside {
 #postForm button[type="submit"]:hover {
     background-color: var(--accent-dark);
 }
+
+.post {
+    margin: 25px 0;
+    background-color: var(--card-dark);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    color: var(--text-light);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  
+  .post > div {
+    font-size: 1rem;
+    /* background-color: var(); */
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    line-height: 1.5;
+    word-break: break-word;
+  }
+  
+  .post > div:first-child {
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .post .button-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap; /* optional: allows buttons to wrap on small screens */
+  }
+  
+  .post .button-group button {
+    background-color: transparent;
+    color: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+  }
+
+  .post .comments {
+    background-color: var(--bg-dark);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    display: none; /* default hidden */
+    border-left: 3px solid var(--accent);
+  }
+  
