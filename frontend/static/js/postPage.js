@@ -28,7 +28,7 @@ export async function PostsPage() {
               <span></span>
               <button class="displayComment">Comment</button>
             </div>
-            <div class="comments">
+            <div class="comments" style="display:none;">
 
             </div>
         </div>
