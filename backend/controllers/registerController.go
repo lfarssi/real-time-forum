@@ -46,16 +46,16 @@ func RegisterController(w http.ResponseWriter, r *http.Request) {
 
 	ID, err := models.Register(user.UserName, user.Email, user.FirstName, user.LastName, user.Gender, string(password), user.Age)
 	if err != nil {
-		if strings.Contains(err.Error(), "UserName") {
+		if strings.Contains(err.Error(), "username") {
 			utils.ResponseJSON(w, http.StatusConflict, map[string]any{
-				"message": "Username already exists",
-				"status":  http.StatusConflict,
+				"username": "Username already exists",
+				"status":   http.StatusConflict,
 			})
 			return
-		} else if strings.Contains(err.Error(), "Email") {
+		} else if strings.Contains(err.Error(), "email") {
 			utils.ResponseJSON(w, http.StatusConflict, map[string]any{
-				"message": "Email already exists",
-				"status":  http.StatusConflict,
+				"email":  "Email already exists",
+				"status": http.StatusConflict,
 			})
 			return
 		}
