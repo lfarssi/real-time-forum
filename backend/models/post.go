@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 
 	"real_time_forum/backend/database"
@@ -9,15 +8,11 @@ import (
 
 func GetPosts() ([]*Post, error) {
 	query := `
-    SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(DISTINCT c.name) AS categories, p.dateCreation, u.username,
-    COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
-    COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount
+    SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(DISTINCT c.name) AS categories, p.dateCreation, u.username
     FROM posts p
     INNER JOIN users u ON p.userID = u.id
     INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
-	LEFT JOIN postLike pl ON p.id = pl.postID
-    GROUP BY p.id
     ORDER BY p.dateCreation DESC;
     `
 	rows, err := database.DB.Query(query)
@@ -31,17 +26,33 @@ func GetPosts() ([]*Post, error) {
 		var post Post
 		var CreatedAt time.Time
 		var categorie string
-		err = rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &categorie, &CreatedAt, &post.Username, &post.Likes, &post.Dislikes)
-		fmt.Println(post.Likes)
+		err = rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &categorie, &CreatedAt, &post.Username)
 		if err != nil {
 			return nil, err
 		}
+		query2 := `SELECT 
+    COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
+    COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount
+		FROM postLike pl
+        GROUP BY pl.postID;
+	`
 
+		countLikes, err := database.DB.Query(query2)
+		if err != nil {
+			return nil, err
+		}
+		defer countLikes.Close()
+
+		for countLikes.Next() {
+			err := countLikes.Scan(&post.Likes, &post.Dislikes)
+			if err != nil {
+				return nil, err
+			}
+		}
 		post.Categories = append(post.Categories, categorie)
 		post.DateCreation = CreatedAt.Format(time.DateTime)
 		posts = append(posts, &post)
 	}
-
 	return posts, nil
 }
 
@@ -64,7 +75,7 @@ func AddPost(post *Post) error {
 
 func LikedPost(userID int) ([]*Post, error) {
 	query := `
-	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories,
+	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(c.name) AS categories,
     COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
     COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount
 	FROM posts p 
@@ -73,9 +84,8 @@ func LikedPost(userID int) ([]*Post, error) {
 	INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
 	LEFT JOIN postLike pl ON p.id = pl.postID
-
 	WHERE status='like' AND r.userID=?
-	GROUP BY p.id
+	GROUP BY p.id, c.name
 	ORDER BY p.dateCreation DESC
 	`
 	rows, err := database.DB.Query(query, userID)
