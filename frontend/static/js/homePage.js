@@ -20,16 +20,18 @@ export function header() {
 
 
 export async function homePage(param) {
-    if (!await isLogged()) {
+    let logged = await isLogged()
+    if (!logged) {
         return
     }
+
     return /*html*/`   
         ${header()}
         <main class="container">
             <aside>
                 <div class="filter">
 
-                </div>
+                </div>  
             </aside>
             <section>
                 ${await PostForm()}
@@ -37,7 +39,7 @@ export async function homePage(param) {
             </section>
             <aside>
                 <div class="profile">
-        
+                    <p>${logged.username}</p>
                 </div>
                 <div class="friends">
 
