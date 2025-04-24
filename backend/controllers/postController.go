@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -27,7 +28,7 @@ func GetPostController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-
+	fmt.Println(posts[1])
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Posts retrieved successfully",
 		"status":  http.StatusOK,
@@ -94,7 +95,7 @@ func GetPostByCategoryController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	categories:= r.Form["categories"]
+	categories := r.Form["categories"]
 	postSet := make(map[int]struct{})
 	var posts []models.Post
 
@@ -124,7 +125,6 @@ func GetPostByCategoryController(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Posts retrieved successfully",
