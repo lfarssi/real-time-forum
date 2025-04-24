@@ -21,6 +21,8 @@ export async function PostsPage(params) {
   }
 
   console.log(data.data)
+  let i; 
+  
 
   let posts = data.data.map(post => {
     return /*html*/`
@@ -76,16 +78,16 @@ export function ReactPost() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ postID: postId, sender: "post", status })
         });
-
+        
         if (response.ok) {
           const result = await response.json();
           console.log(`Post ${status}d:`, result.message);
 
           if (status === "like") {
-            button.textContent = "Liked!";
+            // button.textContent = "Liked!";
             // button.disabled = true; 
           } else if (status === "dislike") {
-            button.textContent = "Disliked!";
+            // button.textContent = "Disliked!";
             // button.disabled = true; 
           }
         } else {
