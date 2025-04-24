@@ -20,12 +20,12 @@ export async function PostsPage(params) {
 
   }
 
+  console.log(data.data)
+
   let posts = data.data.map(post => {
-    console.log("post=>",post);
-    
     return /*html*/`
         <div class="post" id="${post.id}" data-id="${post.id}">
-            <div class="username"><i class="fa-solid fa-user"></i> ${post.username}</div>
+            <div><i class="fa-solid fa-user"></i> ${post.username}</div>
             <p class="dateCreation">${post.dateCreation}</p>
             <div class="title">${post.title}</div>
             <div class="content">${post.content}</div>
@@ -34,10 +34,10 @@ export async function PostsPage(params) {
             </div>
             <div class="button-group">
                 <div>
-                  <button class="likePost"  data-id="${post.id}"><span>${post.Likes}</span> <i class="fa-regular fa-thumbs-up"></i></button>
+                  <button class="likePost"  data-id="${post.id}">${post.Likes} <i class="fa-regular fa-thumbs-up"></i></button>
                 </div>
                 <div>
-                <button class="disLikePost"  data-id="${post.id}"><span>${post.Dislikes}</span> <i class="fa-regular fa-thumbs-down"></i></button>
+                <button class="disLikePost"  data-id="${post.id}">${post.Dislikes} <i class="fa-regular fa-thumbs-down"></i></button>
                 </div>
                 <div>
                   <button class="displayComment"><i class="fa-regular fa-comment"></i></button>
@@ -79,19 +79,14 @@ export function ReactPost() {
 
         if (response.ok) {
           const result = await response.json();
-
-          console.log(result)
+          console.log(`Post ${status}d:`, result.message);
 
           if (status === "like") {
-            button.childNodes[2].remove()
-            button.innerHTML += /*html*/`
-              <i class="fa-solid fa-thumbs-up"></i>
-            `
+            button.textContent = "Liked!";
+            // button.disabled = true; 
           } else if (status === "dislike") {
-            button.childNodes[2].remove()
-            button.innerHTML += /*html*/`
-             <i class="fa-solid fa-thumbs-down"></i>
-            `
+            button.textContent = "Disliked!";
+            // button.disabled = true; 
           }
         } else {
           console.error(`Failed to ${status} post`);
@@ -201,10 +196,10 @@ export async function PostForm() {
     <form id="postForm">
       <h2>Create post</h2>
       
-      <input maxlength="100" required type="text" name="title" placeholder="title" />
+      <input maxlength="100" type="text" name="title" placeholder="title" />
       <span class="errPost" id="title"></span>
       
-      <input maxlength="1000" required type="text" name="content" placeholder="content" />
+      <input maxlength="1000" type="text" name="content" placeholder="content" />
       <span class="errPost" id="content"></span>
       
       <h3>Categories</h3>
