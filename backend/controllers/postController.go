@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -28,7 +27,6 @@ func GetPostController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	fmt.Println(posts[1])
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Posts retrieved successfully",
 		"status":  http.StatusOK,
