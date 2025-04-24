@@ -23,7 +23,7 @@ export async function PostsPage(params) {
   let posts = data.data.map(post => {
     return /*html*/`
         <div class="post" id="${post.id}" data-id="${post.id}">
-            <div><i class="fa-solid fa-user"></i> ${post.username}</div>
+            <div class="username"><i class="fa-solid fa-user"></i> ${post.username}</div>
             <p class="dateCreation">${post.dateCreation}</p>
             <div class="title">${post.title}</div>
             <div class="content">${post.content}</div>
