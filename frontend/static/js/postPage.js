@@ -1,5 +1,5 @@
 import { errorPage } from "./errorPage.js";
-import { navigateTo } from "./app.js";
+import { isLogged, navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
 import { showInputError } from "./authPage.js";
 export async function PostsPage(params) {
@@ -62,6 +62,10 @@ export function ReactPost() {
 
   document.querySelectorAll(".likePost, .disLikePost").forEach(button => {
     button.addEventListener("click", async () => {
+      if (!await isLogged()) {
+        return
+      }
+
       const postId = parseInt(button.dataset.id);
 
       const status = button.classList.contains("likePost") ? "like" : "dislike";
@@ -85,8 +89,6 @@ export function ReactPost() {
             // button.disabled = true; 
           }
         } else {
-          console.log(response);
-
           console.error(`Failed to ${status} post`);
         }
       } catch (err) {
@@ -215,6 +217,9 @@ export function AddPosts() {
   const spans = document.querySelectorAll(".errPost");
   form.addEventListener("submit", async e => {
     e.preventDefault()
+    if (!await isLogged()) {
+      return
+    }
     const formDataRaw = new FormData(form);
     const formData = Object.fromEntries(formDataRaw.entries());
 

@@ -7,14 +7,14 @@ export const navigateTo = url => {
     router()
 }
 
-let loggedUser=false
+let loggedUser = false
 const router = async () => {
     const response = await fetch("/api/isLogged")
     if (!response.ok && location.pathname !== "/login" && location.pathname !== "/register") {
         navigateTo("/register")
         return
     } else if (response.ok && (location.pathname === "/login" || location.pathname === "/register")) {
-        loggedUser=true
+        loggedUser = true
         navigateTo("/")
         return
     }
@@ -48,7 +48,7 @@ const router = async () => {
 
     if (match.route.hasOwnProperty("eventStart")) {
         match.route.eventStart()
-      AddPosts()
+        AddPosts()
     }
 }
 
@@ -63,3 +63,13 @@ addEventListener("DOMContentLoaded", () => {
 
     router();
 });
+
+export async function isLogged() {
+    const response = await fetch("/api/isLogged")
+    if (!response.ok) {
+        navigateTo("/register")
+        return false 
+    }
+
+    return true
+}
