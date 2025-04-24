@@ -204,6 +204,7 @@ aside > .friends{
 aside > .filter{
     height: 84.5vh;
     width: 300px;
+    padding: 15px 30px;
 }
 
 aside > .profile  p{
@@ -216,12 +217,16 @@ aside > .profile p i{
     margin-right: 10px;
 }
 
+aside > .filter h3{
+    color: var(--accent);
+}
+
 aside > .filter ul{
     display: flex;
     flex-direction: column;
-    padding: 20px 20px;
     list-style: none;
     gap: 20px;
+    margin-top: 30px;
 }
 
 aside > .filter ul i{
@@ -229,23 +234,23 @@ aside > .filter ul i{
     padding: 10px;
     border-radius: 50%;
     margin-right: 10px;
+    font-size: 0.8em;
 }
 
-aside > .filter ul a{
+aside > .filter ul label{
     text-decoration: none;
     color: var(--text-light);
     font-size: 1.1em;
-
+    cursor: pointer;
 }
 
-
-aside > .filter ul a span{
+aside > .filter ul label span{
     position: relative;
     width: max-content;
     transition: .3s;
 }
 
-aside > .filter ul a span::after{
+aside > .filter ul label span::after{
     content: '';
     position: absolute;
     left: 50%;
@@ -258,10 +263,13 @@ aside > .filter ul a span::after{
 
 }
 
-aside > .filter ul a span:hover::after{
+aside > .filter ul label span:hover::after{
     width: 100%;
     transition: .3s;
+}
 
+aside > .filter ul input:checked + label span::after{
+    width: 100%;
 }
 
 #postForm {

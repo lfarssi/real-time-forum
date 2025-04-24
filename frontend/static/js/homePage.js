@@ -29,13 +29,16 @@ export async function homePage(param) {
     let data = await response.json()
 
     const categoriesInputs = data.data.map(category => /*html*/`
-        <input type="checkbox" name="categories" id="filter${category.id}" value="${category.id}" />
+        <input style="display:none;" type="checkbox" name="categories" id="filter${category.id}" value="${category.id}" />
     <label for="filter${category.id}">
-    ${category.name}
+    <i class="fa-solid fa-tag"></i> <span> ${category.name}</span>
     </label>
     `).join("");
 
-    return /*html*/`   
+    let isAsideExists = document.querySelector('aside')
+
+    if (!isAsideExists) {
+        document.body.innerHTML = /*html*/`   
         ${header()}
         <main class="container">
             <aside>
@@ -51,7 +54,9 @@ export async function homePage(param) {
             </aside>
             <section>
                 ${await PostForm()}
+                <div class="posts">
                 ${await PostsPage(param)}
+                </div>
             </section>
             <aside>
                 <div class="profile">
@@ -64,4 +69,8 @@ export async function homePage(param) {
         </main>
 
     `
+    } else {
+        let posts = document.querySelector('.posts')
+        posts.innerHTML = `${await PostsPage(param)}`
+    }
 }
