@@ -1,3 +1,4 @@
+import { isLogged } from "./app.js"
 import { AddPosts, PostForm, PostsPage } from "./postPage.js"
 
 export function header() {
@@ -19,6 +20,9 @@ export function header() {
 
 
 export async function homePage(param) {
+    if (!await isLogged()) {
+        return
+    }
     return /*html*/`   
         ${header()}
         <main class="container">
