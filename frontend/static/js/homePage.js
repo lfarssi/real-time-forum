@@ -3,7 +3,7 @@ import { AddPosts, PostForm, PostsPage } from "./postPage.js"
 export function header() {
     return /*html*/`
         <header>
-            <nav class="container">
+            <nav>
                 <a id="logo" href="/" data-link>FOR<span class="U">U</span>M</a>
                 <ul>
                     <li><a class="home" href="/" data-link=""><i class="fa fa-home" ></i></a></li>
@@ -22,6 +22,11 @@ export async function homePage(param) {
     return /*html*/`   
         ${header()}
         <main class="container">
+            <aside>
+                <div class="filter">
+
+                </div>
+            </aside>
             <section>
                 ${await PostForm()}
                 ${await PostsPage(param)}
