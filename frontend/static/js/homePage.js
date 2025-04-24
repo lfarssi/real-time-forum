@@ -29,8 +29,8 @@ export async function homePage(param) {
     let data = await response.json()
 
     const categoriesInputs = data.data.map(category => /*html*/`
-        <input type="checkbox" name="categories" id="${category.id}" value="${category.id}" />
-    <label for="${category.id}">
+        <input type="checkbox" name="categories" id="filter${category.id}" value="${category.id}" />
+    <label for="filter${category.id}">
     ${category.name}
     </label>
     `).join("");
