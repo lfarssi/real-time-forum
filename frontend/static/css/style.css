@@ -163,40 +163,54 @@ nav>.logout:hover {
 
 main{
     display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
 }
 
 section {
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: 100px 120px;
-    flex: 1.5;
+    padding: 100px 0px;
 }
 
 aside{
-    flex: 1;
-    padding: 100px 0px;
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+    padding: 0 20px;
+
 }
 
 aside > div{
     background-color: var(--card-dark);
-    height: 50px;
-    width: 100%;
     border-radius: var(--radius);
 }
 
-aside > .friends{
-    height: 100%;
-    margin-top: 20px;
+aside > .profile{
+    height: 50px;
+    width: 300px;
+
 }
 
+aside > .friends{
+    height: 75vh;
+    margin-top: 20px;
+    width: 300px;
+
+}
+
+aside > .filter{
+    height: 84.5vh;
+    width: 300px;
+}
 
 #postForm {
     background-color: var(--card-dark);
     color: var(--text-light);
     padding: 1.5rem;
     border-radius: var(--radius);
-    width: 100%;
+    width: 700px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
@@ -294,7 +308,7 @@ aside > .friends{
     padding: 1.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
     color: var(--text-light);
-    max-width: 632px;
+    width: 700px;
     word-break: break-word;
     overflow-wrap: break-word;
     white-space: normal;
@@ -396,10 +410,25 @@ aside > .friends{
     .container {
         width: 100%;
     }
+   
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 1900px) {
     .container {
-        max-width: 1320px;
+        max-width: 1900px;
     }
+}
+
+@media (max-width: 1300px) {
+    .post, #postForm{
+        max-width: 500px;
+    }
+}
+
+
+@media (max-width: 1100px) {
+    .post, #postForm{
+        max-width: 400px;
+    }
+
 }
