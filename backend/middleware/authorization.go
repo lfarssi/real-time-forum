@@ -83,5 +83,6 @@ func IsLogged(w http.ResponseWriter, r *http.Request) {
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Valid token",
 		"status":  http.StatusOK,
+		"username": userName,
 	})
 }

@@ -66,10 +66,13 @@ addEventListener("DOMContentLoaded", () => {
 
 export async function isLogged() {
     const response = await fetch("/api/isLogged")
+
     if (!response.ok) {
         navigateTo("/register")
-        return false 
+        return false
     }
 
-    return true
+    let data = await response.json()
+
+    return data
 }
