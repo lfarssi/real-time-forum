@@ -1,12 +1,13 @@
 package models
 
 import (
+	"database/sql"
 	"time"
 
 	"real_time_forum/backend/database"
 )
 
-func GetPosts() ([]*Post, error) {
+func GetPosts(userID int) ([]*Post, error) {
 	query := `
     SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(DISTINCT c.name) AS categories, p.dateCreation, u.username
     FROM posts p
@@ -31,24 +32,28 @@ func GetPosts() ([]*Post, error) {
 			return nil, err
 		}
 		query2 := `SELECT 
-    COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
-    COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount
+		COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
+		COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount,
+        MAX(CASE WHEN pl.userID = ? AND pl.status = 'like' THEN 1 ELSE 0 END) AS isLiked,
+        MAX(CASE WHEN pl.userID = ? AND pl.status = 'dislike' THEN 1 ELSE 0 END) AS isDisliked
 		FROM postLike pl
+		WHERE pl.postID = ?
         GROUP BY pl.postID;
 	`
-
-		countLikes, err := database.DB.Query(query2)
-		if err != nil {
+	row := database.DB.QueryRow(query2, userID, userID, post.ID)
+	err = row.Scan(&post.Likes, &post.Dislikes, &post.IsLiked, &post.IsDisliked)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// If no rows are found, initialize the counts and flags to zero
+			post.Likes = 0
+			post.Dislikes = 0
+			post.IsLiked = false
+			post.IsDisliked = false
+		} else {
 			return nil, err
 		}
-		defer countLikes.Close()
+	}
 
-		for countLikes.Next() {
-			err := countLikes.Scan(&post.Likes, &post.Dislikes)
-			if err != nil {
-				return nil, err
-			}
-		}
 		post.Categories = append(post.Categories, categorie)
 		post.DateCreation = CreatedAt.Format(time.DateTime)
 		posts = append(posts, &post)

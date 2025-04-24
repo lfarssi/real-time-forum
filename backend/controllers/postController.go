@@ -18,8 +18,9 @@ func GetPostController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	userID := r.Context().Value("userId").(int)
 
-	posts, err := models.GetPosts()
+	posts, err := models.GetPosts(userID)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error Getting Post",
