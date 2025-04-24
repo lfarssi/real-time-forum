@@ -23,6 +23,8 @@ export async function PostsPage(params) {
   console.log(data.data)
 
   let posts = data.data.map(post => {
+    console.log("post=>",post);
+    
     return /*html*/`
         <div class="post" id="${post.id}" data-id="${post.id}">
             <div><i class="fa-solid fa-user"></i> ${post.username}</div>

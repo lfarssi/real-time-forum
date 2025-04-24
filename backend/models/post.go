@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"real_time_forum/backend/database"
@@ -8,7 +9,7 @@ import (
 
 func GetPosts() ([]*Post, error) {
 	query := `
-    SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(c.name) AS categories, p.dateCreation, u.username,
+    SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(DISTINCT c.name) AS categories, p.dateCreation, u.username,
     COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
     COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount
     FROM posts p
@@ -31,6 +32,7 @@ func GetPosts() ([]*Post, error) {
 		var CreatedAt time.Time
 		var categorie string
 		err = rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &categorie, &CreatedAt, &post.Username, &post.Likes, &post.Dislikes)
+		fmt.Println(post.Likes)
 		if err != nil {
 			return nil, err
 		}
