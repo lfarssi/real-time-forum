@@ -8,11 +8,14 @@ import (
 
 func GetPosts() ([]*Post, error) {
 	query := `
-    SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(c.name) AS categories, p.dateCreation, u.username
+    SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(c.name) AS categories, p.dateCreation, u.username,
+    COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
+    COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount
     FROM posts p
     INNER JOIN users u ON p.userID = u.id
     INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
+	LEFT JOIN postLike pl ON p.id = pl.postID
     GROUP BY p.id
     ORDER BY p.dateCreation DESC;
     `
@@ -27,7 +30,7 @@ func GetPosts() ([]*Post, error) {
 		var post Post
 		var CreatedAt time.Time
 		var categorie string
-		err = rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &categorie, &CreatedAt, &post.Username)
+		err = rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &categorie, &CreatedAt, &post.Username, &post.Likes, &post.Dislikes)
 		if err != nil {
 			return nil, err
 		}
@@ -59,12 +62,16 @@ func AddPost(post *Post) error {
 
 func LikedPost(userID int) ([]*Post, error) {
 	query := `
-	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories
+	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories,
+    COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
+    COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount
 	FROM posts p 
 	INNER JOIN users u ON u.id=p.userID
 	INNER JOIN postLike r ON p.id = r.postID
-	  INNER JOIN postCategory pc ON p.id = pc.postID
+	INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
+	LEFT JOIN postLike pl ON p.id = pl.postID
+
 	WHERE status='like' AND r.userID=?
 	GROUP BY p.id
 	ORDER BY p.dateCreation DESC
@@ -79,7 +86,7 @@ func LikedPost(userID int) ([]*Post, error) {
 		var post Post
 		var categorie string
 		var CreatedAt time.Time
-		err = rows.Scan(&post.ID, &post.Title, &post.Content, &CreatedAt, &post.Username, &categorie)
+		err = rows.Scan(&post.ID, &post.Title, &post.Content, &CreatedAt, &post.Username, &categorie, &post.Likes, &post.Dislikes)
 		if err != nil {
 			return nil, err
 		}
@@ -93,11 +100,14 @@ func LikedPost(userID int) ([]*Post, error) {
 
 func CreatedPost(userID int) ([]Post, error) {
 	query := `
-	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories
+	SELECT p.id , p.title,p.content,p.dateCreation ,u.username , GROUP_CONCAT(DISTINCT c.name) AS categories,
+    COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
+    COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount
 	FROM posts p 
 	INNER JOIN users u ON u.id=p.userID
-	  INNER JOIN postCategory pc ON p.id = pc.postID
+	INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
+	LEFT JOIN postLike pl ON p.id = pl.postID
 	WHERE p.userID=?
 	GROUP BY p.id
 	ORDER BY p.dateCreation DESC
@@ -112,7 +122,7 @@ func CreatedPost(userID int) ([]Post, error) {
 		var post Post
 		var categorie string
 		var CreatedAt time.Time
-		err = rows.Scan(&post.ID, &post.Title, &post.Content, &CreatedAt, &post.Username, &categorie)
+		err = rows.Scan(&post.ID, &post.Title, &post.Content, &CreatedAt, &post.Username, &categorie, &post.Likes, &post.Dislikes)
 		if err != nil {
 			return nil, err
 		}
@@ -125,11 +135,14 @@ func CreatedPost(userID int) ([]Post, error) {
 
 func GetPostsByCategory(idCategory int) ([]Post, error) {
 	query := `
-	SELECT   p.id, p.title, p.content, c.name, p.dateCreation, u.username
+	SELECT   p.id, p.title, p.content, c.name, p.dateCreation, u.username,
+    COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
+    COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount
 	FROM post p
 	INNER JOIN users u ON p.userID = u.id
 	INNER JOIN postCategory pc ON p.id = pc.post_id
 	INNER JOIN category c ON pc.categoryID = c.id
+	LEFT JOIN postLike pl ON p.id = pl.postID
 	WHERE pc.categoryID =?
 	ORDER BY p.dateCreation DESC;
 	`
@@ -143,7 +156,7 @@ func GetPostsByCategory(idCategory int) ([]Post, error) {
 	for rows.Next() {
 		var post Post
 		var categorie string
-		err = rows.Scan(&post.ID, &post.Title, &post.Content, &categorie, &post.DateCreation, &post.Username)
+		err = rows.Scan(&post.ID, &post.Title, &post.Content, &categorie, &post.DateCreation, &post.Username, &post.Likes, &post.Dislikes)
 		if err != nil {
 			return nil, err
 		}
