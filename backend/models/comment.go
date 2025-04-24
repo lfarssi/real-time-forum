@@ -10,8 +10,10 @@ func GetCommnets(postID string) ([]*Comment, error) {
 	query := `
 	SELECT u.username, c.id, c.content, c.dateCreation
 	FROM comment c
-	INNER JOIN users u USING (id)
-	WHERE c.postID = ?;
+	INNER JOIN users u ON c.userID = u.ID
+	WHERE c.postID = ?
+	ORDER BY c.dateCreation desc;
+
 	`
 
 	rows, err := database.DB.Query(query, postID)
