@@ -232,6 +232,12 @@ aside > .filter{
     background-color: var(--bg-dark);
     color: var(--text-light);
     font-size: 1rem;
+    outline: none;
+}
+
+#postForm input[type="text"]:focus,
+#postForm input[type="text"]:valid{
+    border-bottom: 1px solid var(--accent-dark);
 }
 
 #postForm input[type="text"]::placeholder {
@@ -345,6 +351,9 @@ aside > .filter{
 
 .post .content{
     margin: 15px 0;
+    background-color: var(--bg-dark);
+    padding: 10px 20px;
+    border-radius: var(--radius);
 }
 
 .post>div:first-child {
