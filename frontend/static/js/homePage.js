@@ -1,5 +1,5 @@
 import { isLogged } from "./app.js"
-import { AddPosts, PostForm, PostsPage } from "./postPage.js"
+import { PostForm, PostsPage } from "./postPage.js"
 
 export function header() {
     return /*html*/`
@@ -25,12 +25,28 @@ export async function homePage(param) {
         return
     }
 
+    let response = await fetch('/api/getCategories')
+    let data = await response.json()
+
+    const categoriesInputs = data.data.map(category => /*html*/`
+        <input type="checkbox" name="categories" id="${category.id}" value="${category.id}" />
+    <label for="${category.id}">
+    ${category.name}
+    </label>
+    `).join("");
+
     return /*html*/`   
         ${header()}
         <main class="container">
             <aside>
-                <div class="filter">
-
+                <div class="filter">    
+                    <h3>Categories</h3>
+                    <form>
+                        <ul>
+                            ${categoriesInputs}
+                        </ul>
+                        <button type="submit">Filter</button>
+                    </form>
                 </div>  
             </aside>
             <section>

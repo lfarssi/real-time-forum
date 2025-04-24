@@ -21,6 +21,7 @@ func ApiRouter() {
 
 	http.HandleFunc("/api/addComment", middleware.Authorization(http.HandlerFunc(controllers.AddCommentController)))
 	http.HandleFunc("/api/getComments", middleware.Authorization(http.HandlerFunc(controllers.GetCommnetsController)))
+	http.HandleFunc("/api/getCategories", middleware.Authorization(http.HandlerFunc(controllers.CategoryController)))
 
 	http.HandleFunc("/api/addLike", middleware.Authorization(http.HandlerFunc(controllers.ReactPostController)))
 }
