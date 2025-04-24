@@ -43,7 +43,7 @@ const router = async () => {
     }
 
     if (match.route.hasOwnProperty("view")) {
-        document.body.innerHTML = await match.route.view(match.route.path.slice(1,))
+        await match.route.view(match.route.path.slice(1,))
     }
 
     if (match.route.hasOwnProperty("eventStart")) {

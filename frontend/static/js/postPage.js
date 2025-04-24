@@ -54,10 +54,7 @@ export async function PostsPage(params) {
   })
 
   return /*html*/`
-        <div class="posts">
-            ${posts.join('')}
-        </div>
-
+      ${posts.join('')}
     `
 }
 export function ReactPost() {
@@ -217,11 +214,18 @@ export async function PostForm() {
 export function AddPosts() {
   const form = document.querySelector("#postForm");
   const spans = document.querySelectorAll(".errPost");
+  const ipt = document.querySelectorAll('#postForm input') 
   form.addEventListener("submit", async e => {
     e.preventDefault()
     if (!await isLogged()) {
       return
     }
+
+    spans.forEach(span => {
+      span.innerHTML = "";
+      span.style.display = "none";
+    });
+
     const formDataRaw = new FormData(form);
     const formData = Object.fromEntries(formDataRaw.entries());
 
@@ -239,6 +243,8 @@ export function AddPosts() {
             showInputError(data[span.id], span)
         }
       } else {
+        ipt[0].value = ""
+        ipt[1].value = ""
         navigateTo(location.pathname);
       }
     } catch (err) {
