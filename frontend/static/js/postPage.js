@@ -196,10 +196,10 @@ export async function PostForm() {
     <form id="postForm">
       <h2>Create post</h2>
       
-      <input maxlength="100" type="text" name="title" placeholder="title" />
+      <input maxlength="100" required type="text" name="title" placeholder="title" />
       <span class="errPost" id="title"></span>
       
-      <input maxlength="1000" type="text" name="content" placeholder="content" />
+      <input maxlength="1000" required type="text" name="content" placeholder="content" />
       <span class="errPost" id="content"></span>
       
       <h3>Categories</h3>
