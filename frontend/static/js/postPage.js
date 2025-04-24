@@ -187,7 +187,7 @@ export async function PostsByCategoriesPage() {
   `
 }
 export async function PostForm() {
-  const response = await fetch("/getCategory");
+  const response = await fetch("/api/getCategories");
   const categories = await response.json();
 
   const categoriesInputs = categories.data.map(category => /*html*/`

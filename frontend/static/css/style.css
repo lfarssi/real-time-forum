@@ -216,6 +216,54 @@ aside > .profile p i{
     margin-right: 10px;
 }
 
+aside > .filter ul{
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px;
+    list-style: none;
+    gap: 20px;
+}
+
+aside > .filter ul i{
+    background-color: var(--bg-dark);
+    padding: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+aside > .filter ul a{
+    text-decoration: none;
+    color: var(--text-light);
+    font-size: 1.1em;
+
+}
+
+
+aside > .filter ul a span{
+    position: relative;
+    width: max-content;
+    transition: .3s;
+}
+
+aside > .filter ul a span::after{
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -3px;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-dark);
+    transition: .3s;
+
+}
+
+aside > .filter ul a span:hover::after{
+    width: 100%;
+    transition: .3s;
+
+}
+
 #postForm {
     background-color: var(--card-dark);
     color: var(--text-light);
