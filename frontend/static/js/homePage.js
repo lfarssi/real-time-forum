@@ -39,7 +39,7 @@ export async function homePage(param) {
             </section>
             <aside>
                 <div class="profile">
-                    <p>${logged.username}</p>
+                    <p><i class="fa-solid fa-user"></i> ${logged.username}</p>
                 </div>
                 <div class="friends">
 

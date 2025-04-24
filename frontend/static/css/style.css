@@ -188,9 +188,10 @@ aside > div{
 }
 
 aside > .profile{
-    height: 50px;
     width: 300px;
-
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
 }
 
 aside > .friends{
@@ -203,6 +204,16 @@ aside > .friends{
 aside > .filter{
     height: 84.5vh;
     width: 300px;
+}
+
+aside > .profile  p{
+    color: var(--text-light);
+    font-weight: 600;
+    font-size: 1.2em;
+}
+
+aside > .profile p i{
+    margin-right: 10px;
 }
 
 #postForm {
@@ -324,6 +335,7 @@ aside > .filter{
 .post .dateCreation{
     font-size: 12px;
     opacity: .6;
+    margin-top: 5px;
 }
 
 .post>div {
@@ -339,14 +351,8 @@ aside > .filter{
     width: max-content;
 }
 
-.post .title::after{
-    content: '';
-    width: 100%;
-    height: 2px;
-    background-color: var(--accent);
-    position: absolute;
-    left: 0;
-    bottom: -3px;
+.post .username{
+    width: max-content;
 }
 
 .post .content{
