@@ -63,27 +63,27 @@ export async function PostsPage(params) {
     `
 }
 export function ReactPost() {
-  document.body.addEventListener("click", async (e) => {
+  document.querySelector('.posts').addEventListener("click", async (e) => {
 
     let button = e.target.closest("button[class='likePost'], button[class='disLikePost']")
     if (button) {
       if (!await isLogged()) {
         return
       }
-  
+
       const postId = parseInt(button.dataset.id);
       const status = button.classList.contains("likePost") ? "like" : "dislike";
-  
+
       try {
         const response = await fetch(`/api/addLike`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ postID: postId, sender: "post", status })
         });
-  
+
         if (response.ok) {
           const result = await response.json();
-  
+
           if (status === "like") {
             button.innerHTML = /*html*/`
              ${result.data.nbLikes} 
@@ -95,7 +95,7 @@ export function ReactPost() {
             button.innerHTML = /*html*/`
             ${result.data.nbDislikes} 
            <i class="fa-solid fa-thumbs-down"></i>`;
-           document.querySelector("button[class='likePost']").innerHTML =  /*html*/`
+            document.querySelector("button[class='likePost']").innerHTML =  /*html*/`
            ${result.data.nbLikes} 
           <i class="fa-regular fa-thumbs-up"></i>`;
           }
