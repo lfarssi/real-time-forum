@@ -12,8 +12,10 @@ export async function PostsPage(params) {
   }
   else if (params == "createdPosts") {
     response = await fetch("/api/getCreatedPosts");
-
+  } else if (params == "postsByCategory") {
+    response = await fetch('/api/getPostsByCategory' + location.search)
   }
+
   const data = await response.json()
   if (!data.data) {
     return errorPage("No Post Available", 404)
@@ -22,6 +24,7 @@ export async function PostsPage(params) {
 
   console.log(data.data)
   let i;
+
 
 
   let posts = data.data.map(post => {
@@ -101,85 +104,6 @@ export function ReactPost() {
 }
 
 
-export async function LikedPostsPage() {
-  const response = await fetch("/api/getLikedPosts");
-  const data = await response.json()
-  if (!data.data) {
-
-    return errorPage("No Post Available", 404)
-
-  }
-  console.log(data.data);
-
-  let posts = data.data.map(post => {
-    return /*html*/`
-      <div class="post">
-          <div>${post.username}</div>
-          <div>${post.title}</div>
-          <div>${post.content}</div>
-      </div>
-  `
-  })
-
-  return /*html*/`
-      <div class="posts">
-          ${posts.join('')}
-      </div>
-
-  `
-}
-export async function CreatedPostsPage() {
-  const response = await fetch("/api/getCreatedPosts");
-  const data = await response.json()
-  if (!data.data) {
-    return errorPage("No Post Available", 404)
-
-  }
-  console.log(data.data);
-
-  let posts = data.data.map(post => {
-    return /*html*/`
-      <div class="post">
-          <div>${post.username}</div>
-          <div>${post.title}</div>
-          <div>${post.content}</div>
-      </div>
-  `
-  })
-
-  return /*html*/`
-      <div class="posts">
-          ${posts.join('')}
-      </div>
-
-  `
-}
-export async function PostsByCategoriesPage() {
-  const response = await fetch("/api/getPostsByCategory");
-  const data = await response.json()
-  if (!data.data) {
-    return errorPage("No Post Available", 404)
-
-  }
-  console.log(data.data);
-
-  let posts = data.data.map(post => {
-    return /*html*/`
-      <div class="post">
-          <div>${post.username}</div>
-          <div>${post.title}</div>
-          <div>${post.content}</div>
-      </div>
-  `
-  })
-
-  return /*html*/`
-      <div class="posts">
-          ${posts.join('')}
-      </div>
-
-  `
-}
 export async function PostForm() {
   const response = await fetch("/api/getCategories");
   const categories = await response.json();
@@ -230,7 +154,9 @@ export function AddPosts() {
     const formData = Object.fromEntries(formDataRaw.entries());
 
     // ✅ Fix: ensure "categories" is always an array
-    formData.categories = formDataRaw.getAll("categories"); try {
+    formData.categories = formDataRaw.getAll("categories");
+    console.log(formData)
+    try {
       const response = await fetch("/api/addPost", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -252,10 +178,7 @@ export function AddPosts() {
       document.body.innerHTML = errorPage("Something went wrong!", 500)
 
     }
-
-  })
-
-
+  }, { once: true })
 }
 
 export function filterByCategories() {
@@ -264,14 +187,15 @@ export function filterByCategories() {
   categories.forEach(category => {
     category.addEventListener('change', async () => {
       let checkedInputs = Array.from(categories).filter(cat => cat.checked)
-      let checkedInputsValue = checkedInputs.map(cat => "categories="+cat.value).join('&')
 
-      try {
-        const response = await fetch('/api/getPostsByCategory?'+checkedInputsValue)
-        console.log(await response.json())
-      } catch (err) {
-        console.error(err)
+      if (checkedInputs.length !== 0) {
+        let checkedInputsValue = checkedInputs.map(cat => "categories=" + cat.value).join('&')
+        navigateTo('/postsByCategory?' + checkedInputsValue)
+
+      } else {
+        console.log("All data")
       }
+
 
     })
   })
