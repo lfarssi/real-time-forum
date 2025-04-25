@@ -72,6 +72,7 @@ type Message struct {
 	ID         int       `json:"id"`
 	SenderID   int       `json:"sender_id"`
 	RecipientID int      `json:"recipient_id"`
+	Username   string    `json:"username"` 
 	Content    string    `json:"content"`
 	SentAt     time.Time `json:"sent_at"`
 	Status     string    `json:"status"` 
