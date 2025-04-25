@@ -1,5 +1,5 @@
 import { isLogged } from "./app.js"
-import { PostForm, PostsPage } from "./postPage.js"
+import { filterByCategories, PostForm, PostsPage } from "./postPage.js"
 
 export function header() {
     return /*html*/`
@@ -29,7 +29,7 @@ export async function homePage(param) {
     let data = await response.json()
 
     const categoriesInputs = data.data.map(category => /*html*/`
-        <input style="display:none;" type="checkbox" name="categories" id="filter${category.id}" value="${category.id}" />
+        <input style="display:none;" type="checkbox" name="categories" class="categories" id="filter${category.id}" value="${category.id}" />
     <label for="filter${category.id}">
     <i class="fa-solid fa-tag"></i> <span> ${category.name}</span>
     </label>
@@ -48,7 +48,6 @@ export async function homePage(param) {
                         <ul>
                             ${categoriesInputs}
                         </ul>
-                        <button class="btn" type="submit">Filter</button>
                     </form>
                 </div>  
             </aside>
@@ -73,4 +72,6 @@ export async function homePage(param) {
         let posts = document.querySelector('.posts')
         posts.innerHTML = `${await PostsPage(param)}`
     }
+
+    filterByCategories()
 }
