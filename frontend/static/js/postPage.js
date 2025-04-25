@@ -5,8 +5,8 @@ import { showInputError } from "./authPage.js";
 
 export async function PostsPage(params) {
   let response;
-  let offset = 0; 
-  const limite = 10; 
+  let offset = 0;
+  const limite = 10;
 
 
   if (params == "") {
@@ -51,8 +51,8 @@ export async function PostsPage(params) {
               #${post.categories.join(' #')}
             </div>
             <div class="button-group">
-                <button class="likePost"  data-id="${post.id}">${post.Likes} ${reactLike}</button>
-                <button class="disLikePost"  data-id="${post.id}">${post.Dislikes} ${reactDislike}</button>
+                <button class="likePost" data-id="${post.id}"><span>${post.Likes}</span> ${reactLike}</button>
+                <button class="disLikePost" data-id="${post.id}"><span>${post.Dislikes}</span> ${reactDislike}</button>
                 <button class="displayComment"><i class="fa-regular fa-comment"></i></button>
             </div>
             
@@ -89,19 +89,38 @@ export function ReactPost() {
         if (response.ok) {
           const result = await response.json();
 
+          let currentNbLikes = parseInt(button.children[0].textContent)
+
+          console.log(currentNbLikes)
+          console.log(result.data)
+
           if (status === "like") {
-            button.innerHTML = /*html*/`
-             ${result.data.nbLikes} 
+            if (currentNbLikes < result.data.nbLikes) {
+              button.innerHTML = /*html*/`
+             <span>${result.data.nbLikes} </span>
             <i class="fa-solid fa-thumbs-up"></i>`;
+            } else {
+              button.innerHTML = /*html*/`
+              <span>${result.data.nbLikes} </span>
+             <i class="fa-regular fa-thumbs-up"></i>`;
+            }
             document.querySelector("button[class='disLikePost']").innerHTML = /*html*/`
-            ${result.data.nbDislikes} 
+            <span>${result.data.nbDislikes} </span>
            <i class="fa-regular fa-thumbs-down"></i>`;
-          } else if (status === "dislike") {
-            button.innerHTML = /*html*/`
-            ${result.data.nbDislikes} 
+          } 
+          if (status === "dislike") {
+            if (currentNbLikes < result.data.nbLikes) {
+              button.innerHTML = /*html*/`
+            <span>${result.data.nbDislikes}</span>
            <i class="fa-solid fa-thumbs-down"></i>`;
+            } else {
+              button.innerHTML = /*html*/`
+                <span>${result.data.nbDislikes}</span>
+               <i class="fa-regular fa-thumbs-down"></i>`;
+            }
+
             document.querySelector("button[class='likePost']").innerHTML =  /*html*/`
-           ${result.data.nbLikes} 
+           <span>${result.data.nbLikes}</span> 
           <i class="fa-regular fa-thumbs-up"></i>`;
           }
         } else {
