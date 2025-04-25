@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -126,6 +127,9 @@ func GetPostByCategoryController(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[i].DateCreation > posts[j].DateCreation
+	})
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Posts retrieved successfully",
