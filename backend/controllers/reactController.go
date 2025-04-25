@@ -53,8 +53,26 @@ func ReactPostController(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	like,err := models.GetReactionPost(react.PostID,"like")
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error getting number of reaction",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
+	dislike, err := models.GetReactionPost(react.PostID,"dislike")
+	if err != nil {
+		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+			"message": "Error getting number of reaction",
+			"status":  http.StatusInternalServerError,
+		})
+		return
+	}
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "React added successfully!",
 		"status":  http.StatusOK,
+		"data": map[string]any{"nbLikes": like, "nbDislikes": dislike},
+
 	})
 }
