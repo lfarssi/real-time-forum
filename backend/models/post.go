@@ -14,6 +14,7 @@ func GetPosts(userID int) ([]*Post, error) {
     INNER JOIN users u ON p.userID = u.id
     INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
+	GROUP BY p.id
     ORDER BY p.dateCreation DESC;
     `
 	rows, err := database.DB.Query(query)
@@ -40,19 +41,18 @@ func GetPosts(userID int) ([]*Post, error) {
 		WHERE pl.postID = ?
         GROUP BY pl.postID;
 	`
-	row := database.DB.QueryRow(query2, userID, userID, post.ID)
-	err = row.Scan(&post.Likes, &post.Dislikes, &post.IsLiked, &post.IsDisliked)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			post.Likes = 0
-			post.Dislikes = 0
-			post.IsLiked = false
-			post.IsDisliked = false
-		} else {
-			return nil, err
+		row := database.DB.QueryRow(query2, userID, userID, post.ID)
+		err = row.Scan(&post.Likes, &post.Dislikes, &post.IsLiked, &post.IsDisliked)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				post.Likes = 0
+				post.Dislikes = 0
+				post.IsLiked = false
+				post.IsDisliked = false
+			} else {
+				return nil, err
+			}
 		}
-	}
-
 		post.Categories = append(post.Categories, categorie)
 		post.DateCreation = CreatedAt.Format(time.DateTime)
 		posts = append(posts, &post)
@@ -86,7 +86,7 @@ func LikedPost(userID int) ([]*Post, error) {
 	INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
 	WHERE status='like' AND r.userID=?
-	GROUP BY p.id, c.name
+	GROUP BY p.id
 	ORDER BY p.dateCreation DESC
 	`
 	rows, err := database.DB.Query(query, userID)
@@ -112,18 +112,18 @@ func LikedPost(userID int) ([]*Post, error) {
 		WHERE pl.postID = ?
         GROUP BY pl.postID;
 	`
-	row := database.DB.QueryRow(query2, userID, userID, post.ID)
-	err = row.Scan(&post.Likes, &post.Dislikes, &post.IsLiked, &post.IsDisliked)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			post.Likes = 0
-			post.Dislikes = 0
-			post.IsLiked = false
-			post.IsDisliked = false
-		} else {
-			return nil, err
+		row := database.DB.QueryRow(query2, userID, userID, post.ID)
+		err = row.Scan(&post.Likes, &post.Dislikes, &post.IsLiked, &post.IsDisliked)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				post.Likes = 0
+				post.Dislikes = 0
+				post.IsLiked = false
+				post.IsDisliked = false
+			} else {
+				return nil, err
+			}
 		}
-	}
 		post.Categories = append(post.Categories, categorie)
 		post.DateCreation = CreatedAt.Format(time.DateTime)
 		LikedPost = append(LikedPost, &post)
@@ -166,18 +166,18 @@ func CreatedPost(userID int) ([]Post, error) {
 		WHERE pl.postID = ?
         GROUP BY pl.postID;
 	`
-	row := database.DB.QueryRow(query2, userID, userID, post.ID)
-	err = row.Scan(&post.Likes, &post.Dislikes, &post.IsLiked, &post.IsDisliked)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			post.Likes = 0
-			post.Dislikes = 0
-			post.IsLiked = false
-			post.IsDisliked = false
-		} else {
-			return nil, err
+		row := database.DB.QueryRow(query2, userID, userID, post.ID)
+		err = row.Scan(&post.Likes, &post.Dislikes, &post.IsLiked, &post.IsDisliked)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				post.Likes = 0
+				post.Dislikes = 0
+				post.IsLiked = false
+				post.IsDisliked = false
+			} else {
+				return nil, err
+			}
 		}
-	}
 		post.Categories = append(post.Categories, categorie)
 		post.DateCreation = CreatedAt.Format(time.DateTime)
 		createdPost = append(createdPost, post)
@@ -217,7 +217,7 @@ func GetPostsByCategory(idCategory int) ([]Post, error) {
 		}
 
 	}
-	
+
 	for _, post := range tempPosts {
 		posts = append(posts, *post)
 	}
