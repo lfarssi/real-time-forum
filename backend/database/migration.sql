@@ -7,6 +7,7 @@ CREATE TABLE IF not EXISTS users (
     age INTEGER,
     gender char(20) NOT NULL,
     password char(40),
+    isOnline BOOLEAN DEFAULT FALSE,
     createdAt DATE NOT NULL,
     session TEXT ,
     expiredAt DATE,

@@ -3,7 +3,7 @@ package models
 import "real_time_forum/backend/database"
 
 func GetMessage(sender int, receiver int)([]*Message ,error)  {
-	query := `SELECT m.id,u.username, m.content , m.sentAt, m.status
+	query := `SELECT m.id, u.username, m.content , m.sentAt, m.status
 	FROM messages m 
 	INNER JOIN users u 
 	ON u.id=m.receiverID
@@ -18,7 +18,7 @@ func GetMessage(sender int, receiver int)([]*Message ,error)  {
 	var messages []*Message
 	for rows.Next() {
 		var msg Message
-		err := rows.Scan(&msg.ID, &msg.Content, &msg.SentAt, &msg.Status, &msg.Username)
+		err := rows.Scan(&msg.ID, &msg.Username, &msg.Content, &msg.SentAt, &msg.Status)
 		if err != nil {
 			return nil, err
 		}
@@ -30,4 +30,16 @@ func GetMessage(sender int, receiver int)([]*Message ,error)  {
 	}
 
 	return messages, nil	
+}
+
+
+func AddMessage(message *Message)error  {
+	query := `
+		INSERT INTO messages (senderID, receiverID, content, sentAt, status RETURNING id) VALUES ($1, $2, $3, $4, $5) 
+	`
+	err := database.DB.QueryRow(query, &message.SenderID, &message.RecipientID, &message.Content, &message.SentAt, &message.Status).Scan(&message.ID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
