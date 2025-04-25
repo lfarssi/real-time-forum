@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"strings"
 	"time"
 
 	"real_time_forum/backend/database"
@@ -27,8 +28,8 @@ func GetPosts(userID int) ([]*Post, error) {
 	for rows.Next() {
 		var post Post
 		var CreatedAt time.Time
-		var categorie string
-		err = rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &categorie, &CreatedAt, &post.Username)
+		var category string
+		err = rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &category, &CreatedAt, &post.Username)
 		if err != nil {
 			return nil, err
 		}
@@ -53,7 +54,8 @@ func GetPosts(userID int) ([]*Post, error) {
 				return nil, err
 			}
 		}
-		post.Categories = append(post.Categories, categorie)
+		categories := strings.Split(category,",")
+		post.Categories = append(post.Categories, categories...)
 		post.DateCreation = CreatedAt.Format(time.DateTime)
 		posts = append(posts, &post)
 	}
@@ -97,9 +99,9 @@ func LikedPost(userID int) ([]*Post, error) {
 	var LikedPost []*Post
 	for rows.Next() {
 		var post Post
-		var categorie string
+		var category string
 		var CreatedAt time.Time
-		err = rows.Scan(&post.ID, &post.Title, &post.Content, &CreatedAt, &post.Username, &categorie)
+		err = rows.Scan(&post.ID, &post.Title, &post.Content, &CreatedAt, &post.Username, &category)
 		if err != nil {
 			return nil, err
 		}
@@ -124,7 +126,8 @@ func LikedPost(userID int) ([]*Post, error) {
 				return nil, err
 			}
 		}
-		post.Categories = append(post.Categories, categorie)
+		categories := strings.Split(category,",")
+		post.Categories = append(post.Categories, categories...)	
 		post.DateCreation = CreatedAt.Format(time.DateTime)
 		LikedPost = append(LikedPost, &post)
 	}
@@ -151,9 +154,9 @@ func CreatedPost(userID int) ([]Post, error) {
 	var createdPost []Post
 	for rows.Next() {
 		var post Post
-		var categorie string
+		var category string
 		var CreatedAt time.Time
-		err = rows.Scan(&post.ID, &post.Title, &post.Content, &CreatedAt, &post.Username, &categorie)
+		err = rows.Scan(&post.ID, &post.Title, &post.Content, &CreatedAt, &post.Username, &category)
 		if err != nil {
 			return nil, err
 		}
@@ -178,7 +181,8 @@ func CreatedPost(userID int) ([]Post, error) {
 				return nil, err
 			}
 		}
-		post.Categories = append(post.Categories, categorie)
+		categories := strings.Split(category,",")
+		post.Categories = append(post.Categories, categories...)
 		post.DateCreation = CreatedAt.Format(time.DateTime)
 		createdPost = append(createdPost, post)
 	}
@@ -238,12 +242,12 @@ func CorrectCategories(id int) []string {
 	defer rows.Close()
 	categories := []string{}
 	for rows.Next() {
-		var categorie string
-		err := rows.Scan(&categorie)
+		var category string
+		err := rows.Scan(&category)
 		if err != nil {
 			continue
 		}
-		categories = append(categories, categorie)
+		categories = append(categories, category)
 	}
 	return categories
 }
