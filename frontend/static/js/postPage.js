@@ -28,6 +28,7 @@ export async function PostsPage(params) {
 
 
   let posts = data.data.map(post => {
+    console.log(post.categories);
     return /*html*/`
         <div class="post" id="${post.id}" data-id="${post.id}">
             <div><i class="fa-solid fa-user"></i> ${post.username}</div>
@@ -35,7 +36,7 @@ export async function PostsPage(params) {
             <div class="title">${post.title}</div>
             <div class="content">${post.content}</div>
             <div class="categories">
-              #${post.categories[0].split(",").join(' #')}
+              #${post.categories.join(' #')}
             </div>
             <div class="button-group">
                 <div>
@@ -193,7 +194,7 @@ export function filterByCategories() {
         navigateTo('/postsByCategory?' + checkedInputsValue)
 
       } else {
-        console.log("All data")
+        navigateTo("/")
       }
 
 

@@ -78,7 +78,6 @@ func GetCreatedPostController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "Posts retrieved successfully",
 		"status":  http.StatusOK,
@@ -118,7 +117,7 @@ func GetPostByCategoryController(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-
+		
 		// Avoid duplicate posts by using a map
 		for _, post := range postTemp {
 			if _, exist := postSet[post.ID]; !exist {
