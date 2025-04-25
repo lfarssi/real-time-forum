@@ -1,5 +1,5 @@
 import { isLogged } from "./app.js"
-import { filterByCategories, PostForm, PostsPage } from "./postPage.js"
+import { AddPosts, filterByCategories, PostForm, PostsPage } from "./postPage.js"
 
 export function header() {
     return /*html*/`
@@ -78,5 +78,17 @@ export async function homePage(param) {
         posts.innerHTML = `${await PostsPage(param)}`
     }
 
+        const urlParams = new URLSearchParams(location.search);
+        const myParam = urlParams.getAll('categories');
+        let categories = document.querySelectorAll('.categories')
+    
+        categories.forEach(category => {
+            category.checked = false
+            if (myParam.includes(category.value)) {
+                category.checked = true
+            }
+        })
+    
+    AddPosts()
     filterByCategories()
 }
