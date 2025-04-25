@@ -234,7 +234,10 @@ func GetPostsByCategory(idCategory int) ([]Post, error) {
 func CorrectCategories(id int) []string {
 	query := `SELECT c.name FROM category c
 	INNER JOIN postCategory pc ON c.id = pc.categoryID
-	WHERE pc.postID = ?`
+	INNER JOIN posts p ON p.id= pc.postID
+	WHERE pc.postID = ?
+	ORDER BY p.dateCreation DESC
+	`
 	rows, err := database.DB.Query(query, id)
 	if err != nil {
 		return nil
