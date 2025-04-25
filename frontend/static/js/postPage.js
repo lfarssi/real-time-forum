@@ -3,14 +3,14 @@ import { isLogged, navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
 import { showInputError } from "./authPage.js";
 
-export async function PostsPage(offset) {
+export async function PostsPage(params) {
   let response;
   let offset = 0; 
-  const limit = 10; 
+  const limite = 10; 
 
 
   if (params == "") {
-    response = await fetch(`/api/getPosts?offset=${offset}&limit=${limit}`);
+    response = await fetch(`/api/getPosts?offset=${offset}&limit=${limite}`);
   } else if (params == "likedPosts") {
     response = await fetch("/api/getLikedPosts");
 
