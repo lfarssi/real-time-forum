@@ -19,16 +19,9 @@ export async function PostsPage(params) {
   const data = await response.json()
   if (!data.data) {
     return errorPage("No Post Available", 404)
-
   }
 
-  console.log(data.data)
-  let i;
-
-
-
   let posts = data.data.map(post => {
-    console.log(post.categories);
     return /*html*/`
         <div class="post" id="${post.id}" data-id="${post.id}">
             <div><i class="fa-solid fa-user"></i> ${post.username}</div>
@@ -183,21 +176,22 @@ export function AddPosts() {
 }
 
 export function filterByCategories() {
-  let categories = document.querySelectorAll('.categories');
+  const filterForm = document.querySelector(".filter form");
 
-  categories.forEach(category => {
-    category.addEventListener('change', async () => {
-      let checkedInputs = Array.from(categories).filter(cat => cat.checked)
+  if (!filterForm) return;
 
-      if (checkedInputs.length !== 0) {
-        let checkedInputsValue = checkedInputs.map(cat => "categories=" + cat.value).join('&')
-        navigateTo('/postsByCategory?' + checkedInputsValue)
+  filterForm.addEventListener('change', async () => {
+    let checkedInputs = Array.from(filterForm.querySelectorAll('.categories')).filter(cat => cat.checked);
 
-      } else {
-        navigateTo("/")
+    if (checkedInputs.length !== 0) {
+      let checkedInputsValue = checkedInputs.map(cat => "categories=" + cat.value).join('&');
+      if (location.pathname + location.search !== '/postsByCategory?' + checkedInputsValue) {
+        navigateTo('/postsByCategory?' + checkedInputsValue);
       }
-
-
-    })
-  })
+    } else {
+      if (location.pathname !== "/") {
+        navigateTo("/");
+      }
+    }
+  });
 }
