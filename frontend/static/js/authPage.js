@@ -2,7 +2,7 @@ import { navigateTo } from "./app.js";
 import { errorPage } from "./errorPage.js";
 
 export function loginPage() {
-  return /*html*/`
+  document.body.innerHTML = /*html*/`
     <div class="auth">
     <form class="authForm" id="loginForm">
       <h2>Login</h2>
@@ -25,7 +25,7 @@ export function loginPage() {
 }
 
 export function registerPage() {
-  return /*html*/`
+  document.body.innerHTML = /*html*/`
     <div class="auth">
     <form class="authForm" id="registerForm">
       <h2>Register</h2>
