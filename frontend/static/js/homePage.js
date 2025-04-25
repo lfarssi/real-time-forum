@@ -48,7 +48,7 @@ export async function homePage(param) {
                         <ul>
                             ${categoriesInputs}
                         </ul>
-                        <button type="submit">Filter</button>
+                        <button class="btn" type="submit">Filter</button>
                     </form>
                 </div>  
             </aside>
