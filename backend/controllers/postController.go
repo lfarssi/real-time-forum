@@ -94,6 +94,9 @@ func GetPostByCategoryController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	r.ParseForm()
+
 	categories := r.Form["categories"]
 	postSet := make(map[int]struct{})
 	var posts []models.Post

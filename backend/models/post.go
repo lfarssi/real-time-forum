@@ -188,9 +188,9 @@ func CreatedPost(userID int) ([]Post, error) {
 func GetPostsByCategory(idCategory int) ([]Post, error) {
 	query := `
 	SELECT   p.id, p.title, p.content, c.name, p.dateCreation, u.username
-	FROM post p
+	FROM posts p
 	INNER JOIN users u ON p.userID = u.id
-	INNER JOIN postCategory pc ON p.id = pc.post_id
+	INNER JOIN postCategory pc ON p.id = pc.postID
 	INNER JOIN category c ON pc.categoryID = c.id
 	WHERE pc.categoryID =?
 	ORDER BY p.dateCreation DESC;

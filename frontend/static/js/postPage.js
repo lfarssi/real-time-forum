@@ -21,8 +21,8 @@ export async function PostsPage(params) {
   }
 
   console.log(data.data)
-  let i; 
-  
+  let i;
+
 
   let posts = data.data.map(post => {
     return /*html*/`
@@ -75,7 +75,7 @@ export function ReactPost() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ postID: postId, sender: "post", status })
         });
-        
+
         if (response.ok) {
           const result = await response.json();
           console.log(`Post ${status}d:`, result.message);
@@ -214,7 +214,7 @@ export async function PostForm() {
 export function AddPosts() {
   const form = document.querySelector("#postForm");
   const spans = document.querySelectorAll(".errPost");
-  const ipt = document.querySelectorAll('#postForm input') 
+  const ipt = document.querySelectorAll('#postForm input')
   form.addEventListener("submit", async e => {
     e.preventDefault()
     if (!await isLogged()) {
@@ -256,4 +256,23 @@ export function AddPosts() {
   })
 
 
+}
+
+export function filterByCategories() {
+  let categories = document.querySelectorAll('.categories');
+
+  categories.forEach(category => {
+    category.addEventListener('change', async () => {
+      let checkedInputs = Array.from(categories).filter(cat => cat.checked)
+      let checkedInputsValue = checkedInputs.map(cat => "categories="+cat.value).join('&')
+
+      try {
+        const response = await fetch('/api/getPostsByCategory?'+checkedInputsValue)
+        console.log(await response.json())
+      } catch (err) {
+        console.error(err)
+      }
+
+    })
+  })
 }
