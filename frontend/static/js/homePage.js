@@ -29,8 +29,8 @@ export async function homePage(param) {
     let response = await fetch('/api/getCategories')
     let data = await response.json()
 
-    let iconsCategories = ['<i class="fa-solid fa-file-code"></i>','<i class="fa-solid fa-lightbulb"></i>',' <i class="fa-solid fa-bitcoin-sign"></i>',
-        '<i class="fa-solid fa-child-reaching"></i>', '<i class="fa-solid fa-file-video"></i>', '<i class="fa-solid fa-medal"></i>',' <i class="fa-solid fa-utensils"></i>'
+    let iconsCategories = ['<i class="fa-solid fa-file-code"></i>', '<i class="fa-solid fa-lightbulb"></i>', ' <i class="fa-solid fa-bitcoin-sign"></i>',
+        '<i class="fa-solid fa-child-reaching"></i>', '<i class="fa-solid fa-file-video"></i>', '<i class="fa-solid fa-medal"></i>', ' <i class="fa-solid fa-utensils"></i>'
     ]
 
     const categoriesInputs = data.data.map((category, index) => /*html*/`
@@ -73,22 +73,22 @@ export async function homePage(param) {
         </main>
 
     `
+
+        AddPosts()
+        filterByCategories()
     } else {
         let posts = document.querySelector('.posts')
         posts.innerHTML = `${await PostsPage(param)}`
     }
 
-        const urlParams = new URLSearchParams(location.search);
-        const myParam = urlParams.getAll('categories');
-        let categories = document.querySelectorAll('.categories')
-    
-        categories.forEach(category => {
-            category.checked = false
-            if (myParam.includes(category.value)) {
-                category.checked = true
-            }
-        })
-    
-    AddPosts()
-    filterByCategories()
+    const urlParams = new URLSearchParams(location.search);
+    const myParam = urlParams.getAll('categories');
+    let categories = document.querySelectorAll('.categories')
+
+    categories.forEach(category => {
+        category.checked = false
+        if (myParam.includes(category.value)) {
+            category.checked = true
+        }
+    })
 }

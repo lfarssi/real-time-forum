@@ -22,6 +22,20 @@ export async function PostsPage(params) {
   }
 
   let posts = data.data.map(post => {
+    let reactLike;
+    let reactDislike;
+    if (post.IsLiked) {
+      reactLike = '<i class="fa-solid fa-thumbs-up"></i>'
+    } else {
+      reactLike = '<i class="fa-regular fa-thumbs-up"></i>'
+    }
+
+    if (post.IsDisliked) {
+      reactDislike = '<i class="fa-solid fa-thumbs-down"></i>'
+    } else {
+      reactDislike = '<i class="fa-regular fa-thumbs-down"></i>'
+    }
+
     return /*html*/`
         <div class="post" id="${post.id}" data-id="${post.id}">
             <div><i class="fa-solid fa-user"></i> ${post.username}</div>
@@ -33,10 +47,10 @@ export async function PostsPage(params) {
             </div>
             <div class="button-group">
                 <div>
-                  <button class="likePost"  data-id="${post.id}">${post.Likes} <i class="fa-regular fa-thumbs-up"></i></button>
+                  <button class="likePost"  data-id="${post.id}">${post.Likes} ${reactLike}</button>
                 </div>
                 <div>
-                <button class="disLikePost"  data-id="${post.id}">${post.Dislikes} <i class="fa-regular fa-thumbs-down"></i></button>
+                <button class="disLikePost"  data-id="${post.id}">${post.Dislikes} ${reactDislike}</button>
                 </div>
                 <div>
                   <button class="displayComment"><i class="fa-regular fa-comment"></i></button>
