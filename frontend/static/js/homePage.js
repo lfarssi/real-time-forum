@@ -1,5 +1,5 @@
 import { isLogged } from "./app.js"
-import { AddPosts, filterByCategories, PostForm, PostsPage } from "./postPage.js"
+import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 export function header() {
     return /*html*/`
@@ -75,6 +75,7 @@ export async function homePage(param) {
     `
 
         AddPosts()
+        ReactPost()
         filterByCategories()
     } else {
         let posts = document.querySelector('.posts')

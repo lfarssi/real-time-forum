@@ -140,7 +140,7 @@ export function login() {
 export async function logout() {
   try {
     await fetch("/api/logout")
-    navigateTo("/")
+    navigateTo("/register")
   } catch (err) {
     console.error(err)
     document.body.innerHTML = errorPage("Something went wrong!", 500)

@@ -13,7 +13,7 @@ export async function PostsPage(params) {
   else if (params == "createdPosts") {
     response = await fetch("/api/getCreatedPosts");
   } else if (params == "postsByCategory") {
-    response = await fetch('/api/getPostsByCategory' + location.search)    
+    response = await fetch('/api/getPostsByCategory' + location.search)
   }
 
   const data = await response.json()
@@ -46,15 +46,9 @@ export async function PostsPage(params) {
               #${post.categories.join(' #')}
             </div>
             <div class="button-group">
-                <div>
-                  <button class="likePost"  data-id="${post.id}">${post.Likes} ${reactLike}</button>
-                </div>
-                <div>
+                <button class="likePost"  data-id="${post.id}">${post.Likes} ${reactLike}</button>
                 <button class="disLikePost"  data-id="${post.id}">${post.Dislikes} ${reactDislike}</button>
-                </div>
-                <div>
-                  <button class="displayComment"><i class="fa-regular fa-comment"></i></button>
-                </div>
+                <button class="displayComment"><i class="fa-regular fa-comment"></i></button>
             </div>
             
             <div class="comments" style="display:none;">
@@ -69,34 +63,43 @@ export async function PostsPage(params) {
     `
 }
 export function ReactPost() {
+  document.body.addEventListener("click", async (e) => {
 
-  document.querySelectorAll(".likePost, .disLikePost").forEach(button => {
-    button.addEventListener("click", async () => {
+    let button = e.target.closest("button[class='likePost'], button[class='disLikePost']")
+    if (button) {
       if (!await isLogged()) {
         return
       }
 
+      console.log(button)
+  
       const postId = parseInt(button.dataset.id);
-
       const status = button.classList.contains("likePost") ? "like" : "dislike";
-
+  
       try {
         const response = await fetch(`/api/addLike`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ postID: postId, sender: "post", status })
         });
-
+  
         if (response.ok) {
           const result = await response.json();
-          console.log(`Post ${status}d:`, result.message);
-
+  
           if (status === "like") {
-            // button.textContent = "Liked!";
-            // button.disabled = true; 
+            button.innerHTML = /*html*/`
+             ${result.data.nbLikes} 
+            <i class="fa-solid fa-thumbs-up"></i>`;
+            document.querySelector("button[class='disLikePost']").innerHTML = /*html*/`
+            ${result.data.nbDislikes} 
+           <i class="fa-regular fa-thumbs-down"></i>`;
           } else if (status === "dislike") {
-            // button.textContent = "Disliked!";
-            // button.disabled = true; 
+            button.innerHTML = /*html*/`
+            ${result.data.nbDislikes} 
+           <i class="fa-solid fa-thumbs-down"></i>`;
+           document.querySelector("button[class='likePost']").innerHTML =  /*html*/`
+           ${result.data.nbLikes} 
+          <i class="fa-regular fa-thumbs-up"></i>`;
           }
         } else {
           console.error(`Failed to ${status} post`);
@@ -104,8 +107,10 @@ export function ReactPost() {
       } catch (err) {
         console.error(`Error ${status}ing post:`, err);
       }
-    });
+    }
+
   });
+
   document.querySelectorAll(".displayComment").forEach(button => {
     button.addEventListener("click", CommentSection);
   });
