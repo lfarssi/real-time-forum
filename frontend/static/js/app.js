@@ -48,7 +48,6 @@ const router = async () => {
 
     if (match.route.hasOwnProperty("eventStart")) {
         match.route.eventStart()
-        AddPosts()
     }
 }
 

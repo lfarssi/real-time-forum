@@ -13,7 +13,7 @@ export async function PostsPage(params) {
   else if (params == "createdPosts") {
     response = await fetch("/api/getCreatedPosts");
   } else if (params == "postsByCategory") {
-    response = await fetch('/api/getPostsByCategory' + location.search)
+    response = await fetch('/api/getPostsByCategory' + location.search)    
   }
 
   const data = await response.json()
@@ -28,7 +28,7 @@ export async function PostsPage(params) {
             <p class="dateCreation">${post.dateCreation}</p>
             <div class="title">${post.title}</div>
             <div class="content">${post.content}</div>
-            <div class="categories">
+            <div class="allCategories">
               #${post.categories.join(' #')}
             </div>
             <div class="button-group">

@@ -425,7 +425,7 @@ aside > .filter ul input:checked + label span::after{
     letter-spacing: 0.5px;
 }
 
-.post .categories{
+.post .allCategories{
     color: var(--text-muted);
 }
 
