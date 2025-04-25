@@ -30,7 +30,7 @@ export async function homePage(param) {
     let data = await response.json()
 
     let iconsCategories = ['<i class="fa-solid fa-file-code"></i>','<i class="fa-solid fa-lightbulb"></i>',' <i class="fa-solid fa-bitcoin-sign"></i>',
-        '<i class="fa-solid fa-child-reaching"></i>', '<i class="fa-solid fa-video"></i>', '<i class="fa-solid fa-medal"></i>',' <i class="fa-solid fa-utensils"></i>'
+        '<i class="fa-solid fa-child-reaching"></i>', '<i class="fa-solid fa-file-video"></i>', '<i class="fa-solid fa-medal"></i>',' <i class="fa-solid fa-utensils"></i>'
     ]
 
     const categoriesInputs = data.data.map((category, index) => /*html*/`
