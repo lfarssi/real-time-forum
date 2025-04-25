@@ -117,7 +117,7 @@ func GetPostByCategoryController(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		
+
 		// Avoid duplicate posts by using a map
 		for _, post := range postTemp {
 			if _, exist := postSet[post.ID]; !exist {
