@@ -1,5 +1,7 @@
 package models
 
+import "time"
+
 type UserAuth struct {
 	UserName  string `json:"username"`
 	Email     string `json:"email"`
@@ -61,8 +63,16 @@ type React struct {
 	Status    string `json:"status"`
 }
 
-
 type Category struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
+}
+
+type Message struct {
+	ID         int       `json:"id"`
+	SenderID   int       `json:"sender_id"`
+	RecipientID int      `json:"recipient_id"`
+	Content    string    `json:"content"`
+	SentAt     time.Time `json:"sent_at"`
+	Status     string    `json:"status"` 
 }
