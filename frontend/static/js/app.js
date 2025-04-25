@@ -20,10 +20,10 @@ const router = async () => {
     }
 
     const routes = [
-        { path: "/", view: homePage, eventStart: ReactPost },
-        { path: "/likedPosts", view: homePage, eventStart: ReactPost },
-        { path: "/createdPosts", view: homePage, eventStart: ReactPost },
-        { path: "/postsByCategory", view: homePage, eventStart: ReactPost },
+        { path: "/", view: homePage },
+        { path: "/likedPosts", view: homePage },
+        { path: "/createdPosts", view: homePage},
+        { path: "/postsByCategory", view: homePage },
         { path: "/login", view: loginPage, eventStart: login },
         { path: "/register", view: registerPage, eventStart: register },
         { path: "/logout", eventStart: logout }
