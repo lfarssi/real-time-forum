@@ -7,18 +7,20 @@ import (
 
 	"real_time_forum/backend/database"
 )
-
-func GetPosts(userID int) ([]*Post, error) {
+func GetPosts(userID int, offset int, limit int) ([]*Post, error) {
 	query := `
-    SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(DISTINCT c.name) AS categories, p.dateCreation, u.username
+    SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(DISTINCT c.name) AS categories, 
+           p.dateCreation, u.username
     FROM posts p
     INNER JOIN users u ON p.userID = u.id
     INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
-	GROUP BY p.id
-    ORDER BY p.dateCreation DESC;
+    GROUP BY p.id
+    ORDER BY p.dateCreation DESC
+    LIMIT ? OFFSET ?;
     `
-	rows, err := database.DB.Query(query)
+
+	rows, err := database.DB.Query(query, limit, offset)
 	if err != nil {
 		return nil, err
 	}
@@ -29,19 +31,24 @@ func GetPosts(userID int) ([]*Post, error) {
 		var post Post
 		var CreatedAt time.Time
 		var category string
+
 		err = rows.Scan(&post.ID, &post.UserID, &post.Title, &post.Content, &category, &CreatedAt, &post.Username)
 		if err != nil {
 			return nil, err
 		}
-		query2 := `SELECT 
-		COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
-		COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount,
-        MAX(CASE WHEN pl.userID = ? AND pl.status = 'like' THEN 1 ELSE 0 END) AS isLiked,
-        MAX(CASE WHEN pl.userID = ? AND pl.status = 'dislike' THEN 1 ELSE 0 END) AS isDisliked
+
+		// Query likes, dislikes, and user reactions
+		query2 := `
+		SELECT 
+			COUNT(CASE WHEN pl.status = 'like' THEN 1 END) AS likeCount,
+			COUNT(CASE WHEN pl.status = 'dislike' THEN 1 END) AS dislikeCount,
+			MAX(CASE WHEN pl.userID = ? AND pl.status = 'like' THEN 1 ELSE 0 END) AS isLiked,
+			MAX(CASE WHEN pl.userID = ? AND pl.status = 'dislike' THEN 1 ELSE 0 END) AS isDisliked
 		FROM postLike pl
 		WHERE pl.postID = ?
-        GROUP BY pl.postID;
-	`
+		GROUP BY pl.postID;
+		`
+
 		row := database.DB.QueryRow(query2, userID, userID, post.ID)
 		err = row.Scan(&post.Likes, &post.Dislikes, &post.IsLiked, &post.IsDisliked)
 		if err != nil {
@@ -54,13 +61,18 @@ func GetPosts(userID int) ([]*Post, error) {
 				return nil, err
 			}
 		}
-		categories := strings.Split(category,",")
+
+		// Split categories and assign them to the post
+		categories := strings.Split(category, ",")
 		post.Categories = append(post.Categories, categories...)
 		post.DateCreation = CreatedAt.Format(time.DateTime)
+
 		posts = append(posts, &post)
 	}
+
 	return posts, nil
 }
+
 
 func AddPost(post *Post) error {
 	var postID int
