@@ -24,6 +24,7 @@ export async function homePage(param) {
     if (!logged) {
         return
     }
+    
 
     let response = await fetch('/api/getCategories')
     let data = await response.json()

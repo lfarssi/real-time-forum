@@ -212,7 +212,7 @@ func GetPostsByCategory(idCategory int) ([]Post, error) {
 		if temposts, ok := tempPosts[post.ID]; ok {
 			temposts.Categories = append(temposts.Categories, categorie)
 		} else {
-			// post.Categories = CorrectCategories(post.ID)
+			post.Categories = CorrectCategories(post.ID)
 			tempPosts[post.ID] = &post
 		}
 
@@ -223,4 +223,27 @@ func GetPostsByCategory(idCategory int) ([]Post, error) {
 	}
 	return posts, nil
 
+}
+
+
+
+func CorrectCategories(id int) []string {
+	query:= `SELECT c.name FROM category c
+	INNER JOIN postCategory pc ON c.id = pc.categoryID
+	WHERE pc.postID = ?`
+	rows, err := database.DB.Query(query, id)
+	if err != nil {
+		return nil
+	}
+	defer rows.Close()
+	categories := []string{}
+	for rows.Next() {
+		var categorie string
+		err := rows.Scan(&categorie)
+		if err != nil {
+			continue
+		}
+		categories = append(categories, categorie)
+	}
+	return categories
 }
