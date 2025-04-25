@@ -72,7 +72,7 @@ func ReactPostController(w http.ResponseWriter, r *http.Request) {
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "React added successfully!",
 		"status":  http.StatusOK,
-		"data": map[string]any{"nbLikes": like, "nbDislikes": dislike},
+		"data": map[string]any{"nbLikes": len(like), "nbDislikes": len(dislike)},
 
 	})
 }
