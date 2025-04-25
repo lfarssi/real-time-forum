@@ -21,7 +21,20 @@ func GetPostController(w http.ResponseWriter, r *http.Request) {
 	}
 	userID := r.Context().Value("userId").(int)
 
-	posts, err := models.GetPosts(userID)
+	query := r.URL.Query()
+	page, err := strconv.Atoi(query.Get("page"))
+	if err != nil || page < 1 {
+		page = 1 
+	}
+
+	limit, err := strconv.Atoi(query.Get("limit"))
+	if err != nil || limit < 1 {
+		limit = 10
+	}
+
+	offset := (page - 1) * limit
+
+	posts, err := models.GetPosts(userID, offset, limit)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error Getting Post",

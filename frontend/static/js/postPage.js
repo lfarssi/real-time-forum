@@ -2,10 +2,15 @@ import { errorPage } from "./errorPage.js";
 import { isLogged, navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
 import { showInputError } from "./authPage.js";
-export async function PostsPage(params) {
+
+export async function PostsPage(offset) {
   let response;
+  let offset = 0; 
+  const limit = 10; 
+
+
   if (params == "") {
-    response = await fetch("/api/getPosts");
+    response = await fetch(`/api/getPosts?offset=${offset}&limit=${limit}`);
   } else if (params == "likedPosts") {
     response = await fetch("/api/getLikedPosts");
 
@@ -127,7 +132,7 @@ export async function PostForm() {
   `).join("");
 
   return /*html*/`
-    <form id="postForm">
+    <form id="postForm" method="post">
       <h2>Create post</h2>
       
       <input maxlength="100" type="text" name="title" required placeholder="title" />
