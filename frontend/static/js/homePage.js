@@ -24,15 +24,19 @@ export async function homePage(param) {
     if (!logged) {
         return
     }
-    
+
 
     let response = await fetch('/api/getCategories')
     let data = await response.json()
 
-    const categoriesInputs = data.data.map(category => /*html*/`
+    let iconsCategories = ['<i class="fa-solid fa-file-code"></i>','<i class="fa-solid fa-lightbulb"></i>',' <i class="fa-solid fa-bitcoin-sign"></i>',
+        '<i class="fa-solid fa-child-reaching"></i>', '<i class="fa-solid fa-video"></i>', '<i class="fa-solid fa-medal"></i>',' <i class="fa-solid fa-utensils"></i>'
+    ]
+
+    const categoriesInputs = data.data.map((category, index) => /*html*/`
         <input style="display:none;" type="checkbox" name="categories" class="categories" id="filter${category.id}" value="${category.id}" />
     <label for="filter${category.id}">
-    <i class="fa-solid fa-tag"></i> <span> ${category.name}</span>
+    ${iconsCategories[index]} <span> ${category.name}</span>
     </label>
     `).join("");
 
