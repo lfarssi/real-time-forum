@@ -70,8 +70,6 @@ export function ReactPost() {
       if (!await isLogged()) {
         return
       }
-
-      console.log(button)
   
       const postId = parseInt(button.dataset.id);
       const status = button.classList.contains("likePost") ? "like" : "dislike";

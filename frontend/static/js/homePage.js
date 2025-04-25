@@ -1,4 +1,5 @@
 import { isLogged } from "./app.js"
+import { FriendsPage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 export function header() {
@@ -67,7 +68,7 @@ export async function homePage(param) {
                     <p><i class="fa-solid fa-user"></i> ${logged.username}</p>
                 </div>
                 <div class="friends">
-
+                ${await FriendsPage()}
                 </div>
             </aside>
         </main>
