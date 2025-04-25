@@ -204,8 +204,9 @@ func GetPostsByCategory(idCategory int) ([]Post, error) {
 	tempPosts := make(map[int]*Post)
 	for rows.Next() {
 		var post Post
+		var CreatedAt time.Time
 		var categorie string
-		err = rows.Scan(&post.ID, &post.Title, &post.Content, &categorie, &post.DateCreation, &post.Username)
+		err = rows.Scan(&post.ID, &post.Title, &post.Content, &categorie, &CreatedAt, &post.Username)
 		if err != nil {
 			return nil, err
 		}
@@ -215,6 +216,7 @@ func GetPostsByCategory(idCategory int) ([]Post, error) {
 			post.Categories = CorrectCategories(post.ID)
 			tempPosts[post.ID] = &post
 		}
+		post.DateCreation = CreatedAt.Format(time.DateTime)
 
 	}
 
@@ -225,10 +227,8 @@ func GetPostsByCategory(idCategory int) ([]Post, error) {
 
 }
 
-
-
 func CorrectCategories(id int) []string {
-	query:= `SELECT c.name FROM category c
+	query := `SELECT c.name FROM category c
 	INNER JOIN postCategory pc ON c.id = pc.categoryID
 	WHERE pc.postID = ?`
 	rows, err := database.DB.Query(query, id)
