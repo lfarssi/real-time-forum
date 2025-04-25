@@ -5,6 +5,7 @@ import "real_time_forum/backend/database"
 func Friends()([]*UserAuth, error)  {
     query := `SELECT firstName, lastName, gender
         FROM users
+        ORDER BY firstName
     `
     rows, err := database.DB.Query(query) 
     if err != nil {
