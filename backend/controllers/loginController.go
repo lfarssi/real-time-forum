@@ -73,7 +73,7 @@ func LoginController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie := &http.Cookie{Name: "Token", Value: token, MaxAge: 3600, HttpOnly: true}
+	cookie := &http.Cookie{Name: "Token", Value: token, MaxAge: 3600 * 24, HttpOnly: true}
 	http.SetCookie(w, cookie)
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
