@@ -15,6 +15,8 @@
     --accent-dark: #6E9946;
     --text-light: #F2F2F2;
     --text-muted: #AAAAAA;
+    --online: #4CAF50;
+    --offline: #777777;
     --error: #FF6B6B;
     --radius: 8px;
 }
@@ -270,6 +272,41 @@ aside > .filter ul label span:hover::after{
 
 aside > .filter ul input:checked + label span::after{
     width: 100%;
+}
+
+.friends ul{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.friends ul i{
+    padding: 5px;
+    border-radius: 50%;
+    color: var(--bg-dark);
+    margin-right: 10px;
+}
+
+.friends ul i.male{
+    color: var(--online);
+}
+
+.friends ul i.female{
+    color: var(--offline);
+}
+
+.friends ul li span{
+    color: var(--text-light);
+}
+
+.friends ul li{
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: var(--radius);
+}
+
+.friends ul li:hover{
+    background-color: var(--text-muted);
 }
 
 #postForm {

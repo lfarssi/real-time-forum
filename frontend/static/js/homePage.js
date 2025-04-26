@@ -8,7 +8,7 @@ export function header() {
             <nav>
                 <a id="logo" href="/" data-link>FOR<span class="U">U</span>M</a>
                 <ul>
-                    <li><a class="home" href="/" data-link=""><i class="fa fa-home" ></i></a></li>
+                    <li><a class="home active" href="/" data-link=""><i class="fa fa-home" ></i></a></li>
                     <li><a class="createdPosts" href="/createdPosts" data-link=""><i class="fa-solid fa-pen"></i></a></li>
                     <li><a class="likedPosts" href="/likedPosts" data-link="" ><i class="fa-solid fa-thumbs-up"></i></a></li>
                     <li><button class="postsByCategory"><i class="fa-solid fa-tag"></i></button></li>
@@ -68,7 +68,9 @@ export async function homePage(param) {
                     <p><i class="fa-solid fa-user"></i> ${logged.username}</p>
                 </div>
                 <div class="friends">
+                <ul>
                 ${await FriendsPage()}
+                </ul>
                 </div>
             </aside>
         </main>
@@ -91,6 +93,19 @@ export async function homePage(param) {
         category.checked = false
         if (myParam.includes(category.value)) {
             category.checked = true
+        }
+    })
+
+    activePage()
+}
+
+function activePage() {
+    let a = document.querySelectorAll('header nav ul a') 
+
+    a.forEach(element => {
+        element.style.color = "var(--text-light)"
+        if (element.pathname === location.pathname) {
+            element.style.color = "var(--accent)"
         }
     })
 }
