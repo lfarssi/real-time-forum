@@ -18,11 +18,11 @@ export async function FriendsPage() {
 }
 
 export function chatFriend() {
-    let ul = document.querySelector('.friends ul')
-    ul.addEventListener('click', (e) => {
-        let friend = e.target.closest("li")
-        if (friend) {
-            console.log(friend)
+    let friends = document.querySelector('.friends')
+    friends.addEventListener('click', (e) => {
+        let li = e.target.closest("li")
+        if (li) {
+            
         }
     })
 }

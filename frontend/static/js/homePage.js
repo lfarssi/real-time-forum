@@ -71,6 +71,9 @@ export async function homePage(param) {
                 <ul>
                 ${await FriendsPage()}
                 </ul>
+                <div class="chat">
+                    
+                </div>
                 </div>
             </aside>
         </main>

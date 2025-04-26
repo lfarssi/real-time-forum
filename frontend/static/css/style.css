@@ -328,6 +328,20 @@ aside > .filter ul input:checked + label span::after{
     width: 100%;
 }
 
+.friends .chat{
+    width: 300px;
+    height: 400px;
+    background-image: url(/frontend/static/images/chatbg2.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: 2px solid var(--accent-dark);
+    position: absolute;
+    right: 94%;
+    bottom: 0;
+    border-radius: var(--radius);
+}
+
 #postForm {
     background-color: var(--card-dark);
     color: var(--text-light);
