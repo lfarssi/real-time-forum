@@ -91,9 +91,6 @@ export function ReactPost() {
 
           let currentNbLikes = parseInt(button.children[0].textContent)
 
-          console.log(currentNbLikes)
-          console.log(result.data)
-
           if (status === "like") {
             if (currentNbLikes < result.data.nbLikes) {
               button.innerHTML = /*html*/`
@@ -104,12 +101,13 @@ export function ReactPost() {
               <span>${result.data.nbLikes} </span>
              <i class="fa-regular fa-thumbs-up"></i>`;
             }
-            document.querySelector("button[class='disLikePost']").innerHTML = /*html*/`
+
+            let disLikeButton = document.querySelector(`button.disLikePost[data-id='${button.dataset.id}']`)
+            disLikeButton.innerHTML = /*html*/`
             <span>${result.data.nbDislikes} </span>
            <i class="fa-regular fa-thumbs-down"></i>`;
-          } 
-          if (status === "dislike") {
-            if (currentNbLikes < result.data.nbLikes) {
+          } else if (status === "dislike") {
+            if (currentNbLikes < result.data.nbDislikes) {
               button.innerHTML = /*html*/`
             <span>${result.data.nbDislikes}</span>
            <i class="fa-solid fa-thumbs-down"></i>`;
@@ -119,7 +117,8 @@ export function ReactPost() {
                <i class="fa-regular fa-thumbs-down"></i>`;
             }
 
-            document.querySelector("button[class='likePost']").innerHTML =  /*html*/`
+            let likeButton = document.querySelector(`button.likePost[data-id='${button.dataset.id}']`)
+            likeButton.innerHTML =  /*html*/`
            <span>${result.data.nbLikes}</span> 
           <i class="fa-regular fa-thumbs-up"></i>`;
           }
