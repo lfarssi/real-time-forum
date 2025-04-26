@@ -23,7 +23,7 @@ func ApiRouter() {
 	http.HandleFunc("/api/getComments", middleware.Authorization(http.HandlerFunc(controllers.GetCommnetsController)))
 	http.HandleFunc("/api/getCategories", middleware.Authorization(http.HandlerFunc(controllers.CategoryController)))
 
-	http.HandleFunc("/api/addLike", middleware.Authorization(middleware.RateLimit(http.HandlerFunc(controllers.ReactPostController))))
+	http.HandleFunc("/api/addLike", middleware.Authorization(http.HandlerFunc(controllers.ReactPostController)))
 
 	http.HandleFunc("/api/getFriends", middleware.Authorization(http.HandlerFunc(controllers.FriendsController)))
 }
