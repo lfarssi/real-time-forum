@@ -13,7 +13,7 @@ func ApiRouter() {
 	http.HandleFunc("/api/logout", controllers.LogoutController)
 	http.HandleFunc("/api/isLogged", middleware.IsLogged)
 
-	http.HandleFunc("/api/addPost", middleware.Authorization(middleware.RateLimit(http.HandlerFunc(controllers.AddPostController))))
+	http.HandleFunc("/api/addPost", middleware.Authorization(http.HandlerFunc(controllers.AddPostController)))
 	http.HandleFunc("/api/getPosts", middleware.Authorization(http.HandlerFunc(controllers.GetPostController)))
 	http.HandleFunc("/api/getLikedPosts", middleware.Authorization(http.HandlerFunc(controllers.GetLikedPostController)))
 	http.HandleFunc("/api/getCreatedPosts", middleware.Authorization(http.HandlerFunc(controllers.GetCreatedPostController)))

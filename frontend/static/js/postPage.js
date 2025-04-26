@@ -150,7 +150,7 @@ export async function PostForm() {
   `).join("");
 
   return /*html*/`
-    <form id="postForm" method="post">
+    <form id="postForm">
       <h2>Create post</h2>
       
       <input maxlength="100" type="text" name="title" required placeholder="title" />
@@ -175,6 +175,7 @@ export function AddPosts() {
   const ipt = document.querySelectorAll('#postForm input')
   form.addEventListener("submit", async e => {
     e.preventDefault()
+
     if (!await isLogged()) {
       return
     }
@@ -189,7 +190,6 @@ export function AddPosts() {
 
     // ✅ Fix: ensure "categories" is always an array
     formData.categories = formDataRaw.getAll("categories");
-    console.log(formData)
     try {
       const response = await fetch("/api/addPost", {
         method: "POST",
@@ -212,7 +212,7 @@ export function AddPosts() {
       document.body.innerHTML = errorPage("Something went wrong!", 500)
 
     }
-  }, { once: true })
+  })
 }
 
 export function filterByCategories() {
