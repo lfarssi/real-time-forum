@@ -287,16 +287,18 @@ aside > .filter ul input:checked + label span::after{
     margin-right: 10px;
 }
 
-.friends ul i.male{
+.friends ul i.online{
     color: var(--online);
 }
 
-.friends ul i.female{
+.friends ul i.offline{
     color: var(--offline);
 }
 
 .friends ul li span{
     color: var(--text-light);
+    position: relative;
+
 }
 
 .friends ul li{
@@ -305,8 +307,25 @@ aside > .filter ul input:checked + label span::after{
     border-radius: var(--radius);
 }
 
-.friends ul li:hover{
-    background-color: var(--text-muted);
+.friends ul li span::after{
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -3px;
+    width: 0;
+    height: 2px;
+    transition: .3s;
+}
+
+.friends ul li i.online + span:hover::after{ 
+    background-color: var(--accent-dark);
+    width: 100%;
+}
+
+.friends ul li i.offline + span:hover::after{ 
+    background-color: var(--offline);
+    width: 100%;
 }
 
 #postForm {
