@@ -72,7 +72,13 @@ export async function homePage(param) {
                 ${await FriendsPage()}
                 </ul>
                 <div class="chat">
-                    
+                    <div class="header">
+                        <p><i class="fa-solid fa-user"></i> <span></span></p>
+                        <button class="closeChat"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                    <div class="cbody">
+
+                    </div>
                 </div>
                 </div>
             </aside>

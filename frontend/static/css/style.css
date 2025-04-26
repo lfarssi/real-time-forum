@@ -328,19 +328,60 @@ aside > .filter ul input:checked + label span::after{
     width: 100%;
 }
 
-.friends .chat{
+.friends .chat {
     width: 300px;
     height: 400px;
-    background-image: url(/frontend/static/images/chatbg2.png);
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    border: 2px solid var(--accent-dark);
+    background-color: var(--card-dark);
+    border: 1px solid var(--text-muted);
     position: absolute;
     right: 94%;
     bottom: 0;
     border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    display: none;
 }
+
+.friends .chat .header {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    font-weight: bold;
+    font-size: 16px;
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+}
+
+.friends .chat .header button {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 18px;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.friends .chat .header button:hover {
+    background-color: var(--card-dark);
+}
+
+.friends .chat .cbody {
+    flex-grow: 1;
+    background-image: url(/frontend/static/images/chatbg2.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 10px;
+    overflow-y: auto;
+}
+
 
 #postForm {
     background-color: var(--card-dark);

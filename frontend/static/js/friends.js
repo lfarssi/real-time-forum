@@ -19,10 +19,17 @@ export async function FriendsPage() {
 
 export function chatFriend() {
     let friends = document.querySelector('.friends')
+    let closeChat = document.querySelector('.chat .closeChat')
+    let chat = document.querySelector('.chat')
     friends.addEventListener('click', (e) => {
         let li = e.target.closest("li")
         if (li) {
-            
+            chat.style.display = 'block';
+            chat.querySelector('.header span').textContent = li.children[1].textContent
         }
+    })
+
+    closeChat.addEventListener('click', () => {
+        chat.style.display = 'none';
     })
 }
