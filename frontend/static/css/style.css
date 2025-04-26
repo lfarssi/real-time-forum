@@ -318,12 +318,12 @@ aside > .filter ul input:checked + label span::after{
     transition: .3s;
 }
 
-.friends ul li i.online + span:hover::after{ 
+.friends ul li:hover i.online + span::after{ 
     background-color: var(--accent-dark);
     width: 100%;
 }
-
-.friends ul li i.offline + span:hover::after{ 
+    
+.friends ul li:hover i.offline + span::after{ 
     background-color: var(--offline);
     width: 100%;
 }
