@@ -568,7 +568,12 @@ aside > .filter ul input:checked + label span::after{
     /* default hidden */
     border-left: 3px solid var(--accent);
 }
-
+.noPost{
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 /* Responsive container */
 @media (min-width: 576px) {
     .container {
