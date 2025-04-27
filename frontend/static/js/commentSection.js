@@ -1,5 +1,5 @@
-import { errorPage } from "./errorPage.js";
-export async function CommentSection(event) {
+import {  popup } from "./errorPage.js";
+export async function CommentSection(event) {  
   const postElement = event.target.closest(".post");
   const postId = parseInt(postElement.dataset.id);
 
@@ -12,7 +12,6 @@ export async function CommentSection(event) {
   try {
     const response = await fetch(`/api/getComments?postID=${postId}`);
     const data = await response.json();
-    console.log(data.data);
     
     const commentsHtml = data.data && data.data.length > 0
       ? data.data.map(comment => `
@@ -33,7 +32,7 @@ export async function CommentSection(event) {
     await AddComments(postId);
   } catch (err) {
     console.error("Error fetching comments:", err);
-    errorPage("Something went wrong!", 500);
+    popup("Something went wrong!", "failed");
   }
 }
                                                             
@@ -70,8 +69,7 @@ export async function AddComments(postId) {
 
       if (response.ok) {
         const result = await response.json();
-        console.log("Comment added:", result);
-
+        popup("Comment added successfully","success")
         // Create a new comment HTML element
         const newCommentHtml = `
           <div class="comment">
@@ -91,7 +89,7 @@ export async function AddComments(postId) {
       }
     } catch (err) {
       console.error("Error adding comment:", err);
-      errorSpan.textContent = "Something went wrong!";
+      document.body.innerHTML = popup("Something went wrong!","failed");
     }
   });
 }

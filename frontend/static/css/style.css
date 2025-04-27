@@ -484,6 +484,32 @@ aside > .filter ul input:checked + label span::after{
 #postForm button[type="submit"]:hover {
     background-color: var(--accent-dark);
 }
+.commentForm input{
+    width: 100%;
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--radius);
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-size: 1rem;
+    outline: none;
+}
+
+.commentForm input:focus,
+.commentForm input:valid{
+    border-bottom: 1px solid var(--accent-dark);
+}
+.commentForm button{
+    padding: 0.50rem;
+    margin: 0.50rem;
+    font-size: 0.8rem;
+    background-color: var(--accent);
+    color: var(--bg-dark);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
 
 .post {
     margin: 25px 0;
