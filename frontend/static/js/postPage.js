@@ -3,23 +3,21 @@ import { isLogged, navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
 import { showInputError } from "./authPage.js";
 
-export async function PostsPage(params) {
+export async function PostsPage(params, offset=0) {
   let response;
-  let offset = 0;
-  const limite = 10;
+  const limit =10;
 
-
-  if (params == "") {
-    response = await fetch(`/api/getPosts?offset=${offset}&limit=${limite}`);
-  } else if (params == "likedPosts") {
-    response = await fetch("/api/getLikedPosts");
-
+  let url = `/api/getPosts?offset=${offset}&limit=${limit}`; // Default case
+  if (params === "likedPosts") {
+      url = "/api/getLikedPosts";
+  } else if (params === "createdPosts") {
+      url = "/api/getCreatedPosts";
+  } else if (params === "postsByCategory") {
+      url = '/api/getPostsByCategory' + location.search;
   }
-  else if (params == "createdPosts") {
-    response = await fetch("/api/getCreatedPosts");
-  } else if (params == "postsByCategory") {
-    response = await fetch('/api/getPostsByCategory' + location.search)
-  }
+
+  response = await fetch(url);
+
 
   const data = await response.json()
   if (!data.data) {
@@ -67,6 +65,52 @@ export async function PostsPage(params) {
       ${posts.join('')}
     `
 }
+
+let offset = 0;
+const limit = 10;
+const params = ""; 
+let loading = false;
+let allPostsLoaded = false;
+
+async function loadPosts() {
+  console.log(offset);
+  console.log(limit);
+  
+  if (loading || allPostsLoaded) return;
+  loading = true;
+
+  const postsContainer = document.querySelector('.posts'); // Select here!
+  if (!postsContainer) {
+      console.error("postsContainer not found");
+      return;
+  }
+
+  const postsHTML = await PostsPage(params, offset);
+  if (!postsHTML || postsHTML.trim() === "") {
+      allPostsLoaded = true;
+  } else {
+      postsContainer.insertAdjacentHTML('beforeend', postsHTML);
+      offset += limit;
+  }
+
+  loading = false;
+}
+
+window.addEventListener('scroll', () => {
+  console.log("fii");
+  
+  if (loading || allPostsLoaded) return;
+
+  const scrollPosition = window.innerHeight + window.scrollY;
+  const threshold = document.body.offsetHeight - 500; // 500px before bottom
+
+  if (scrollPosition >= threshold) {
+    loadPosts();
+  }
+});
+
+
+
 export function ReactPost() {
   document.querySelector('.posts').addEventListener("click", async (e) => {
 
