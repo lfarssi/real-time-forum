@@ -27,14 +27,10 @@ func GetPostController(w http.ResponseWriter, r *http.Request) {
 		page = 1 
 	}
 
-	limit, err := strconv.Atoi(query.Get("limit"))
-	if err != nil || limit < 1 {
-		limit = 10
-	}
 
-	offset := (page - 1) * limit
 
-	posts, err := models.GetPosts(userID, offset, limit)
+	offset := (page - 1) * 10
+	posts, err := models.GetPosts(userID, offset)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error Getting Post",
