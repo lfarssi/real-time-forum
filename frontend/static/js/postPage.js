@@ -98,9 +98,9 @@ window.addEventListener('scroll', () => {
   throttle = true;
   setTimeout(() => {
     const scrollPosition = window.innerHeight + window.scrollY;
-    const threshold = document.body.offsetHeight - 500;
+    const bottomOfPage = document.body.offsetHeight ;
 
-    if (scrollPosition >= threshold) {
+    if (scrollPosition >= bottomOfPage) {
       loadPosts();
     }
 
