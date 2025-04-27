@@ -1,5 +1,5 @@
 import { navigateTo } from "./app.js";
-import { errorPage } from "./errorPage.js";
+import { errorPage, popup } from "./errorPage.js";
 
 export function loginPage() {
   document.body.innerHTML = /*html*/`
@@ -93,13 +93,16 @@ export function register() {
         for (let span of spans) {
           if (data.hasOwnProperty(span.id))
             showInputError(data[span.id], span)
+          return popup("Registration Failed",'failed')
+
         }
       } else {
-        navigateTo("/");
+        popup("Registered successfully", 'success'); 
+        setTimeout(() => navigateTo("/"), 3000);
       }
     } catch (err) {
       console.error(err)
-      document.body.innerHTML = errorPage("Something went wrong!", 500)
+      document.body.innerHTML = popup("Something went wrong!", "failed")
     }
   });
 }
@@ -127,12 +130,15 @@ export function login() {
 
       if (!response.ok) {
         errLogin.innerHTML = data.message
+        return popup("login Failed",'failed')
+
       } else {
-        navigateTo("/");
+        popup("Logged successfully", 'success');
+        setTimeout(() => navigateTo("/"), 3000);
       }
     } catch (err) {
       console.error(err)
-      document.body.innerHTML = errorPage("Something went wrong!", 500)
+      document.body.innerHTML = popup("Something went wrong!", "failed")
     }
   })
 }
@@ -140,10 +146,11 @@ export function login() {
 export async function logout() {
   try {
     await fetch("/api/logout")
-    navigateTo("/register")
+    popup("Logged successfully", 'success');
+    setTimeout(() => navigateTo("/register"), 3000);
   } catch (err) {
     console.error(err)
-    document.body.innerHTML = errorPage("Something went wrong!", 500)
+    document.body.innerHTML = popup("Something went wrong!", "failed")
   }
 }
 

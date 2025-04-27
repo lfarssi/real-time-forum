@@ -1,4 +1,4 @@
-import { errorPage } from "./errorPage.js";
+import { errorPage, popup } from "./errorPage.js";
 import { isLogged, navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
 import { showInputError } from "./authPage.js";
@@ -18,9 +18,7 @@ export async function PostsPage(params, page=0) {
   const data = await response.json()
   if (!data.data && page==0 ) {
     return errorPage("No Post Available", 404)
-  } else if (!data.data && page!==0){
-    return
-  }
+  } 
 
   let posts = data.data.map(post => {
     let reactLike;
@@ -57,14 +55,29 @@ export async function PostsPage(params, page=0) {
             </div>
         </div>
     `
+    
   })
 
   return /*html*/`
       ${posts.join('')}
-    `
+
+    ` 
 }
-let page = 0;
-const params = "";
+
+function getParamsFromLocation() {
+  if (location.pathname.startsWith('/postsByCategory')) {
+    return 'postsByCategory';
+  }
+  if (location.pathname.startsWith('/likedPosts')) {
+    return 'likedPosts';
+  }
+  if (location.pathname.startsWith('/createdPosts')) {
+    return 'createdPosts';
+  }
+  return '';
+}
+let page = 1;
+const params = getParamsFromLocation();
 let loading = false;
 let allPostsLoaded = false;
 
@@ -86,6 +99,7 @@ async function loadPosts() {
     }
   } catch (error) {
     console.error('Failed to load posts:', error);
+     return popup("No Post Available")
   } finally {
     loading = false;
   }
@@ -105,7 +119,7 @@ window.addEventListener('scroll', () => {
     }
 
     throttle = false;
-  }, 1000);
+  }, 2000);
 });
 
 
@@ -166,10 +180,10 @@ export function ReactPost() {
           <i class="fa-regular fa-thumbs-up"></i>`;
           }
         } else {
-          console.error(`Failed to ${status} post`);
+          return popup(`Failed to ${status} post`)
         }
       } catch (err) {
-        console.error(`Error ${status}ing post:`, err);
+        return popup(err, "failed")
       }
     }
 
@@ -248,11 +262,11 @@ export function AddPosts() {
       } else {
         ipt[0].value = ""
         ipt[1].value = ""
-        navigateTo(location.pathname);
-      }
+        popup("Post Created successfully", 'success');
+        setTimeout(() => navigateTo(location.pathname), 3000);      }
     } catch (err) {
       console.log(err);
-      document.body.innerHTML = errorPage("Something went wrong!", 500)
+      document.body.innerHTML = popup("Something went wrong!", "failed")
 
     }
   })
