@@ -7,20 +7,20 @@ import (
 
 	"real_time_forum/backend/database"
 )
-func GetPosts(userID int, offset int, limit int) ([]*Post, error) {
+func GetPosts(userID int, page int) ([]*Post, error) {
 	query := `
     SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(DISTINCT c.name) AS categories, 
-           p.dateCreation, u.username
+    p.dateCreation, u.username
     FROM posts p
     INNER JOIN users u ON p.userID = u.id
     INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
     GROUP BY p.id
     ORDER BY p.dateCreation DESC
-    LIMIT ? OFFSET ?;
+    LIMIT 10 OFFSET ?;
     `
 
-	rows, err := database.DB.Query(query, limit, offset)
+	rows, err := database.DB.Query(query, page)
 	if err != nil {
 		return nil, err
 	}

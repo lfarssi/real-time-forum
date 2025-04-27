@@ -3,25 +3,23 @@ import { isLogged, navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
 import { showInputError } from "./authPage.js";
 
-export async function PostsPage(params, offset=0) {
+export async function PostsPage(params, page=0) {
   let response;
-  const limit =10;
-
-  let url = `/api/getPosts?offset=${offset}&limit=${limit}`; // Default case
-  if (params === "likedPosts") {
-      url = "/api/getLikedPosts";
-  } else if (params === "createdPosts") {
-      url = "/api/getCreatedPosts";
-  } else if (params === "postsByCategory") {
-      url = '/api/getPostsByCategory' + location.search;
+  if (params == "") {
+    response = await fetch(`/api/getPosts?page=${page}`);
+  } else if (params == "likedPosts") {
+    response = await fetch("/api/getLikedPosts");
+  } else if (params == "createdPosts") {
+    response = await fetch("/api/getCreatedPosts");
+  } else if (params == "postsByCategory") {
+    response = await fetch('/api/getPostsByCategory' + location.search)
   }
 
-  response = await fetch(url);
-
-
   const data = await response.json()
-  if (!data.data) {
+  if (!data.data && page==0 ) {
     return errorPage("No Post Available", 404)
+  } else if (!data.data && page!==0){
+    return
   }
 
   let posts = data.data.map(post => {
@@ -65,48 +63,49 @@ export async function PostsPage(params, offset=0) {
       ${posts.join('')}
     `
 }
-
-let offset = 0;
-const limit = 10;
-const params = ""; 
+let page = 0;
+const params = "";
 let loading = false;
 let allPostsLoaded = false;
 
+
 async function loadPosts() {
-  console.log(offset);
-  console.log(limit);
-  
   if (loading || allPostsLoaded) return;
+
   loading = true;
 
-  const postsContainer = document.querySelector('.posts'); // Select here!
-  if (!postsContainer) {
-      console.error("postsContainer not found");
-      return;
-  }
+  try {
+    const postsContainer = document.querySelector('.posts');
+    const postsHTML = await PostsPage(params, page);
 
-  const postsHTML = await PostsPage(params, offset);
-  if (!postsHTML || postsHTML.trim() === "") {
+    if (!postsHTML || postsHTML.trim() === "") {
       allPostsLoaded = true;
-  } else {
+    } else {
       postsContainer.insertAdjacentHTML('beforeend', postsHTML);
-      offset += limit;
+      page += 1;
+    }
+  } catch (error) {
+    console.error('Failed to load posts:', error);
+  } finally {
+    loading = false;
   }
-
-  loading = false;
 }
 
+let throttle = false;
 window.addEventListener('scroll', () => {
-  console.log("fii");
-  
-  if (loading || allPostsLoaded) return;
+  if (throttle || loading || allPostsLoaded) return;
 
-  const scrollPosition = window.innerHeight + window.scrollY;
-  const threshold = document.body.offsetHeight - 500; // 500px before bottom
+  throttle = true;
+  setTimeout(() => {
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const threshold = document.body.offsetHeight - 500;
 
-  if (scrollPosition >= threshold) {
-    loadPosts();
-  }
+    if (scrollPosition >= threshold) {
+      loadPosts();
+    }
+
+    throttle = false;
+  }, 1000);
 });
 
 
