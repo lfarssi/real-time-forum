@@ -574,6 +574,86 @@ aside > .filter ul input:checked + label span::after{
     flex-direction: column;
     align-items: center;
 }
+.popup {
+    position: fixed;
+    top: 20px;
+    right: 50px;
+    background-color: var(--card-dark);
+    color: var(--text-light);
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    z-index: 9999;
+    animation: slide-in 0.3s ease;
+  }
+  
+  .popup-message {
+    margin-right: 10px;
+  }
+  
+  .popup-close-failed {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .popup-close-failed:hover {
+    color: #ff5c5c;
+  }
+  .popup-close-success {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  .popup-close-success:hover {
+    color: var(--accent);
+  }
+  .popup-timer-failed {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background-color: #ff5c5c;
+    animation: timer-line 3s linear forwards;
+    border-radius: 0 0 8px 8px;
+}
+.popup-timer-success {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background-color: var(--accent);
+    animation: timer-line 3s linear forwards;
+    border-radius: 0 0 8px 8px;
+}
+
+@keyframes timer-line {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+  
+  @keyframes slide-in {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
 /* Responsive container */
 @media (min-width: 576px) {
     .container {
