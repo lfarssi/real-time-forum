@@ -44,6 +44,7 @@ const ws = new WebSocket("ws://localhost:8080/ws/messages");
 
 ws.onmessage = function(event) {
     const msg = JSON.parse(event.data);
+    displayMessage(msg)
 };
 
 function sendMessage(content, senderID, receiverID) {
@@ -52,4 +53,15 @@ function sendMessage(content, senderID, receiverID) {
         senderID,
         receiverID,
     }));
+}
+
+
+function displayMessage(msg) {
+    const chatMessages = document.querySelector(".chat .messages");
+    if (chatMessages) {
+        const messageEl = document.createElement("div");
+        messageEl.className = "message";
+        messageEl.textContent = `${msg.sender}: ${msg.content}`;
+        chatMessages.appendChild(messageEl);
+    }
 }
