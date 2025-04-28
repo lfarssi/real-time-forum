@@ -59,7 +59,7 @@ export async function AddComments(postId) {
     const formData = Object.fromEntries(new FormData(form).entries());
     formData.postID = postId; // Include the post ID in the payload
     const username = window.loggedInUsername || "Anonymous"; // Replace with actual logic to get the username
-    
+
     try {
       const response = await fetch("/api/addComment", {
         method: "POST",
