@@ -83,8 +83,8 @@ export async function homePage(param) {
                         </div>
                         <form id="chatForm" class="chatForm">
                             <div class="input-container">
-                                <input type="text" name="content" placeholder="Write your message..." required />
-                                <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+                                <input type="text" class="messageInput" name="content" placeholder="Write your message..." required />
+                                <button type="submit" class="sendMessage"><i class="fa-solid fa-paper-plane"></i></button>
                             </div>
                             <span class="errChat" id="errChat"></span>
                         </form> 
