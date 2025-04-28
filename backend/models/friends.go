@@ -3,7 +3,7 @@ package models
 import "real_time_forum/backend/database"
 
 func Friends(userID int)([]*UserAuth, error)  {
-    query := `SELECT firstName, lastName, gender
+    query := `SELECT id, firstName, lastName, gender
         FROM users
         WHERE id != ?
         ORDER BY firstName
@@ -17,7 +17,7 @@ func Friends(userID int)([]*UserAuth, error)  {
     var users []*UserAuth
     for rows.Next() {
         var user UserAuth
-        err := rows.Scan(&user.FirstName, &user.LastName, &user.Gender)
+        err := rows.Scan(&user.ID,&user.FirstName, &user.LastName, &user.Gender)
         if err != nil {
             return nil, err
         }
