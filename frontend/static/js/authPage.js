@@ -27,7 +27,7 @@ export function loginPage() {
 export function registerPage() {
   document.body.innerHTML = /*html*/`
     <div class="auth">
-    <form class="authForm" id="registerForm">
+    <form class="authForm" method="post" id="registerForm">
       <h2>Register</h2>
 
       <input required type="text" name="username" placeholder="Username" />
@@ -97,9 +97,8 @@ export function register() {
 
         }
       } else {
-        popup("Registered successfully", 'success'); 
-        setTimeout(() => navigateTo("/"), 3000);
-      }
+        navigateTo("/")
+        }
     } catch (err) {
       console.error(err)
       document.body.innerHTML = popup("Something went wrong!", "failed")
@@ -133,9 +132,8 @@ export function login() {
         return popup("login Failed",'failed')
 
       } else {
-        popup("Logged successfully", 'success');
-        setTimeout(() => navigateTo("/"), 3000);
-      }
+        navigateTo("/")
+            }
     } catch (err) {
       console.error(err)
       document.body.innerHTML = popup("Something went wrong!", "failed")
@@ -146,9 +144,8 @@ export function login() {
 export async function logout() {
   try {
     await fetch("/api/logout")
-    popup("Logged successfully", 'success');
-    setTimeout(() => navigateTo("/register"), 3000);
-  } catch (err) {
+    navigateTo("/register")
+    } catch (err) {
     console.error(err)
     document.body.innerHTML = popup("Something went wrong!", "failed")
   }

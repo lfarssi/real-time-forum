@@ -3,16 +3,22 @@ import { isLogged, navigateTo } from "./app.js";
 import { CommentSection } from "./commentSection.js";
 import { showInputError } from "./authPage.js";
 
+let page = 1;
+const params = getParamsFromLocation();
+let loading = false;
+let allPostsLoaded = false;
+let throttle = false;
+
 export async function PostsPage(params, page=0) {
   let response;
   if (params == "") {
     response = await fetch(`/api/getPosts?page=${page}`);
   } else if (params == "likedPosts") {
-    response = await fetch("/api/getLikedPosts");
+    response = await fetch(`/api/getLikedPosts?page=${page}`);
   } else if (params == "createdPosts") {
-    response = await fetch("/api/getCreatedPosts");
+    response = await fetch(`/api/getCreatedPosts?page=${page}`);
   } else if (params == "postsByCategory") {
-    response = await fetch('/api/getPostsByCategory' + location.search)
+    response = await fetch(`/api/getPostsByCategory` + location.search + `&page=${page}`)
   }
 
   const data = await response.json()
@@ -76,11 +82,6 @@ function getParamsFromLocation() {
   }
   return '';
 }
-let page = 1;
-const params = getParamsFromLocation();
-let loading = false;
-let allPostsLoaded = false;
-
 
 async function loadPosts() {
   if (loading || allPostsLoaded) return;
@@ -105,21 +106,20 @@ async function loadPosts() {
   }
 }
 
-let throttle = false;
 window.addEventListener('scroll', () => {
   if (throttle || loading || allPostsLoaded) return;
 
   throttle = true;
   setTimeout(() => {
     const scrollPosition = window.innerHeight + window.scrollY;
-    const bottomOfPage = document.body.offsetHeight ;
+    const bottomOfPage = document.body.offsetHeight -500 ;
 
     if (scrollPosition >= bottomOfPage) {
       loadPosts();
     }
 
     throttle = false;
-  }, 2000);
+  }, 1000);
 });
 
 
