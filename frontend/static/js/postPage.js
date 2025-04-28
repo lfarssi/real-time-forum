@@ -261,7 +261,8 @@ export function AddPosts() {
         ipt[0].value = ""
         ipt[1].value = ""
         popup("Post Created successfully", 'success');
-        setTimeout(() => navigateTo(location.pathname), 3000);      }
+        navigateTo(location.pathname)
+      }
     } catch (err) {
       console.log(err);
       document.body.innerHTML = popup("Something went wrong!", "failed")
