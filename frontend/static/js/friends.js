@@ -40,7 +40,10 @@ export function chatFriend() {
     })
 }
 
-const ws = new WebSocket("ws://localhost:8080/ws/messages");
+const response= await fetch('https://api.ipify.org?format=json')
+const data=await response.json()
+
+const ws = new WebSocket(`ws://${data.data.ip}:8080/ws/messages`);
 
 ws.onmessage = function(event) {
     const msg = JSON.parse(event.data);
@@ -52,6 +55,7 @@ function sendMessage(content, senderID, receiverID) {
         content,
         senderID,
         receiverID,
+        "type":"addMessage"
     }));
 }
 
@@ -61,7 +65,20 @@ function displayMessage(msg) {
     if (chatMessages) {
         const messageEl = document.createElement("div");
         messageEl.className = "message";
-        messageEl.textContent = `${msg.sender}: ${msg.content}`;
+        messageEl.textContent = ` ${msg.content}`;
         chatMessages.appendChild(messageEl);
     }
 }
+
+const sendButton = document.querySelector(".sendMessage");
+sendButton.addEventListener("click", () => {
+    const messageInput = document.querySelector(".messageInput");
+    const receiverID = document.querySelector(".chatForm").dataset.receiverId; 
+    const content = messageInput.value.trim();
+
+    if (content) {
+        const senderID = 1; 
+        sendMessage(content, senderID, receiverID);
+        messageInput.value = ""; 
+    }
+});
