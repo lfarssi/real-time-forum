@@ -32,6 +32,7 @@ export function chatFriend() {
         if (li) {
             chat.style.display = 'flex';
             chat.querySelector('.header span').textContent = li.children[1].textContent
+            chat.querySelector('.header span').dataset.id = li.dataset.id
         }
     })
 
@@ -44,17 +45,24 @@ const ws = new WebSocket("ws://localhost:8080/ws/messages");
 
 ws.onmessage = function(event) {
     const msg = JSON.parse(event.data);
-    displayMessage(msg)
+    console.log(msg)
 };
 
-function sendMessage(content, senderID, receiverID) {
-    ws.send(JSON.stringify({
-        content,
-        senderID,
-        receiverID,
-    }));
-}
+export function sendMessage() {
+    let form = document.querySelector('.chatForm')
+    
+    form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        let input = document.querySelector('.chatForm input').value
+        let receiverID = document.querySelector('.header span').dataset.id
 
+        ws.send(JSON.stringify({
+            content: input,
+            recipientID: parseInt(receiverID),
+            type: "addMessage"
+        }))
+    })
+}
 
 function displayMessage(msg) {
     const chatMessages = document.querySelector(".chat .messages");
@@ -65,3 +73,4 @@ function displayMessage(msg) {
         chatMessages.appendChild(messageEl);
     }
 }
+
