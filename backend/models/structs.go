@@ -3,7 +3,7 @@ package models
 import "time"
 
 type UserAuth struct {
-	ID		  int `json:"id"`
+	ID        int    `json:"id"`
 	UserName  string `json:"username"`
 	Email     string `json:"email"`
 	FirstName string `json:"firstName"`
@@ -70,12 +70,12 @@ type Category struct {
 }
 
 type Message struct {
-	ID         int       `json:"id"`
-	SenderID   int       `json:"sender_id"`
-	RecipientID int      `json:"recipient_id"`
-	Username   string    `json:"username"` 
-	Content    string    `json:"content"`
-	SentAt     time.Time `json:"sent_at"`
-	Status     string    `json:"status"` 
-	Type     string    `json:"type"` 
+	ID          int       `json:"id"`
+	SenderID    int       `json:"senderID"`
+	RecipientID int       `json:"recipientID"`
+	Username    string    `json:"username"`
+	Content     string    `json:"content"`
+	SentAt      time.Time `json:"sentAT"`
+	Status      string    `json:"status"`
+	Type        string    `json:"type"`
 }
