@@ -15,7 +15,7 @@ export async function FriendsPage() {
             gender = '<i class="fa-solid fa-user offline"></i>'
         }
         return /*html*/`
-            <li>${gender} <span>${friend.firstName} ${friend.lastName}</span></li>
+            <li data-id="${friend.id}">${gender} <span>${friend.firstName} ${friend.lastName}</span></li>
     `
     })
     return /*html*/`
@@ -38,4 +38,18 @@ export function chatFriend() {
     closeChat.addEventListener('click', () => {
         chat.style.display = 'none';
     })
+}
+
+const ws = new WebSocket("ws://localhost:8080/ws/messages");
+
+ws.onmessage = function(event) {
+    const msg = JSON.parse(event.data);
+};
+
+function sendMessage(content, senderID, receiverID) {
+    ws.send(JSON.stringify({
+        content,
+        senderID,
+        receiverID,
+    }));
 }

@@ -1,6 +1,5 @@
 import { errorPage, popup } from "./errorPage.js";
 import { isLogged, navigateTo } from "./app.js";
-import { CommentSection } from "./commentSection.js";
 import { showInputError } from "./authPage.js";
 
 let page = 1;
