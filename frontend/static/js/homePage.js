@@ -1,6 +1,6 @@
 import { isLogged } from "./app.js"
 import { CommentSection } from "./commentSection.js"
-import { chatFriend, FriendsPage } from "./friends.js"
+import { chatFriend, FriendsPage, sendMessage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 export function header() {
@@ -100,6 +100,7 @@ export async function homePage(param) {
         ReactPost()
         filterByCategories()
         chatFriend()
+        sendMessage()
     } else {
         let posts = document.querySelector('.posts')
         posts.innerHTML = `${await PostsPage(param)}`
