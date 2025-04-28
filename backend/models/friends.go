@@ -2,12 +2,13 @@ package models
 
 import "real_time_forum/backend/database"
 
-func Friends()([]*UserAuth, error)  {
+func Friends(userID int)([]*UserAuth, error)  {
     query := `SELECT firstName, lastName, gender
         FROM users
+        WHERE id != ?
         ORDER BY firstName
     `
-    rows, err := database.DB.Query(query) 
+    rows, err := database.DB.Query(query, userID) 
     if err != nil {
         return nil, err
     }
