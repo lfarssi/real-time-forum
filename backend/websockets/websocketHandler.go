@@ -32,29 +32,40 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-        sender := r.Context().Value("userId").(int)
-        message.SenderID=sender
-		err = models.AddMessage(&message)
-		if err != nil {
-			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-				"message": "Cannot Send Message",
-				"status":  http.StatusInternalServerError,
-			})
-			return
-		}
 
-		messages, err := models.GetMessage(sender, message.RecipientID)
-        if err!= nil{
+		sender := r.Context().Value("userId").(int)
+		message.SenderID=sender
+		switch message.Type{
+		case "addMessage":
+			err = models.AddMessage(&message)
+			if err != nil {
+				utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+					"message": "Cannot Send Message",
+					"status":  http.StatusInternalServerError,
+				})
+				return
+			}
 			utils.ResponseJSON(w, http.StatusOK, map[string]any{
-				"message": "Getting  Messages",
+				"message": "Message Sent",
 				"status":  http.StatusOK,
 			})
-			return
+		case "loadMessage":
+			messages, err := models.GetMessage(message.SenderID, message.RecipientID)
+			if err!= nil{
+				utils.ResponseJSON(w, http.StatusOK, map[string]any{
+					"message": "Getting  Messages",
+					"status":  http.StatusOK,
+				})
+				return
+			}
+			utils.ResponseJSON(w, http.StatusOK, map[string]any{
+				"message": "Message Loaded",
+				"status":  http.StatusOK,
+				"data":    messages,
+			})
+
 		}
-		utils.ResponseJSON(w, http.StatusOK, map[string]any{
-			"message": "Message Sent",
-			"status":  http.StatusOK,
-			"data":    messages,
-		})
+        
+		
 	}
 }
