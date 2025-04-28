@@ -157,8 +157,7 @@ func CreatedPost(userID int, offset int) ([]Post, error) {
 	WHERE p.userID=?
 	GROUP BY p.id
 	ORDER BY p.dateCreation DESC
-		LIMIT 10 OFFSET ?;
-
+	LIMIT 10 OFFSET ?;
 	`
 	rows, err := database.DB.Query(query, userID, offset)
 	if err != nil {
