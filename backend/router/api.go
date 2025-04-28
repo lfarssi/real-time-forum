@@ -5,6 +5,7 @@ import (
 
 	"real_time_forum/backend/controllers"
 	"real_time_forum/backend/middleware"
+	"real_time_forum/backend/websockets"
 )
 
 func ApiRouter() {
@@ -26,4 +27,10 @@ func ApiRouter() {
 	http.HandleFunc("/api/addLike", middleware.Authorization(http.HandlerFunc(controllers.ReactPostController)))
 
 	http.HandleFunc("/api/getFriends", middleware.Authorization(http.HandlerFunc(controllers.FriendsController)))
+
+
+
+
+	http.HandleFunc("/ws/messages", websockets.MessageWebSocketHandler)
+
 }
