@@ -77,4 +77,5 @@ type Message struct {
 	Content    string    `json:"content"`
 	SentAt     time.Time `json:"sent_at"`
 	Status     string    `json:"status"` 
+	Type     string    `json:"type"` 
 }
