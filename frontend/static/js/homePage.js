@@ -1,4 +1,5 @@
 import { isLogged } from "./app.js"
+import { CommentSection } from "./commentSection.js"
 import { chatFriend, FriendsPage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
@@ -114,6 +115,10 @@ export async function homePage(param) {
     })
 
     activePage()
+
+    document.querySelectorAll(".displayComment").forEach(button => {
+        button.addEventListener("click", CommentSection);
+      });
 }
 
 function activePage() {

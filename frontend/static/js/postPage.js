@@ -189,9 +189,7 @@ export function ReactPost() {
 
   });
 
-  document.querySelectorAll(".displayComment").forEach(button => {
-    button.addEventListener("click", CommentSection);
-  });
+ 
 }
 
 
