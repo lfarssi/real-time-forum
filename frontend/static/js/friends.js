@@ -24,7 +24,7 @@ export function chatFriend() {
     friends.addEventListener('click', (e) => {
         let li = e.target.closest("li")
         if (li) {
-            chat.style.display = 'block';
+            chat.style.display = 'flex';
             chat.querySelector('.header span').textContent = li.children[1].textContent
         }
     })
