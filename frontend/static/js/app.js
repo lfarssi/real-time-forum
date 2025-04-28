@@ -1,5 +1,5 @@
 import { login, loginPage, logout, register, registerPage } from "./authPage.js"
-import { errorPage } from "./errorPage.js"
+import { errorPage, popup } from "./errorPage.js"
 import { homePage } from "./homePage.js"
 import { AddPosts, PostForm, ReactPost } from "./postPage.js"
 export const navigateTo = url => {
@@ -44,6 +44,7 @@ const router = async () => {
 
     if (match.route.hasOwnProperty("view")) {
         await match.route.view(match.route.path.slice(1,))
+
     }
 
     if (match.route.hasOwnProperty("eventStart")) {

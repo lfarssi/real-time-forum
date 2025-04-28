@@ -24,10 +24,8 @@ func GetPostController(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	page, err := strconv.Atoi(query.Get("page"))
 	if err != nil || page < 1 {
-		page = 1 
+		page = 1
 	}
-
-
 
 	offset := (page - 1) * 10
 	posts, err := models.GetPosts(userID, offset)
@@ -54,7 +52,14 @@ func GetLikedPostController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userID := r.Context().Value("userId").(int)
-	posts, err := models.LikedPost(userID)
+
+	query := r.URL.Query()
+	page, err := strconv.Atoi(query.Get("page"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+	offset := (page - 1) * 10
+	posts, err := models.LikedPost(userID, offset)
 	if err != nil {
 
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
@@ -80,7 +85,14 @@ func GetCreatedPostController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userID := r.Context().Value("userId").(int)
-	posts, err := models.CreatedPost(userID)
+
+	query := r.URL.Query()
+	page, err := strconv.Atoi(query.Get("page"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+	offset := (page - 1) * 10
+	posts, err := models.CreatedPost(userID, offset)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error Getting Post",
@@ -110,6 +122,12 @@ func GetPostByCategoryController(w http.ResponseWriter, r *http.Request) {
 	postSet := make(map[int]struct{})
 	var posts []models.Post
 
+	query := r.URL.Query()
+	page, err := strconv.Atoi(query.Get("page"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+	offset := (page - 1) * 10
 	for _, category := range categories {
 		idCategorie, err := strconv.Atoi(category)
 		if err != nil {
@@ -119,7 +137,7 @@ func GetPostByCategoryController(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-		postTemp, err := models.GetPostsByCategory(idCategorie)
+		postTemp, err := models.GetPostsByCategory(idCategorie, offset)
 		if err != nil {
 			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 				"message": "Error Getting Post",
