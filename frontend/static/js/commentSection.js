@@ -1,3 +1,4 @@
+import { isLogged } from "./app.js";
 import {  popup } from "./errorPage.js";
 export async function CommentSection(event) {  
   const postElement = event.target.closest(".post");
@@ -55,11 +56,12 @@ export async function AddComments(postId) {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+      let logged = await isLogged()
 
     const formData = Object.fromEntries(new FormData(form).entries());
     formData.postID = postId; // Include the post ID in the payload
-    const username = window.loggedInUsername || "Anonymous"; // Replace with actual logic to get the username
-
+    const username = logged.username || "Anonymous"; // Replace with actual logic to get the username
+    
     try {
       const response = await fetch("/api/addComment", {
         method: "POST",
