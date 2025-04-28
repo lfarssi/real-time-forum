@@ -28,9 +28,5 @@ func ApiRouter() {
 
 	http.HandleFunc("/api/getFriends", middleware.Authorization(http.HandlerFunc(controllers.FriendsController)))
 
-
-
-
-	http.HandleFunc("/ws/messages", websockets.MessageWebSocketHandler)
-
+	http.HandleFunc("/ws/messages", middleware.Authorization(http.HandlerFunc(websockets.MessageWebSocketHandler)))
 }
