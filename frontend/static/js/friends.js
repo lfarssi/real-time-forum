@@ -1,6 +1,12 @@
+import { errorPage } from "./errorPage.js"
+
 export async function FriendsPage() {
     const response = await fetch("/api/getFriends")
     const data = await response.json()
+    
+    if(!data.data){
+        return errorPage("You Don't Have Friends", 404)
+    }
     let friends = data.data.map(friend => {
         let gender
         if (friend.gender === "male") {
