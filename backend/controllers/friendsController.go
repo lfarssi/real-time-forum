@@ -15,7 +15,8 @@ func FriendsController(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	friends, err := models.Friends()
+	userID := r.Context().Value("userId").(int)
+	friends, err := models.Friends(userID)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Cannot Getting Friends",
