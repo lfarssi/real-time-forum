@@ -380,8 +380,43 @@ aside > .filter ul input:checked + label span::after{
     background-repeat: no-repeat;
     padding: 10px;
     overflow-y: auto;
+    position: relative;
 }
 
+
+.cbody  .messages{
+    height: 75%;
+}
+.cbody  .chatForm{
+    position: sticky;
+    bottom: 0;
+}
+.chatForm input{
+    width: 100%;
+    padding: 8px 16px;
+    border: none;
+    border-radius: var(--radius);
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-size: 1rem;
+    outline: none;
+}
+
+.chatForm input:focus,
+.chatForm input:valid{
+    border-bottom: 1px solid var(--accent-dark);
+}
+.chatForm button{
+    padding: 0.50rem;
+    margin: 0.50rem;
+    font-size: 0.8rem;
+    background-color: var(--accent);
+    color: var(--bg-dark);
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
 
 #postForm {
     background-color: var(--card-dark);
@@ -510,38 +545,7 @@ aside > .filter ul input:checked + label span::after{
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
 }
-.cbody  .messages{
-    height: 60%;
-}
-.cbody  .chatForm{
-    height: 60%;
-}
-.chatForm input{
-    width: 100%;
-    padding: 8px 16px;
-    border: none;
-    border-radius: var(--radius);
-    background-color: var(--bg-dark);
-    color: var(--text-light);
-    font-size: 1rem;
-    outline: none;
-}
 
-.chatForm input:focus,
-.chatForm input:valid{
-    border-bottom: 1px solid var(--accent-dark);
-}
-.chatForm button{
-    padding: 0.50rem;
-    margin: 0.50rem;
-    font-size: 0.8rem;
-    background-color: var(--accent);
-    color: var(--bg-dark);
-    border: none;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-}
 .post {
     margin: 25px 0;
     background-color: var(--card-dark);
