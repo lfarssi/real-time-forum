@@ -385,9 +385,10 @@ aside > .filter ul input:checked + label span::after{
 
 
 .cbody  .messages{
-    height: 75%;
+    height: 88%;
 }
-.cbody  .chatForm{
+
+ .cbody  .chatForm{
     position: sticky;
     bottom: 0;
 }
@@ -407,6 +408,8 @@ aside > .filter ul input:checked + label span::after{
     border-bottom: 1px solid var(--accent-dark);
 }
 .chatForm button{
+    position: absolute;
+    right: 0;
     padding: 0.50rem;
     margin: 0.50rem;
     font-size: 0.8rem;
@@ -416,6 +419,12 @@ aside > .filter ul input:checked + label span::after{
     border-radius: var(--radius);
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
+}
+.input-container{
+    position: relative;
+    display: flex;
+    align-items: center;
+    
 }
 
 #postForm {

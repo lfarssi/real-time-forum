@@ -32,6 +32,8 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
+        sender := r.Context().Value("userId").(int)
+        message.SenderID=sender
 		err = models.AddMessage(&message)
 		if err != nil {
 			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
@@ -40,9 +42,8 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-        sender := r.Context().Value("userId").(int)
 
-		messages, err := models.GetMessage(sender, 2)
+		messages, err := models.GetMessage(sender, message.RecipientID)
         if err!= nil{
 			utils.ResponseJSON(w, http.StatusOK, map[string]any{
 				"message": "Getting  Messages",
