@@ -16,9 +16,10 @@ func GetPosts(userID int, page int) ([]*Post, error) {
     INNER JOIN users u ON p.userID = u.id
     INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
+	WHERE p.id > ?
     GROUP BY p.id
 	ORDER BY p.dateCreation DESC, p.id DESC
-    LIMIT 10 OFFSET ?;
+    LIMIT 10 ;
     `
 
 	rows, err := database.DB.Query(query, page)
@@ -99,10 +100,10 @@ func LikedPost(userID int, offset int) ([]*Post, error) {
 	INNER JOIN postLike r ON p.id = r.postID
 	INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
-	WHERE status='like' AND r.userID=?
+	WHERE status='like' AND r.userID=? AND p.id > ?
 	GROUP BY p.id
 	ORDER BY p.dateCreation DESC
-	LIMIT 10 OFFSET ?;
+	LIMIT 10;
 	`
 	rows, err := database.DB.Query(query, userID, offset)
 	if err != nil {
@@ -154,10 +155,10 @@ func CreatedPost(userID int, offset int) ([]Post, error) {
 	INNER JOIN users u ON u.id=p.userID
 	INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
-	WHERE p.userID=?
+	WHERE p.userID=? AND p.id>?
 	GROUP BY p.id
 	ORDER BY p.dateCreation DESC
-	LIMIT 10 OFFSET ?;
+	LIMIT 10 ;
 	`
 	rows, err := database.DB.Query(query, userID, offset)
 	if err != nil {
@@ -209,9 +210,9 @@ func GetPostsByCategory(idCategory int, offset int) ([]Post, error) {
 	INNER JOIN users u ON p.userID = u.id
 	INNER JOIN postCategory pc ON p.id = pc.postID
 	INNER JOIN category c ON pc.categoryID = c.id
-	WHERE pc.categoryID =?
+	WHERE pc.categoryID =? AND p.id> ?
 	ORDER BY p.dateCreation DESC
-	LIMIT 10 OFFSET ?;
+	LIMIT 10;
 	`
 	rows, err := database.DB.Query(query, idCategory, offset)
 	if err != nil {

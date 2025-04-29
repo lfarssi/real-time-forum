@@ -3,7 +3,7 @@ import { isLogged, navigateTo } from "./app.js";
 import { showInputError } from "./authPage.js";
 import { CommentSection } from "./commentSection.js";
 
-let page = 1;
+let page = 2;
 const params = getParamsFromLocation();
 let loading = false;
 let allPostsLoaded = false;
