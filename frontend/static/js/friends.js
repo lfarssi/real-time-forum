@@ -43,7 +43,7 @@ export function chatFriend() {
 
 
 
-const ws = new WebSocket(`ws://10.1.12.7:8080/ws/messages`);
+const ws = new WebSocket(`/ws/messages`);
 
 ws.onmessage = function(event) {
     const msg = JSON.parse(event.data);
