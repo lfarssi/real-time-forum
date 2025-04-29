@@ -72,19 +72,23 @@ function GetMessages(receiverID) {
 }
 
 
-export function displayMessage(msg) {
+export function displayMessage(msg, sender) {
     const chatMessages = document.querySelector(".chat .messages");
-    console.log(msg)
-    // if (chatMessages) {
-    //     if (msg.) {
-    //         chatMessages.innerHTML = /*html*/`
-    //         <div class="messageSender">
-    //             <p>${msg.content}</p>
-    //         </div>
-    //     `
-    //     } else {
-
-    //     }
-    // }
+    console.log(msg.username, sender)
+    if (chatMessages) {
+        if (msg.username === sender) {
+            chatMessages.innerHTML += /*html*/`
+            <div class="messageSender">
+                <p>${msg.content}</p>
+            </div>
+        `
+        } else {
+            chatMessages.innerHTML += /*html*/`
+            <div class="messagesReceiver">
+                <p>${msg.content}</p>
+            </div>
+        `
+        }
+    }
 }
 

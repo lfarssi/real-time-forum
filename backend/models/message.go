@@ -8,10 +8,10 @@ func GetMessage(sender int, receiver int) ([]*Message, error) {
 	query := `SELECT m.id, m.senderID, m.receiverID, u.username, m.content , m.sentAt, m.status
 	FROM messages m 
 	INNER JOIN users u 
-	ON u.id=m.receiverID
-	WHERE senderID=? AND receiverID=?
+	ON u.id=m.senderID
+	WHERE (senderID=? OR senderID = ?) AND (receiverID=? OR receiverID=?)
 	`
-	rows, err := database.DB.Query(query, sender, receiver)
+	rows, err := database.DB.Query(query, sender, receiver, receiver, sender)
 	if err != nil {
 		return nil, err
 	}
