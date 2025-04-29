@@ -109,7 +109,17 @@ export async function homePage(param) {
 
         ws.onmessage = function (event) {
             const msg = JSON.parse(event.data);
-            if (msg.type=="allMessages"){                
+            console.log(msg);
+            
+            if (msg.type == "userStatus") {
+                const { userID, isOnline } = msg;
+                const friendElement = document.querySelector(`li[data-id='${userID}'] i`);
+        
+                if (friendElement) {
+                    friendElement.classList.toggle('online', isOnline);
+                    friendElement.classList.toggle('offline', !isOnline);
+                }
+            } else if (msg.type=="allMessages"){                
                 msg.data.map(m=>displayMessage(m))
             }else {
                 displayMessage(msg)
