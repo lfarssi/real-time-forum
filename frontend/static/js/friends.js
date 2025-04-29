@@ -71,7 +71,6 @@ function GetMessages(receiverID) {
 
 export function displayMessage(msg, sender) {
     const chatMessages = document.querySelector(".chat .messages");
-    console.log(msg.username, sender)
     if (chatMessages) {
         if (msg.username === sender) {
             chatMessages.innerHTML += /*html*/`

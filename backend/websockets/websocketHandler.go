@@ -25,7 +25,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userID, ok := r.Context().Value("userId").(int)
-	if !ok{
+	if !ok {
 		conn.WriteJSON(map[string]any{
 			"message": "You don't have authorization",
 			"status":  http.StatusBadRequest,
@@ -64,6 +64,14 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
+			if con, ok := userConnections[message.RecipientID]; ok {
+				con.WriteJSON(map[string]any{
+					"message": "Messages Loaded",
+					"type":    "allMessages",
+					"status":  http.StatusOK,
+					"data":    message,
+				})
+			}
 			conn.WriteJSON(map[string]any{
 				"message": "Message Sent",
 				"type":    "newMessage",
@@ -80,20 +88,25 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
-			for _, msg := range messages{
-				if conn,ok := userConnections[msg.RecipientID];ok{
-					conn.WriteJSON(map[string]any{
-						"message": "Messages Loaded",
-						"type":    "allMessages",
-						"status":  http.StatusOK,
-						"data":    messages,
-					})
-				}
+			if con, ok := userConnections[message.RecipientID]; ok {
+				con.WriteJSON(map[string]any{
+					"message": "Messages Loaded",
+					"type":    "allMessages",
+					"status":  http.StatusOK,
+					"data":    messages,
+				})
 			}
-			
+			conn.WriteJSON(map[string]any{
+				"message": "Messages Loaded",
+				"type":    "allMessages",
+				"status":  http.StatusOK,
+				"data":    messages,
+			})
 		}
+
 	}
 }
+
 func broadcastStatus(userID int, isOnline bool) {
 	statusMessage := map[string]any{
 		"type":     "userStatus",
@@ -106,7 +119,6 @@ func broadcastStatus(userID int, isOnline bool) {
 			conn.WriteJSON(statusMessage)
 		}
 	}
-
 }
 
 func OnlineFriends(w http.ResponseWriter, r *http.Request) {
