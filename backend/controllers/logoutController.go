@@ -15,7 +15,7 @@ func LogoutController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie := &http.Cookie{Name: "Token", Value: "", MaxAge: -1, HttpOnly: true}
+	cookie := &http.Cookie{Name: "Token", Value: "", MaxAge: -1, Path: "/"}
 	// cookie2 := &http.Cookie{Name: "UserID", Value: "", MaxAge: -1, HttpOnly: true}
 
 	http.SetCookie(w, cookie)
