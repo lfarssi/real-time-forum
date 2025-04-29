@@ -119,18 +119,13 @@ export async function homePage(param) {
                     friendElement.classList.toggle('online', isOnline);
                     friendElement.classList.toggle('offline', !isOnline);
                 }
-            } else if (msg.type=="allMessages"){                
-                msg.data.map(m=>displayMessage(m))
-            }else {
-                displayMessage(msg)
-            }
-            console.log(msg)
-            if (msg.type == "allMessages") {
+            } else if (msg.type == "allMessages") {
                 document.querySelector(".chat .messages").innerHTML = ""
                 msg.data.map(m => displayMessage(m, logged.username))
             } else {
                 displayMessage(msg.data)
             }
+           
         };
     } else {
         let posts = document.querySelector('.posts')
