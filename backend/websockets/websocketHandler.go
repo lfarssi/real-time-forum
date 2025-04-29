@@ -80,13 +80,17 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
+			for _, msg := range messages{
+				if conn,ok := userConnections[msg.RecipientID];ok{
+					conn.WriteJSON(map[string]any{
+						"message": "Messages Loaded",
+						"type":    "allMessages",
+						"status":  http.StatusOK,
+						"data":    messages,
+					})
+				}
+			}
 			
-			conn.WriteJSON(map[string]any{
-				"message": "Messages Loaded",
-				"type":    "allMessages",
-				"status":  http.StatusOK,
-				"data":    messages,
-			})
 		}
 	}
 }

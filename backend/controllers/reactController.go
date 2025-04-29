@@ -28,7 +28,7 @@ func ReactPostController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	react.UserID = r.Context().Value("userId").(int)
+	react.UserID= r.Context().Value("userId").(int)
 
 	if react.Sender == "post" {
 		err = models.InsertReactPost(react)
