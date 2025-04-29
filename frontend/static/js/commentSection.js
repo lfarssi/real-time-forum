@@ -51,13 +51,13 @@ export  function CommentForm(postId) {
 
  
 export async function AddComments(postId) {
+  const comments= document.querySelectorAll(".comment")
   const form = document.querySelector(`#commentForm-${postId}`); // Target the specific form for this post
   const errorSpan = document.querySelector(`#errComment-${postId}`); // Target the error span for this form
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
       let logged = await isLogged()
-
     const formData = Object.fromEntries(new FormData(form).entries());
     formData.postID = postId; // Include the post ID in the payload
     const username = logged.username || "You"; // Replace with actual logic to get the username
@@ -81,7 +81,7 @@ export async function AddComments(postId) {
         `;
 
         // Insert the new comment right before the form
-        form.insertAdjacentHTML("beforebegin", newCommentHtml);
+        comments[0].insertAdjacentHTML("beforebegin", newCommentHtml);
 
         form.reset(); // Clear the form
         errorSpan.textContent = ""; // Clear any previous error message

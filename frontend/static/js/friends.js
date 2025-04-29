@@ -41,26 +41,15 @@ export function chatFriend() {
     })
 }
 
-const response= await fetch('https://api.ipify.org?format=json')
-const data=await response.json()
 
-const ws = new WebSocket(`ws://${data.data.ip}:8080/ws/messages`);
+
+const ws = new WebSocket(`ws://10.1.12.7:8080/ws/messages`);
 
 ws.onmessage = function(event) {
     const msg = JSON.parse(event.data);
     console.log(msg)
 };
 
-<<<<<<< HEAD
-function sendMessage(content, senderID, receiverID) {
-    ws.send(JSON.stringify({
-        content,
-        senderID,
-        receiverID,
-        "type":"addMessage"
-    }));
-}
-=======
 export function sendMessage() {
     let form = document.querySelector('.chatForm')
     
@@ -68,7 +57,6 @@ export function sendMessage() {
         e.preventDefault()
         let input = document.querySelector('.chatForm input').value
         let receiverID = document.querySelector('.header span').dataset.id
->>>>>>> 674d7d602abe90e70ab949769f6743033b533c22
 
         ws.send(JSON.stringify({
             content: input,
@@ -88,18 +76,15 @@ function displayMessage(msg) {
     }
 }
 
-<<<<<<< HEAD
-const sendButton = document.querySelector(".sendMessage");
-sendButton.addEventListener("click", () => {
-    const messageInput = document.querySelector(".messageInput");
-    const receiverID = document.querySelector(".chatForm").dataset.receiverId; 
-    const content = messageInput.value.trim();
+// const sendButton = document.querySelector(".sendMessage");
+// sendButton.addEventListener("click", () => {
+//     const messageInput = document.querySelector(".messageInput");
+//     const receiverID = document.querySelector(".chatForm").dataset.receiverId; 
+//     const content = messageInput.value.trim();
 
-    if (content) {
-        const senderID = 1; 
-        sendMessage(content, senderID, receiverID);
-        messageInput.value = ""; 
-    }
-});
-=======
->>>>>>> 674d7d602abe90e70ab949769f6743033b533c22
+//     if (content) {
+//         const senderID = 1; 
+//         sendMessage(content, senderID, receiverID);
+//         messageInput.value = ""; 
+//     }
+// });
