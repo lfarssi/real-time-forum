@@ -32,8 +32,10 @@ export function chatFriend() {
         let li = e.target.closest("li")
         if (li) {
             chat.style.display = 'flex';
-            chat.querySelector('.header span').textContent = li.children[1].textContent
-            chat.querySelector('.header span').dataset.id = li.dataset.id
+            let span = chat.querySelector('.header span')
+            span.textContent = li.children[1].textContent
+            span.dataset.id = li.dataset.id
+            GetMessages(span.dataset.id)
         }
     })
 
@@ -60,7 +62,15 @@ export function sendMessage() {
     })
 }
 
-function displayMessage(msg) {
+function GetMessages(receiverID) {
+    ws.send(JSON.stringify({
+        recipientID: parseInt(receiverID),
+        type: "loadMessage"
+    }))
+}
+
+
+export function displayMessage(msg) {
     const chatMessages = document.querySelector(".chat .messages");
     if (chatMessages) {
         const messageEl = document.createElement("div");

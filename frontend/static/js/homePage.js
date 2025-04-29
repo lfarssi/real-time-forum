@@ -1,6 +1,6 @@
 import { isLogged } from "./app.js"
 import { CommentSection } from "./commentSection.js"
-import { chatFriend, FriendsPage, sendMessage } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage, sendMessage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 
@@ -109,6 +109,11 @@ export async function homePage(param) {
 
         ws.onmessage = function (event) {
             const msg = JSON.parse(event.data);
+            if (msg.type=="allMessages"){                
+                msg.data.map(m=>displayMessage(m))
+            }else {
+                displayMessage(msg)
+            }
             console.log(msg)
         };
     } else {

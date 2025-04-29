@@ -426,6 +426,11 @@ aside > .filter ul input:checked + label span::after{
     align-items: center;
     
 }
+.message{
+    margin: 5px;
+    width: fit-content;
+    background-color: #4CAF50;
+}
 
 #postForm {
     background-color: var(--card-dark);

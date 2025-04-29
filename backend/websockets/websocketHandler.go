@@ -12,6 +12,8 @@ var upgrade = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool { return true },
 }
 
+var Clients = make(map[*websocket.Conn]bool)
+
 func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrade.Upgrade(w, r, nil)
 	if err != nil {
@@ -21,8 +23,11 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	defer conn.Close()
-
+	Clients[conn] = true
+	defer func() {
+		delete(Clients, conn)
+		conn.Close()
+	}()
 	for {
 		var message models.Message
 		err := conn.ReadJSON(&message)
@@ -48,7 +53,9 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			conn.WriteJSON(map[string]any{
 				"message": "Message Sent",
+				"type":    "newMessage",
 				"status":  http.StatusOK,
+				"data":    message.Content,
 			})
 
 		case "loadMessage":
@@ -62,6 +69,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			conn.WriteJSON(map[string]any{
 				"message": "Messages Loaded",
+				"type":    "allMessages",
 				"status":  http.StatusOK,
 				"data":    messages,
 			})
