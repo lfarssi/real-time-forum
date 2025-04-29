@@ -9,14 +9,11 @@ export async function FriendsPage() {
         return errorPage("You Don't Have Friends", 404)
     }
     let friends = data.data.map(friend => {
-        let gender
-        if (friend.gender === "male") {
-            gender = '<i class="fa-solid fa-user online"></i>'
-        } else {
-            gender = '<i class="fa-solid fa-user offline"></i>'
-        }
+        console.log("friend=>",friend);
+        let onlineClass = friend.isOnline ? 'online' : 'offline';
+        let status =`<i class="fa-solid fa-user ${onlineClass}"></i>`
         return /*html*/`
-            <li data-id="${friend.id}">${gender} <span>${friend.firstName} ${friend.lastName}</span></li>
+            <li data-id="${friend.id}">${status} <span>${friend.firstName} ${friend.lastName}</span></li>
     `
     })
     return /*html*/`
