@@ -109,10 +109,11 @@ export async function homePage(param) {
 
         ws.onmessage = function (event) {
             const msg = JSON.parse(event.data);
+            console.log(logged)
             console.log(msg)
             if (msg.type == "allMessages") {
                 document.querySelector(".chat .messages").innerHTML = ""
-                msg.data.map(m => displayMessage(m))
+                msg.data.map(m => displayMessage(m, logged.username))
             } else {
                 displayMessage(msg.data)
             }
