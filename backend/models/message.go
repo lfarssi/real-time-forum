@@ -35,7 +35,7 @@ func GetMessage(sender int, receiver int)([]*Message ,error)  {
 
 func AddMessage(message *Message)error  {
 	query := `
-		INSERT INTO messages (senderID, receiverID, content, sentAt, status RETURNING id) VALUES ($1, $2, $3, $4, $5) 
+		INSERT INTO messages (senderID, receiverID, content, sentAt, status) VALUES ($1, $2, $3, $4, $5) RETURNING id 
 	`
 	err := database.DB.QueryRow(query, &message.SenderID, &message.RecipientID, &message.Content, &message.SentAt, &message.Status).Scan(&message.ID)
 	if err != nil {

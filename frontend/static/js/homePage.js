@@ -3,6 +3,9 @@ import { CommentSection } from "./commentSection.js"
 import { chatFriend, FriendsPage, sendMessage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
+
+export let ws;
+
 export function header() {
     return /*html*/`
         <header>
@@ -101,6 +104,13 @@ export async function homePage(param) {
         filterByCategories()
         chatFriend()
         sendMessage()
+        
+        ws = new WebSocket(`/ws/messages`);
+
+        ws.onmessage = function (event) {
+            const msg = JSON.parse(event.data);
+            console.log(msg)
+        };
     } else {
         let posts = document.querySelector('.posts')
         posts.innerHTML = `${await PostsPage(param)}`
@@ -121,11 +131,11 @@ export async function homePage(param) {
 
     document.querySelectorAll(".displayComment").forEach(button => {
         button.addEventListener("click", CommentSection);
-      });
+    });
 }
 
 function activePage() {
-    let a = document.querySelectorAll('header nav ul a') 
+    let a = document.querySelectorAll('header nav ul a')
 
     a.forEach(element => {
         element.style.color = "var(--text-light)"

@@ -1,4 +1,5 @@
 import { errorPage } from "./errorPage.js"
+import { ws } from "./homePage.js"
 
 export async function FriendsPage() {
     const response = await fetch("/api/getFriends")
@@ -43,13 +44,6 @@ export function chatFriend() {
 
 
 
-const ws = new WebSocket(`/ws/messages`);
-
-ws.onmessage = function(event) {
-    const msg = JSON.parse(event.data);
-    console.log(msg)
-};
-
 export function sendMessage() {
     let form = document.querySelector('.chatForm')
     
@@ -76,15 +70,3 @@ function displayMessage(msg) {
     }
 }
 
-// const sendButton = document.querySelector(".sendMessage");
-// sendButton.addEventListener("click", () => {
-//     const messageInput = document.querySelector(".messageInput");
-//     const receiverID = document.querySelector(".chatForm").dataset.receiverId; 
-//     const content = messageInput.value.trim();
-
-//     if (content) {
-//         const senderID = 1; 
-//         sendMessage(content, senderID, receiverID);
-//         messageInput.value = ""; 
-//     }
-// });
