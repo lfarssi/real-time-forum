@@ -10,14 +10,14 @@ import (
 
 func GetPosts(userID int, page int) ([]*Post, error) {
 	query := `
-    SELECT p.id, p.userID, p.title, p.content, GROUP_CONCAT(DISTINCT c.name) AS categories, 
-    p.dateCreation, u.username
+    SELECT   p.id, p.userID, p.title, p.content, GROUP_CONCAT(DISTINCT c.name) AS categories, 
+	 p.dateCreation, u.username
     FROM posts p
     INNER JOIN users u ON p.userID = u.id
     INNER JOIN postCategory pc ON p.id = pc.postID
     INNER JOIN category c ON pc.categoryID = c.id
     GROUP BY p.id
-    ORDER BY p.dateCreation DESC
+	ORDER BY p.dateCreation DESC, p.id DESC
     LIMIT 10 OFFSET ?;
     `
 
