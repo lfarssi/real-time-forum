@@ -9,7 +9,7 @@ let loading = false;
 let allPostsLoaded = false;
 let throttle = false;
 
-export async function PostsPage(params, page=0) {
+export async function PostsPage(params, page=1) {
   let response;
   if (params == "") {
     response = await fetch(`/api/getPosts?page=${page}`);
@@ -22,7 +22,7 @@ export async function PostsPage(params, page=0) {
   }
 
   const data = await response.json()
-  if (!data.data && page==0 ) {
+  if (!data.data && page==1 ) {
     return errorPage("No Post Available", 404)
   } 
 

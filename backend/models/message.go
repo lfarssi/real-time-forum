@@ -10,6 +10,7 @@ func GetMessage(sender int, receiver int) ([]*Message, error) {
 	INNER JOIN users u 
 	ON u.id=m.senderID
 	WHERE (senderID=? OR senderID = ?) AND (receiverID=? OR receiverID=?)
+	ORDER BY m.id
 	`
 	rows, err := database.DB.Query(query, sender, receiver, receiver, sender)
 	if err != nil {
@@ -24,6 +25,7 @@ func GetMessage(sender int, receiver int) ([]*Message, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		messages = append(messages, &msg)
 	}
 
