@@ -11,6 +11,7 @@ type UserAuth struct {
 	Age       int    `json:"age"`
 	Gender    string `json:"gender"`
 	Password  string `json:"password"`
+	IsOnline  bool	  `json:"isOnline"`
 }
 
 type ValidationMessagesRegister struct {

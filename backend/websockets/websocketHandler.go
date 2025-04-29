@@ -1,6 +1,7 @@
 package websockets
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"real_time_forum/backend/models"
@@ -12,7 +13,7 @@ var upgrade = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool { return true },
 }
 
-var Clients = make(map[*websocket.Conn]bool)
+var userConnections = make(map[int]*websocket.Conn)
 
 func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrade.Upgrade(w, r, nil)
@@ -23,11 +24,23 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	Clients[conn] = true
+	userID, ok := r.Context().Value("userId").(int)
+	if !ok{
+		conn.WriteJSON(map[string]any{
+			"message": "You don't have authorization",
+			"status":  http.StatusBadRequest,
+		})
+		return
+	}
+	userConnections[userID] = conn
+
 	defer func() {
-		delete(Clients, conn)
+		delete(userConnections, userID)
 		conn.Close()
+		broadcastStatus(userID, false)
 	}()
+
+	broadcastStatus(userID, true)
 	for {
 		var message models.Message
 		err := conn.ReadJSON(&message)
@@ -39,7 +52,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		message.SenderID = r.Context().Value("userId").(int)
+		message.SenderID = userID
 
 		switch message.Type {
 		case "addMessage":
@@ -76,4 +89,43 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 	}
+}
+func broadcastStatus(userID int, isOnline bool) {
+	statusMessage := map[string]any{
+		"type":     "userStatus",
+		"userID":   userID,
+		"isOnline": isOnline,
+	}
+	friends, _ := models.Friends(userID)
+	for _, friend := range friends {
+		if conn, ok := userConnections[friend.ID]; ok {
+			conn.WriteJSON(statusMessage)
+		}
+	}
+
+}
+
+func OnlineFriends(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	userID := r.Context().Value("userId").(int)
+
+	friends, err := models.Friends(userID)
+	if err != nil {
+		http.Error(w, "Cannot get friends", http.StatusInternalServerError)
+		return
+	}
+
+	for i, friend := range friends {
+		_, friends[i].IsOnline = userConnections[friend.ID]
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]any{
+		"message": "Friends list",
+		"status":  http.StatusOK,
+		"data":    friends,
+	})
 }
