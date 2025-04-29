@@ -104,17 +104,18 @@ export async function homePage(param) {
         filterByCategories()
         chatFriend()
         sendMessage()
-        
+
         ws = new WebSocket(`/ws/messages`);
 
         ws.onmessage = function (event) {
             const msg = JSON.parse(event.data);
-            if (msg.type=="allMessages"){                
-                msg.data.map(m=>displayMessage(m))
-            }else {
-                displayMessage(msg)
-            }
             console.log(msg)
+            if (msg.type == "allMessages") {
+                document.querySelector(".chat .messages").innerHTML = ""
+                msg.data.map(m => displayMessage(m))
+            } else {
+                displayMessage(msg.data)
+            }
         };
     } else {
         let posts = document.querySelector('.posts')

@@ -55,7 +55,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"message": "Message Sent",
 				"type":    "newMessage",
 				"status":  http.StatusOK,
-				"data":    message.Content,
+				"data":    message,
 			})
 
 		case "loadMessage":
@@ -67,6 +67,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
+			
 			conn.WriteJSON(map[string]any{
 				"message": "Messages Loaded",
 				"type":    "allMessages",
