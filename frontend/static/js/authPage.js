@@ -93,7 +93,7 @@ export function register() {
         for (let span of spans) {
           if (data.hasOwnProperty(span.id))
             showInputError(data[span.id], span)
-          return popup("Registration Failed",'failed')
+            popup("Registration Failed",'failed')
 
         }
       } else {
@@ -129,7 +129,7 @@ export function login() {
 
       if (!response.ok) {
         errLogin.innerHTML = data.message
-        return popup("login Failed",'failed')
+        popup("login Failed",'failed')
 
       } else {
         navigateTo("/")

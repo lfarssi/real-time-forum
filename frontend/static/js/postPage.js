@@ -1,6 +1,7 @@
 import { errorPage, popup } from "./errorPage.js";
 import { isLogged, navigateTo } from "./app.js";
 import { showInputError } from "./authPage.js";
+import { CommentSection } from "./commentSection.js";
 
 let page = 1;
 const params = getParamsFromLocation();
@@ -91,6 +92,8 @@ async function loadPosts() {
     const postsContainer = document.querySelector('.posts');
     const postsHTML = await PostsPage(params, page);
 
+    
+
     if (!postsHTML || postsHTML.trim() === "") {
       allPostsLoaded = true;
     } else {
@@ -102,7 +105,12 @@ async function loadPosts() {
      return popup("No Post Available")
   } finally {
     loading = false;
+    document.querySelectorAll(".displayComment").forEach(button => {
+      button.addEventListener("click", CommentSection);
+    });
   }
+
+  
 }
 
 window.addEventListener('scroll', () => {
