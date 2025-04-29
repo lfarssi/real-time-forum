@@ -51,14 +51,16 @@ export function sendMessage() {
     
     form.addEventListener('submit', (e) => {
         e.preventDefault()
-        let input = document.querySelector('.chatForm input').value
+        let input = document.querySelector('.chatForm input')
         let receiverID = document.querySelector('.header span').dataset.id
 
         ws.send(JSON.stringify({
-            content: input,
+            content: input.value,
             recipientID: parseInt(receiverID),
             type: "addMessage"
         }))
+
+        input.value = ""
     })
 }
 
@@ -72,11 +74,17 @@ function GetMessages(receiverID) {
 
 export function displayMessage(msg) {
     const chatMessages = document.querySelector(".chat .messages");
-    if (chatMessages) {
-        const messageEl = document.createElement("div");
-        messageEl.className = "message";
-        messageEl.textContent = ` ${msg.content}`;
-        chatMessages.appendChild(messageEl);
-    }
+    console.log(msg)
+    // if (chatMessages) {
+    //     if (msg.) {
+    //         chatMessages.innerHTML = /*html*/`
+    //         <div class="messageSender">
+    //             <p>${msg.content}</p>
+    //         </div>
+    //     `
+    //     } else {
+
+    //     }
+    // }
 }
 

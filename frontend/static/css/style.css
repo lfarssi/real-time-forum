@@ -426,10 +426,17 @@ aside > .filter ul input:checked + label span::after{
     align-items: center;
     
 }
-.message{
+
+.messageSender{
     margin: 5px;
     width: fit-content;
-    background-color: #4CAF50;
+    background-color: var(--accent);
+}
+
+.messagesReceiver{
+    margin: 5px;
+    width: fit-content;
+    background-color: var(--text-light);
 }
 
 #postForm {
