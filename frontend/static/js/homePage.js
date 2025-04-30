@@ -106,43 +106,41 @@ export async function homePage(param) {
         filterByCategories()
         chatFriend()
         sendMessage()
-       
+
         ws = new WebSocket(`/ws/messages`);
-        ws.onclose = function(event) {
+        ws.onclose = function (event) {
             console.log('WebSocket closed:', event);
             navigateTo("/register")
         };
 
         ws.onmessage = async function (event) {
-            const logged = await isLogged(); 
+            const logged = await isLogged();
 
-            if(!logged){
+            if (!logged) {
                 ws.close()
                 return
             }
-           
             const msg = JSON.parse(event.data);
-          
+            console.log(msg)
             if (msg.type == "userStatus") {
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
                 ${await FriendsPage()}
-            `
+                `
             } else if (msg.type == "allMessages") {
-                document.querySelector(".chat .messages").innerHTML = ""
-                console.log(msg);
-                
                 msg.data.map(m => displayMessage(m, logged.username))
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
                 ${await FriendsPage()}
             `
             } else {
+                const chatMessages = document.querySelector(".chat .messages");
                 displayMessage(msg.data, logged.username, msg.isSender)
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
                 ${await FriendsPage()}
             `
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
         };

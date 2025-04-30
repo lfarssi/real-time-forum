@@ -26,15 +26,19 @@ export function chatFriend() {
     let friends = document.querySelector('.friends')
     let closeChat = document.querySelector('.chat .closeChat')
     let chat = document.querySelector('.chat')
+
     friends.addEventListener('click', (e) => {
         let li = e.target.closest("li")
         if (li) {
+            messagesPage = 1
+            document.querySelector(".chat .messages").innerHTML = ""
             chat.style.display = 'flex';
             let span = chat.querySelector('.header span')
             span.textContent = li.children[1].textContent
             span.dataset.id = li.dataset.id
             GetMessages(span.dataset.id)
             loadMessages()
+
         }
     })
 
@@ -78,31 +82,39 @@ function loadMessages() {
     const chatMessages = document.querySelector(".chat .messages");
 
     chatMessages.addEventListener('scroll', () => {
-        console.log(chatMessages.scrollTop)
+        if (chatMessages.scrollTop === 0) {
+            messagesPage++
+            console.log(chatMessages.scrollTop)
+            let span = document.querySelector('.chat .header span')
+            GetMessages(span.dataset.id)
+        }
     })
 }
 
 export function displayMessage(msg, sender, isSender) {
     const chatMessages = document.querySelector(".chat .messages");
-    
+
     if (chatMessages) {
+        let html = "";
         if (msg.username === sender || isSender) {
-            chatMessages.innerHTML += /*html*/`
-            <div class="messagesSender">
-                <div>
-                <p>${msg.content}  <span class="msgTime">${msg.sentAT.slice(0,5)}</span></p>
-               
+            html = /*html*/`
+                <div class="messagesSender">
+                    <div>
+                        <p>${msg.content}  <span class="msgTime">${msg.sentAT.slice(0,5)}</span></p>
+                    </div>
                 </div>
-            </div>
-        `
+            `;
         } else {
-            chatMessages.innerHTML += /*html*/`
-            <div class="messagesReceiver">
-                <p>${msg.content} <span  class="msgTime">${msg.sentAT.slice(0,5)}</span></p>
-                
-            </div>
-        `
+            html = /*html*/`
+                <div class="messagesReceiver">
+                    <p>${msg.content} <span class="msgTime">${msg.sentAT.slice(0,5)}</span></p>
+                </div>
+            `;
         }
+
+        chatMessages.insertAdjacentHTML("afterbegin", html);
+        // scroll to top if you want to auto-scroll to latest
+        // chatMessages.scrollTop = 0;
 
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }

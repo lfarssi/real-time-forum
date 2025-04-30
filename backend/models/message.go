@@ -8,15 +8,12 @@ import (
 
 func GetMessage(sender, receiver, offset int) ([]*Message, error) {
 	query := `
-	SELECT * FROM (
 		SELECT m.id, m.senderID, m.receiverID, u.username, m.content, m.sentAt, m.status
 		FROM messages m
 		INNER JOIN users u ON u.id = m.senderID
 		WHERE (m.senderID = ? AND m.receiverID = ?) OR (m.senderID = ? AND m.receiverID = ?)
 		ORDER BY m.id DESC
 		LIMIT 10 OFFSET ?
-	) AS last_messages
-	ORDER BY last_messages.id ASC
 	`
 
 	rows, err := database.DB.Query(query, sender, receiver, receiver, sender, offset)
