@@ -13,6 +13,7 @@ func GetMessage(sender int, receiver int) ([]*Message, error) {
 	ON u.id=m.senderID
 	WHERE (senderID=? OR senderID = ?) AND (receiverID=? OR receiverID=?)
 	ORDER BY m.id
+	LIMIT 10
 	`
 	rows, err := database.DB.Query(query, sender, receiver, receiver, sender)
 	if err != nil {
