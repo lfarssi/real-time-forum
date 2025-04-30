@@ -11,8 +11,10 @@ import (
 )
 
 // Store to track request counts per IP (in-memory map)
-var requestCounts = make(map[string]int)
-var lastSeenTimes = make(map[string]time.Time)
+var (
+	requestCounts = make(map[string]int)
+	lastSeenTimes = make(map[string]time.Time)
+)
 
 // Middleware to limit requests based on IP
 func RateLimit(next http.Handler) http.HandlerFunc {
@@ -143,10 +145,10 @@ func IsLogged(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
-		"message":  "Valid token",
-		"status":   http.StatusOK,
-		"username": userName,
+		"message":   "Valid token",
+		"status":    http.StatusOK,
+		"username":  userName,
 		"firstName": firstName,
-		"lastName": lastName,
+		"lastName":  lastName,
 	})
 }

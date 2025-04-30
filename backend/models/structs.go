@@ -77,4 +77,5 @@ type Message struct {
 	SentAt      string `json:"sentAT"`
 	Status      string `json:"status"`
 	Type        string `json:"type"`
+	Limit        int    `json:"page"`
 }

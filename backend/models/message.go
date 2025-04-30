@@ -6,15 +6,17 @@ import (
 	"real_time_forum/backend/database"
 )
 
-func GetMessage(sender int, receiver int) ([]*Message, error) {
-	query := `SELECT m.id, m.senderID, m.receiverID, u.username, m.content , m.sentAt, m.status
-	FROM messages m 
-	INNER JOIN users u 
-	ON u.id=m.senderID
-	WHERE (senderID=? OR senderID = ?) AND (receiverID=? OR receiverID=?)
-	ORDER BY m.id
+func GetMessage(sender, receiver, offset int) ([]*Message, error) {
+	query := `
+		SELECT m.id, m.senderID, m.receiverID, u.username, m.content, m.sentAt, m.status
+		FROM messages m
+		INNER JOIN users u ON u.id = m.senderID
+		WHERE (m.senderID = ? AND m.receiverID = ?) OR (m.senderID = ? AND m.receiverID = ?)
+		ORDER BY m.id DESC
+		LIMIT 10 OFFSET ?
 	`
-	rows, err := database.DB.Query(query, sender, receiver, receiver, sender)
+
+	rows, err := database.DB.Query(query, sender, receiver, receiver, sender, offset)
 	if err != nil {
 		return nil, err
 	}

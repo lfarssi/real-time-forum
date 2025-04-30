@@ -92,7 +92,10 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 		case "loadMessage":
-			messages, err := models.GetMessage(message.SenderID, message.RecipientID)
+
+			page := (message.Limit - 1) * 10
+
+			messages, err := models.GetMessage(message.SenderID, message.RecipientID, page)
 			if err != nil {
 				for _, c := range userConnections[message.SenderID] {
 					c.WriteJSON(map[string]any{
