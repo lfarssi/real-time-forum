@@ -101,8 +101,8 @@ async function loadPosts() {
       page += 1;
     }
   } catch (error) {
-    console.error('Failed to load posts:', error);
-     popup("No Post Available")
+    // console.error('Failed to load posts:', error);
+    //  popup("No Post Available")
   } finally {
     loading = false;
     document.querySelectorAll(".displayComment").forEach(button => {

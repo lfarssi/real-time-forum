@@ -108,9 +108,9 @@ func broadcastStatus(userID int, isOnline bool) {
 		"userID":   userID,
 		"isOnline": isOnline,
 	}
-	friends, _ := models.Friends(userID)
-	for _, friend := range friends {
-		if conn, ok := userConnections[friend.ID]; ok {
+		
+	for key, _ := range userConnections {
+		if conn, ok := userConnections[key]; ok {
 			conn.WriteJSON(statusMessage)
 		}
 	}
