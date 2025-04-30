@@ -70,7 +70,6 @@ function GetMessages(receiverID) {
 
 export function displayMessage(msg, sender, isSender) {
     const chatMessages = document.querySelector(".chat .messages");
-    console.log(msg);
     
     if (chatMessages) {
         if (msg.username === sender || isSender) {
@@ -90,6 +89,8 @@ export function displayMessage(msg, sender, isSender) {
             </div>
         `
         }
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }
 
