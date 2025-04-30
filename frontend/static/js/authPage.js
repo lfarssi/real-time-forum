@@ -143,6 +143,10 @@ export function login() {
 
 export async function logout() {
   try {
+    ws.send(JSON.stringify({ type: "logout" }));
+
+    // 2) close your WebSocket connection so the server cleans you up
+    ws.close();
     await fetch("/api/logout")
     navigateTo("/register")
     } catch (err) {
