@@ -120,9 +120,7 @@ export async function homePage(param) {
                 ws.close()
                 return
             }
-           
             const msg = JSON.parse(event.data);
-          
             if (msg.type == "userStatus") {
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `

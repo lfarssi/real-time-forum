@@ -14,7 +14,7 @@ var upgrade = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool { return true },
 }
 
-var userConnections = make(map[int]*websocket.Conn)
+var userConnections = make(map[int][]*websocket.Conn)
 
 func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrade.Upgrade(w, r, nil)
@@ -33,7 +33,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	userConnections[userID] = conn
+	userConnections[userID] = append(userConnections[userID], conn)
 
 	defer func() {
 		delete(userConnections, userID)
@@ -66,22 +66,26 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			message.SentAt = time.Now().Format(time.TimeOnly)
-			if con, ok := userConnections[message.RecipientID]; ok {
-				con.WriteJSON(map[string]any{
-					"message":  "Messages Loaded",
+			if conns, ok := userConnections[message.RecipientID]; ok {
+				for _, conn := range conns {
+					conn.WriteJSON(map[string]any{
+						"message":  "Messages Loaded",
+						"type":     "newMessage",
+						"status":   http.StatusOK,
+						"data":     message,
+						"isSender": false,
+					})
+			}
+			}
+			for _, c := range userConnections[message.SenderID] {
+				c.WriteJSON(map[string]any{
+					"message":  "Message Sent",
 					"type":     "newMessage",
 					"status":   http.StatusOK,
 					"data":     message,
-					"isSender": false,
+					"isSender": true,
 				})
 			}
-			conn.WriteJSON(map[string]any{
-				"message":  "Message Sent",
-				"type":     "newMessage",
-				"status":   http.StatusOK,
-				"data":     message,
-				"isSender": true,
-			})
 
 		case "loadMessage":
 			messages, err := models.GetMessage(message.SenderID, message.RecipientID)
@@ -111,8 +115,10 @@ func broadcastStatus(userID int, isOnline bool) {
 	}
 
 	for key, _ := range userConnections {
-		if conn, ok := userConnections[key]; ok {
-			conn.WriteJSON(statusMessage)
+		if conns, ok := userConnections[key]; ok {
+			for _, conn := range conns {
+				conn.WriteJSON(statusMessage)
+			}
 		}
 	}
 }
