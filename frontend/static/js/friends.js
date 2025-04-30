@@ -64,6 +64,7 @@ export function sendMessage() {
 }
 
 function GetMessages(receiverID) {
+    
     ws.send(JSON.stringify({
         recipientID: parseInt(receiverID),
         type: "loadMessage"

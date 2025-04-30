@@ -36,7 +36,11 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	userConnections[userID] = append(userConnections[userID], conn)
 
 	defer func() {
-		delete(userConnections, userID)
+		if conns, ok := userConnections[userID]; ok {
+			for _, c := range conns {
+				removeConnection(userID, c)
+			}
+		}
 		conn.Close()
 		broadcastStatus(userID, false)
 	}()
@@ -67,15 +71,15 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			message.SentAt = time.Now().Format(time.TimeOnly)
 			if conns, ok := userConnections[message.RecipientID]; ok {
-				for _, conn := range conns {
-					conn.WriteJSON(map[string]any{
+				for _, c := range conns {
+					c.WriteJSON(map[string]any{
 						"message":  "Messages Loaded",
 						"type":     "newMessage",
 						"status":   http.StatusOK,
 						"data":     message,
 						"isSender": false,
 					})
-			}
+				}
 			}
 			for _, c := range userConnections[message.SenderID] {
 				c.WriteJSON(map[string]any{
@@ -90,12 +94,15 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		case "loadMessage":
 			messages, err := models.GetMessage(message.SenderID, message.RecipientID)
 			if err != nil {
-				conn.WriteJSON(map[string]any{
-					"message": "Error Getting Messages",
-					"status":  http.StatusInternalServerError,
-				})
+				for _, c := range userConnections[message.SenderID] {
+					c.WriteJSON(map[string]any{
+						"message": "Error Getting Messages",
+						"status":  http.StatusInternalServerError,
+					})
+				}
 				return
 			}
+
 			conn.WriteJSON(map[string]any{
 				"message": "Messages Loaded",
 				"type":    "allMessages",
@@ -107,6 +114,20 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func removeConnection(userID int, conn *websocket.Conn) {
+    conns := userConnections[userID]
+    for i, c := range conns {
+        if c == conn {
+            userConnections[userID] = append(conns[:i], conns[i+1:]...)
+            break
+        }
+    }
+    if len(userConnections[userID]) == 0 {
+        delete(userConnections, userID)
+    }
+}
+
+
 func broadcastStatus(userID int, isOnline bool) {
 	statusMessage := map[string]any{
 		"type":     "userStatus",
@@ -116,8 +137,8 @@ func broadcastStatus(userID int, isOnline bool) {
 
 	for key, _ := range userConnections {
 		if conns, ok := userConnections[key]; ok {
-			for _, conn := range conns {
-				conn.WriteJSON(statusMessage)
+			for _, c := range conns {
+				c.WriteJSON(statusMessage)
 			}
 		}
 	}
