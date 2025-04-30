@@ -108,7 +108,7 @@ func broadcastStatus(userID int, isOnline bool) {
 		"userID":   userID,
 		"isOnline": isOnline,
 	}
-		
+
 	for key, _ := range userConnections {
 		if conn, ok := userConnections[key]; ok {
 			conn.WriteJSON(statusMessage)
