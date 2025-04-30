@@ -72,7 +72,7 @@ export async function homePage(param) {
                     <p><i class="fa-solid fa-user"></i> ${logged.username}</p>
                 </div>
                 <div class="friends">
-                <ul>
+                <ul class="listFriends">
                 ${await FriendsPage()}
                 </ul>
                 <div class="chat">
@@ -107,16 +107,18 @@ export async function homePage(param) {
 
         ws = new WebSocket(`/ws/messages`);
 
-        ws.onmessage = function (event) {
+        ws.onmessage = async function (event) {
+
+
             const msg = JSON.parse(event.data);
+
+            console.log(msg)
+
             if (msg.type == "userStatus") {
-                const { userID, isOnline } = msg;
-                const friendElement = document.querySelector(`li[data-id='${userID}'] i`);
-        
-                if (friendElement) {
-                    friendElement.classList.toggle('online', isOnline);
-                    friendElement.classList.toggle('offline', !isOnline);
-                }
+                const ul = document.querySelector(".listFriends")
+                ul.innerHTML = `
+                ${await FriendsPage()}
+            `
             } else if (msg.type == "allMessages") {
                 document.querySelector(".chat .messages").innerHTML = ""
                 msg.data.map(m => displayMessage(m, logged.username))
@@ -124,7 +126,7 @@ export async function homePage(param) {
                 console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
                 displayMessage(msg.data, logged.username, msg.isSender)
             }
-           
+
         };
     } else {
         let posts = document.querySelector('.posts')
