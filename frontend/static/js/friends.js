@@ -9,7 +9,6 @@ export async function FriendsPage() {
         return errorPage("You Don't Have Friends", 404)
     }
     let friends = data.data.map(friend => {
-        console.log("friend=>",friend);
         let onlineClass = friend.isOnline ? 'online' : 'offline';
         let status =`<i class="fa-solid fa-user ${onlineClass}"></i>`
         return /*html*/`
@@ -69,12 +68,12 @@ function GetMessages(receiverID) {
 }
 
 
-export function displayMessage(msg, sender) {
+export function displayMessage(msg, sender, isSender) {
     const chatMessages = document.querySelector(".chat .messages");
     if (chatMessages) {
-        if (msg.username === sender) {
+        if (msg.username === sender || isSender) {
             chatMessages.innerHTML += /*html*/`
-            <div class="messageSender">
+            <div class="messagesSender">
                 <p>${msg.content}</p>
             </div>
         `

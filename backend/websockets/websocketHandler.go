@@ -67,9 +67,10 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			if con, ok := userConnections[message.RecipientID]; ok {
 				con.WriteJSON(map[string]any{
 					"message": "Messages Loaded",
-					"type":    "allMessages",
+					"type":    "newMessage",
 					"status":  http.StatusOK,
 					"data":    message,
+					"isSender": false,
 				})
 			}
 			conn.WriteJSON(map[string]any{
@@ -77,6 +78,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"type":    "newMessage",
 				"status":  http.StatusOK,
 				"data":    message,
+				"isSender": true,
 			})
 
 		case "loadMessage":
@@ -88,14 +90,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
-			if con, ok := userConnections[message.RecipientID]; ok {
-				con.WriteJSON(map[string]any{
-					"message": "Messages Loaded",
-					"type":    "allMessages",
-					"status":  http.StatusOK,
-					"data":    messages,
-				})
-			}
+
 			conn.WriteJSON(map[string]any{
 				"message": "Messages Loaded",
 				"type":    "allMessages",

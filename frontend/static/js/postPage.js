@@ -102,7 +102,7 @@ async function loadPosts() {
     }
   } catch (error) {
     console.error('Failed to load posts:', error);
-     return popup("No Post Available")
+     popup("No Post Available")
   } finally {
     loading = false;
     document.querySelectorAll(".displayComment").forEach(button => {
