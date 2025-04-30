@@ -1,6 +1,8 @@
 import { errorPage } from "./errorPage.js"
 import { ws } from "./homePage.js"
 
+let messagesPage = 1
+
 export async function FriendsPage() {
     const response = await fetch("/api/getFriends")
     const data = await response.json()
@@ -32,6 +34,7 @@ export function chatFriend() {
             span.textContent = li.children[1].textContent
             span.dataset.id = li.dataset.id
             GetMessages(span.dataset.id)
+            loadMessages()
         }
     })
 
@@ -66,10 +69,18 @@ export function sendMessage() {
 function GetMessages(receiverID) {
     ws.send(JSON.stringify({
         recipientID: parseInt(receiverID),
-        type: "loadMessage"
+        type: "loadMessage",
+        page: messagesPage
     }))
 }
 
+function loadMessages() {
+    const chatMessages = document.querySelector(".chat .messages");
+
+    chatMessages.addEventListener('scroll', () => {
+        console.log(chatMessages.scrollTop)
+    })
+}
 
 export function displayMessage(msg, sender, isSender) {
     const chatMessages = document.querySelector(".chat .messages");
