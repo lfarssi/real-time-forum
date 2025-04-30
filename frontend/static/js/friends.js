@@ -2,17 +2,19 @@ import { errorPage } from "./errorPage.js"
 import { ws } from "./homePage.js"
 
 let messagesPage = 1
+let isScroll = false
+let scrollValue;
 
 export async function FriendsPage() {
     const response = await fetch("/api/getFriends")
     const data = await response.json()
-    
-    if(!data.data){
+
+    if (!data.data) {
         return errorPage("You Don't Have Friends", 404)
     }
     let friends = data.data.map(friend => {
         let onlineClass = friend.isOnline ? 'online' : 'offline';
-        let status =`<i class="fa-solid fa-user ${onlineClass}"></i>`
+        let status = `<i class="fa-solid fa-user ${onlineClass}"></i>`
         return /*html*/`
             <li data-id="${friend.id}">${status} <span>${friend.firstName} ${friend.lastName}</span></li>
     `
@@ -44,6 +46,7 @@ export function chatFriend() {
 
     closeChat.addEventListener('click', () => {
         chat.style.display = 'none';
+        isScroll = false
     })
 }
 
@@ -51,12 +54,12 @@ export function chatFriend() {
 
 export function sendMessage() {
     let form = document.querySelector('.chatForm')
-    
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault()
         let input = document.querySelector('.chatForm input')
         let receiverID = document.querySelector('.header span').dataset.id
-        
+
         ws.send(JSON.stringify({
             content: input.value,
             recipientID: parseInt(receiverID),
@@ -84,9 +87,10 @@ function loadMessages() {
     chatMessages.addEventListener('scroll', () => {
         if (chatMessages.scrollTop === 0) {
             messagesPage++
-            console.log(chatMessages.scrollTop)
             let span = document.querySelector('.chat .header span')
+            scrollValue = chatMessages.scrollHeight
             GetMessages(span.dataset.id)
+            isScroll = true
         }
     })
 }
@@ -100,29 +104,44 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
             html = /*html*/`
                 <div class="messagesSender">
                     <div>
-                        <p>${msg.content}  <span class="msgTime">${msg.sentAT.slice(0,5)}</span></p>
+                        <p>${msg.content}  <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>
                     </div>
                 </div>
             `;
         } else {
             html = /*html*/`
                 <div class="messagesReceiver">
-                    <p>${msg.content} <span class="msgTime">${msg.sentAT.slice(0,5)}</span></p>
+                    <p>${msg.content} <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>
                 </div>
             `;
         }
 
+
+    
+
+        // let a= chatMessages.scrollHeight
+
         if (isLastMsg) {
-            console.log('first')
             chatMessages.innerHTML += html
         } else {
-            console.log('second')
             chatMessages.insertAdjacentHTML("afterbegin", html);
         }
         // scroll to top if you want to auto-scroll to latest
         // chatMessages.scrollTop = 0;
 
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        if (!isScroll) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        } else {
+
+            console.log(scrollValue)
+
+            chatMessages.scrollTop = chatMessages.scrollHeight - scrollValue
+
+            // console.log(chatMessages.scrollTop, chatMessages.scrollHeight - a)
+            // chatMessages.scrollTop = chatMessages.scrollHeight - a
+        }
+
     }
 }
 
