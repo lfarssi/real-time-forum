@@ -427,7 +427,7 @@ aside > .filter ul input:checked + label span::after{
     
 }
 
-.messageSender{
+.messagesSender{
     margin: 5px;
     width: fit-content;
     background-color: var(--accent);

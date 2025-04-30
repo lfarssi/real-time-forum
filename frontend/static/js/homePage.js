@@ -109,8 +109,6 @@ export async function homePage(param) {
 
         ws.onmessage = function (event) {
             const msg = JSON.parse(event.data);
-            console.log(msg);
-            
             if (msg.type == "userStatus") {
                 const { userID, isOnline } = msg;
                 const friendElement = document.querySelector(`li[data-id='${userID}'] i`);
@@ -123,7 +121,8 @@ export async function homePage(param) {
                 document.querySelector(".chat .messages").innerHTML = ""
                 msg.data.map(m => displayMessage(m, logged.username))
             } else {
-                displayMessage(msg.data)
+                console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+                displayMessage(msg.data, logged.username, msg.isSender)
             }
            
         };
