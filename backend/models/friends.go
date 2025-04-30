@@ -3,10 +3,11 @@ package models
 import "real_time_forum/backend/database"
 
 func Friends(userID int)([]*UserAuth, error)  {
-    query := `SELECT id, firstName, lastName, gender
-        FROM users
-        WHERE id != ?
-        ORDER BY firstName
+    query := `SELECT u.id, u.firstName, u.lastName, u.gender, m.sentAt
+        FROM users u
+        INNER JOIN messages m ON m.receiverID=u.id
+        WHERE u.id != ?
+        ORDER BY u.firstName AND m.sentAt
     `
     rows, err := database.DB.Query(query, userID) 
     if err != nil {
