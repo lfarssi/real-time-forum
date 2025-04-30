@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"real_time_forum/backend/database"
 )
 
@@ -21,11 +23,12 @@ func GetMessage(sender int, receiver int) ([]*Message, error) {
 	var messages []*Message
 	for rows.Next() {
 		var msg Message
-		err := rows.Scan(&msg.ID, &msg.SenderID, &msg.RecipientID, &msg.Username, &msg.Content, &msg.SentAt, &msg.Status)
+		var t time.Time
+		err := rows.Scan(&msg.ID, &msg.SenderID, &msg.RecipientID, &msg.Username, &msg.Content, &t, &msg.Status)
 		if err != nil {
 			return nil, err
 		}
-
+		msg.SentAt = t.Format(time.TimeOnly)
 		messages = append(messages, &msg)
 	}
 
@@ -40,7 +43,7 @@ func AddMessage(message *Message) error {
 	query := `
 		INSERT INTO messages (senderID, receiverID, content, sentAt, status) VALUES ($1, $2, $3, $4, $5) RETURNING id 
 	`
-	err := database.DB.QueryRow(query, &message.SenderID, &message.RecipientID, &message.Content, &message.SentAt, &message.Status).Scan(&message.ID)
+	err := database.DB.QueryRow(query, &message.SenderID, &message.RecipientID, &message.Content, time.Now(), &message.Status).Scan(&message.ID)
 	if err != nil {
 		return err
 	}

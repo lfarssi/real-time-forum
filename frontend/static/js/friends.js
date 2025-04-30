@@ -70,17 +70,24 @@ function GetMessages(receiverID) {
 
 export function displayMessage(msg, sender, isSender) {
     const chatMessages = document.querySelector(".chat .messages");
+    console.log(msg);
+    
     if (chatMessages) {
         if (msg.username === sender || isSender) {
             chatMessages.innerHTML += /*html*/`
             <div class="messagesSender">
+                <div>
                 <p>${msg.content}</p>
+                <span class="msgTime">${msg.sentAT}</span>
+                </div>
             </div>
         `
         } else {
             chatMessages.innerHTML += /*html*/`
             <div class="messagesReceiver">
+                
                 <p>${msg.content}</p>
+                <span>${msg.sentAT}</span>
             </div>
         `
         }

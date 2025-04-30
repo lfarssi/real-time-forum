@@ -82,7 +82,7 @@ export async function homePage(param) {
                     </div>
                     <div class="cbody">
                         <div class="messages">
-
+        
                         </div>
                         <form id="chatForm" class="chatForm">
                             <div class="input-container">
@@ -112,8 +112,6 @@ export async function homePage(param) {
 
             const msg = JSON.parse(event.data);
 
-            console.log(msg)
-
             if (msg.type == "userStatus") {
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
@@ -123,7 +121,6 @@ export async function homePage(param) {
                 document.querySelector(".chat .messages").innerHTML = ""
                 msg.data.map(m => displayMessage(m, logged.username))
             } else {
-                console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
                 displayMessage(msg.data, logged.username, msg.isSender)
             }
 

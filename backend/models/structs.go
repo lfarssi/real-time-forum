@@ -1,7 +1,5 @@
 package models
 
-import "time"
-
 type UserAuth struct {
 	ID        int    `json:"id"`
 	UserName  string `json:"username"`
@@ -11,7 +9,7 @@ type UserAuth struct {
 	Age       int    `json:"age"`
 	Gender    string `json:"gender"`
 	Password  string `json:"password"`
-	IsOnline  bool	  `json:"isOnline"`
+	IsOnline  bool   `json:"isOnline"`
 }
 
 type ValidationMessagesRegister struct {
@@ -71,12 +69,12 @@ type Category struct {
 }
 
 type Message struct {
-	ID          int       `json:"id"`
-	SenderID    int       `json:"senderID"`
-	RecipientID int       `json:"recipientID"`
-	Username    string    `json:"username"`
-	Content     string    `json:"content"`
-	SentAt      time.Time `json:"sentAT"`
-	Status      string    `json:"status"`
-	Type        string    `json:"type"`
+	ID          int    `json:"id"`
+	SenderID    int    `json:"senderID"`
+	RecipientID int    `json:"recipientID"`
+	Username    string `json:"username"`
+	Content     string `json:"content"`
+	SentAt      string `json:"sentAT"`
+	Status      string `json:"status"`
+	Type        string `json:"type"`
 }

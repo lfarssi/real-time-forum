@@ -167,6 +167,7 @@ main{
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    min-height: 100vh;
 }
 
 section {
@@ -429,8 +430,14 @@ aside > .filter ul input:checked + label span::after{
 
 .messagesSender{
     margin: 5px;
-    width: fit-content;
-    background-color: var(--accent);
+    display: flex;
+    justify-content: end;
+}
+
+.messagesSender div{
+    width: max-content;
+    background-color:rgb(162, 250, 162);
+
 }
 
 .messagesReceiver{
@@ -439,6 +446,9 @@ aside > .filter ul input:checked + label span::after{
     background-color: var(--text-light);
 }
 
+.msgTime{
+    font-size: 10px;
+}
 #postForm {
     background-color: var(--card-dark);
     color: var(--text-light);
