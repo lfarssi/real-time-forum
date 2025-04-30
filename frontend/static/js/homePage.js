@@ -111,7 +111,6 @@ export async function homePage(param) {
 
 
             const msg = JSON.parse(event.data);
-            console.log(msg);
             
             if (msg.type == "userStatus") {
                 const ul = document.querySelector(".listFriends")
