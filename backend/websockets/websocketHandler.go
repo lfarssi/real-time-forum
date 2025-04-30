@@ -112,6 +112,8 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"status":  http.StatusOK,
 				"data":    messages,
 			})
+		case "logout":
+			return
 		}
 
 	}
