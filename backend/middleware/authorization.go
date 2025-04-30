@@ -121,8 +121,10 @@ func IsLogged(w http.ResponseWriter, r *http.Request) {
 
 	var userId int
 	var userName string
+	var firstName string
+	var lastName string
 	var expired time.Time
-	err = database.DB.QueryRow("SELECT id, username, expiredAt FROM users WHERE session=?", cookie.Value).Scan(&userId, &userName, &expired)
+	err = database.DB.QueryRow("SELECT id, username, firstName, lastName, expiredAt FROM users WHERE session=?", cookie.Value).Scan(&userId, &userName, &firstName, &lastName, &expired)
 	if err != nil || userId == 0 {
 		utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
 			"message": "You are not authorized to do this",
@@ -144,5 +146,7 @@ func IsLogged(w http.ResponseWriter, r *http.Request) {
 		"message":  "Valid token",
 		"status":   http.StatusOK,
 		"username": userName,
+		"firstName": firstName,
+		"lastName": lastName,
 	})
 }
