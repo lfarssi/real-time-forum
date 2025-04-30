@@ -45,17 +45,20 @@ export function chatFriend() {
 export function sendMessage() {
     let form = document.querySelector('.chatForm')
     
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault()
         let input = document.querySelector('.chatForm input')
         let receiverID = document.querySelector('.header span').dataset.id
-
+        
         ws.send(JSON.stringify({
             content: input.value,
             recipientID: parseInt(receiverID),
             type: "addMessage"
         }))
-
+        const ul = document.querySelector(".listFriends")
+        ul.innerHTML = `
+        ${await FriendsPage()}
+    `
         input.value = ""
     })
 }
