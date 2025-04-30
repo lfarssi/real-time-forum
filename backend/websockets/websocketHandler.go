@@ -112,26 +112,24 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"status":  http.StatusOK,
 				"data":    messages,
 			})
-		case "logout":
-			return
+		
 		}
 
 	}
 }
 
 func removeConnection(userID int, conn *websocket.Conn) {
-    conns := userConnections[userID]
-    for i, c := range conns {
-        if c == conn {
-            userConnections[userID] = append(conns[:i], conns[i+1:]...)
-            break
-        }
-    }
-    if len(userConnections[userID]) == 0 {
-        delete(userConnections, userID)
-    }
+	conns := userConnections[userID]
+	for i, c := range conns {
+		if c == conn {
+			userConnections[userID] = append(conns[:i], conns[i+1:]...)
+			break
+		}
+	}
+	if len(userConnections[userID]) == 0 {
+		delete(userConnections, userID)
+	}
 }
-
 
 func broadcastStatus(userID int, isOnline bool) {
 	statusMessage := map[string]any{
