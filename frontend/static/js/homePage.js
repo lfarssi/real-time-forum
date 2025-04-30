@@ -69,7 +69,9 @@ export async function homePage(param) {
             </section>
             <aside>
                 <div class="profile">
-                    <p><i class="fa-solid fa-user"></i> ${logged.username}</p>
+                    <p><i class="fa-solid fa-user"></i> ${logged.firstName} ${logged.lastName}</p>  
+                
+                    (<span> ${logged.username}</span>)
                 </div>
                 <div class="friends">
                 <ul class="listFriends">
