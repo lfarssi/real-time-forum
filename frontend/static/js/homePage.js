@@ -1,4 +1,4 @@
-import { isLogged } from "./app.js"
+import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
 import { chatFriend, displayMessage, FriendsPage, sendMessage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
@@ -106,14 +106,23 @@ export async function homePage(param) {
         filterByCategories()
         chatFriend()
         sendMessage()
-
+       
         ws = new WebSocket(`/ws/messages`);
+        ws.onclose = function(event) {
+            console.log('WebSocket closed:', event);
+            navigateTo("/register")
+        };
 
         ws.onmessage = async function (event) {
+            const logged = await isLogged(); 
 
-
+            if(!logged){
+                ws.close()
+                return
+            }
+           
             const msg = JSON.parse(event.data);
-            
+          
             if (msg.type == "userStatus") {
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
@@ -121,6 +130,8 @@ export async function homePage(param) {
             `
             } else if (msg.type == "allMessages") {
                 document.querySelector(".chat .messages").innerHTML = ""
+                console.log(msg);
+                
                 msg.data.map(m => displayMessage(m, logged.username))
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
