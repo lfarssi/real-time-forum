@@ -3,6 +3,7 @@ package websockets
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"real_time_forum/backend/models"
 
@@ -64,20 +65,21 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
+			message.SentAt = time.Now().Format(time.TimeOnly)
 			if con, ok := userConnections[message.RecipientID]; ok {
 				con.WriteJSON(map[string]any{
-					"message": "Messages Loaded",
-					"type":    "newMessage",
-					"status":  http.StatusOK,
-					"data":    message,
+					"message":  "Messages Loaded",
+					"type":     "newMessage",
+					"status":   http.StatusOK,
+					"data":     message,
 					"isSender": false,
 				})
 			}
 			conn.WriteJSON(map[string]any{
-				"message": "Message Sent",
-				"type":    "newMessage",
-				"status":  http.StatusOK,
-				"data":    message,
+				"message":  "Message Sent",
+				"type":     "newMessage",
+				"status":   http.StatusOK,
+				"data":     message,
 				"isSender": true,
 			})
 
@@ -90,7 +92,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
-
 			conn.WriteJSON(map[string]any{
 				"message": "Messages Loaded",
 				"type":    "allMessages",

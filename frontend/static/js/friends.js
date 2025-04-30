@@ -77,17 +77,16 @@ export function displayMessage(msg, sender, isSender) {
             chatMessages.innerHTML += /*html*/`
             <div class="messagesSender">
                 <div>
-                <p>${msg.content}</p>
-                <span class="msgTime">${msg.sentAT}</span>
+                <p>${msg.content}  <span class="msgTime">${msg.sentAT.slice(0,5)}</span></p>
+               
                 </div>
             </div>
         `
         } else {
             chatMessages.innerHTML += /*html*/`
             <div class="messagesReceiver">
+                <p>${msg.content} <span  class="msgTime">${msg.sentAT.slice(0,5)}</span></p>
                 
-                <p>${msg.content}</p>
-                <span>${msg.sentAT}</span>
             </div>
         `
         }
