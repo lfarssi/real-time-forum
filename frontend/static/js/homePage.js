@@ -135,7 +135,7 @@ export async function homePage(param) {
             `
             } else {
                 const chatMessages = document.querySelector(".chat .messages");
-                displayMessage(msg.data, logged.username, msg.isSender)
+                displayMessage(msg.data, logged.username, msg.isSender, true)
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
                 ${await FriendsPage()}

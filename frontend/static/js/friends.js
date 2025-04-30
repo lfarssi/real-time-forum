@@ -71,7 +71,6 @@ export function sendMessage() {
 }
 
 function GetMessages(receiverID) {
-    
     ws.send(JSON.stringify({
         recipientID: parseInt(receiverID),
         type: "loadMessage",
@@ -92,7 +91,7 @@ function loadMessages() {
     })
 }
 
-export function displayMessage(msg, sender, isSender) {
+export function displayMessage(msg, sender, isSender, isLastMsg = false) {
     const chatMessages = document.querySelector(".chat .messages");
 
     if (chatMessages) {
@@ -113,7 +112,13 @@ export function displayMessage(msg, sender, isSender) {
             `;
         }
 
-        chatMessages.insertAdjacentHTML("afterbegin", html);
+        if (isLastMsg) {
+            console.log('first')
+            chatMessages.innerHTML += html
+        } else {
+            console.log('second')
+            chatMessages.insertAdjacentHTML("afterbegin", html);
+        }
         // scroll to top if you want to auto-scroll to latest
         // chatMessages.scrollTop = 0;
 
