@@ -1,32 +1,41 @@
 package models
 
-import "real_time_forum/backend/database"
+import (
+	"real_time_forum/backend/database"
+)
 
-func Friends(userID int)([]*UserAuth, error)  {
-    query := `SELECT id, firstName, lastName, gender
-        FROM users
-        WHERE id != ?
-        ORDER BY firstName
+func Friends(userID int) ([]*UserAuth, error) {
+	query := `SELECT u.id, u.firstName, u.lastName, u.gender,  (
+    SELECT MAX(m.sentAt)
+    FROM messages m
+    WHERE (m.senderID   = ? AND m.receiverID = u.id)
+        OR (m.senderID   = u.id  AND m.receiverID = ?)
+    ) AS lastAt
+        FROM users u
+        WHERE u.id != ?
+        ORDER BY  lastAt DESC , u.firstName ;
     `
-    rows, err := database.DB.Query(query, userID) 
-    if err != nil {
-        return nil, err
-    }
-    defer rows.Close()
+	rows, err := database.DB.Query(query, userID, userID, userID)
+	if err != nil {
 
-    var users []*UserAuth
-    for rows.Next() {
-        var user UserAuth
-        err := rows.Scan(&user.ID,&user.FirstName, &user.LastName, &user.Gender)
-        if err != nil {
-            return nil, err
-        }
-        users = append(users, &user)
-    }
+		return nil, err
+	}
+	defer rows.Close()
 
-    if err = rows.Err(); err != nil {
-        return nil, err
-    }
+	var users []*UserAuth
+	for rows.Next() {
+		var user UserAuth
+		var last any
+		err := rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Gender, &last)
+		if err != nil {
 
-    return users, nil    
+			return nil, err
+		}
+		users = append(users, &user)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
