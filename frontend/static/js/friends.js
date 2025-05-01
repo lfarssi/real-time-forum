@@ -35,7 +35,7 @@ export function chatFriend() {
         if (li) {
             chatMessages = document.querySelector(".chat .messages")
             chatMessages.innerHTML = ""
-            chatMessages.removeEventListener('scroll', scrollEventLoadMessages)
+            // chatMessages.removeEventListener('scroll', scrollEventLoadMessages)
             msgID = -1
             isScroll = false
             chat.style.display = 'flex';
@@ -91,7 +91,7 @@ function loadMessages() {
 }
 
 function scrollEventLoadMessages() {
-    if (chatMessages.scrollTop === 0) {
+    if (chatMessages.scrollTop === 0 && chatMessages.querySelector('p')) {
         let span = document.querySelector('.chat .header span')
         msgID = chatMessages.querySelector('p').dataset.id
         scrollValue = chatMessages.scrollHeight
