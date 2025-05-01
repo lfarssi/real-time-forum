@@ -133,6 +133,11 @@ export async function homePage(param) {
                 ul.innerHTML = `
                 ${await FriendsPage()}
             `
+            }else if(msg.type="loggedOut"){
+                const ul = document.querySelector(".listFriends")
+                ul.innerHTML = `
+                ${await FriendsPage()}
+                `
             } else {
                 const chatMessages = document.querySelector(".chat .messages");
                 displayMessage(msg.data, logged.username, msg.isSender, true)
