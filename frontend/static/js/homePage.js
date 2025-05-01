@@ -120,16 +120,17 @@ export async function homePage(param) {
                 ws.close()
                 return
             }
+            const ul = document.querySelector(".listFriends")
+                ul.innerHTML = `
+                ${await FriendsPage()}
+            `
             const chat= document.querySelector(".chat")
             let user = document.querySelector('.chat .header span')
             const msg = JSON.parse(event.data);
             console.log(msg.data);
             
             if (msg.type == "userStatus") {
-                const ul = document.querySelector(".listFriends")
-                ul.innerHTML = `
-                ${await FriendsPage()}
-                `
+              
             } else if (msg.type == "allMessages") {
                 nbrMsg.nbr=0
                 if (msg.data) {
@@ -141,10 +142,7 @@ export async function homePage(param) {
                 ${await FriendsPage()}
             `
             } else if (msg.type = "newMessage") {
-                const ul = document.querySelector(".listFriends")
-                ul.innerHTML = `
-                ${await FriendsPage()}
-            `
+                
                 if (chat.style.display==="" || chat.style.display==="none"){
                     notify(msg.data.senderID)
                 } else{
@@ -157,11 +155,6 @@ export async function homePage(param) {
                 const chatMessages = document.querySelector(".chat .messages");
                 
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            } else if (msg.type = "loggedOut") {
-                const ul = document.querySelector(".listFriends")
-                ul.innerHTML = `
-                ${await FriendsPage()}
-                `
             }
 
         };
