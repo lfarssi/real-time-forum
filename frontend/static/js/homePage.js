@@ -133,12 +133,7 @@ export async function homePage(param) {
                 ul.innerHTML = `
                 ${await FriendsPage()}
             `
-            }else if(msg.type="loggedOut"){
-                const ul = document.querySelector(".listFriends")
-                ul.innerHTML = `
-                ${await FriendsPage()}
-                `
-            } else {
+            }else if(msg.type="newMessage") {
                 const chatMessages = document.querySelector(".chat .messages");
                 displayMessage(msg.data, logged.username, msg.isSender, true)
                 const ul = document.querySelector(".listFriends")
@@ -146,7 +141,12 @@ export async function homePage(param) {
                 ${await FriendsPage()}
             `
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
+            } else if(msg.type="loggedOut"){
+                const ul = document.querySelector(".listFriends")
+                ul.innerHTML = `
+                ${await FriendsPage()}
+                `
+            } 
 
         };
     } else {

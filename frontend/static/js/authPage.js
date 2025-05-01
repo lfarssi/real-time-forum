@@ -145,7 +145,7 @@ export function login() {
 export async function logout() {
   try {
     ws.send(JSON.stringify({ type: "logout" }));
-    ws.close();
+    // ws.close();
 
     await fetch("/api/logout")
     navigateTo("/register")
