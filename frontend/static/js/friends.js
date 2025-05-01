@@ -94,19 +94,22 @@ function loadMessages() {
         }
     })
 }
-let nbrMsg=0;
+export const nbrMsg={nbr:0};
 export function notify(id){
     console.log(id);
-    nbrMsg++
+    nbrMsg.nbr++
     const friend= document.getElementById(`friend${id}`)
     console.log(friend);
     
     let span=document.createElement("span")
     span.style.backgroundColor="green"
     span.style.borderRadius="50%"
-    span.style.left="2px"
+    span.style.marginLeft = "10px";
+    span.style.padding = "0.2em 0.5em";
+    span.style.fontSize = "0.8em";
+
     span.className="notification"
-    span.textContent=nbrMsg
+    span.textContent=nbrMsg.nbr
     friend.append(span)
 }
 
