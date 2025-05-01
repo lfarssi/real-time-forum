@@ -35,16 +35,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userConnections[userID] = append(userConnections[userID], conn)
-
-	defer func() {
-		if conns, ok := userConnections[userID]; ok {
-			for _, c := range conns {
-				removeConnection(userID, c)
-			}
-		}
-		conn.Close()
-		broadcastStatus(userID, false)
-	}()
+	defer removeConnection(userID, conn)
 
 	broadcastStatus(userID, true)
 	for {
@@ -114,10 +105,18 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"data":    messages,
 			})
 
+		case "logout":
+			conn.WriteJSON(map[string]any{
+				"message": "user logged out",
+				"type":    "loggedOut",
+				"status":  http.StatusOK,
+			})
+
 		}
 
 	}
 }
+
 
 func removeConnection(userID int, conn *websocket.Conn) {
 	conns := userConnections[userID]
@@ -129,6 +128,7 @@ func removeConnection(userID int, conn *websocket.Conn) {
 	}
 	if len(userConnections[userID]) == 0 {
 		delete(userConnections, userID)
+		broadcastStatus(userID, false)
 	}
 }
 

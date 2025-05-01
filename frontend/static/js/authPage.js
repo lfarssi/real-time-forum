@@ -1,5 +1,6 @@
 import { navigateTo } from "./app.js";
 import { errorPage, popup } from "./errorPage.js";
+import { ws } from "./homePage.js";
 
 export function loginPage() {
   document.body.innerHTML = /*html*/`
@@ -143,7 +144,9 @@ export function login() {
 
 export async function logout() {
   try {
-    
+    ws.send(JSON.stringify({ type: "logout" }));
+    ws.close();
+
     await fetch("/api/logout")
     navigateTo("/register")
     } catch (err) {
