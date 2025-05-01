@@ -108,12 +108,6 @@ export function notify(id){
     console.log(friend);
     
     let span=document.createElement("span")
-    span.style.backgroundColor="green"
-    span.style.borderRadius="50%"
-    span.style.marginLeft = "10px";
-    span.style.padding = "0.2em 0.5em";
-    span.style.fontSize = "0.8em";
-
     span.className="notification"
     span.textContent=nbrMsg.nbr
     friend.append(span)
