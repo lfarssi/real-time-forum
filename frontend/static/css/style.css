@@ -450,6 +450,13 @@ aside > .filter ul input:checked + label span::after{
     padding: 5px 10px;
     border-radius: var(--radius);
 }
+.notification{
+    background-color: var(--accent-dark);
+    border-radius: 50%;
+    font-size: 0.8em;
+    margin-left: 70px;
+    padding: 0.2em 0.5em;
+}
 
 
 .msgTime{
