@@ -4,6 +4,7 @@ import { ws } from "./homePage.js"
 let isScroll = false
 let scrollValue;
 let msgID = -1
+let chatMessages;
 
 export async function FriendsPage() {
     const response = await fetch("/api/getFriends")
@@ -47,8 +48,8 @@ export function chatFriend() {
 
     closeChat.addEventListener('click', () => {
         chat.style.display = 'none';
-        isScroll = false
-        msgID = -1
+        // isScroll = false
+        // msgID = -1
     })
 }
 
@@ -82,18 +83,21 @@ function GetMessages(receiverID) {
 }
 
 function loadMessages() {
-    const chatMessages = document.querySelector(".chat .messages");
+    chatMessages = document.querySelector(".chat .messages");
 
-    chatMessages.addEventListener('scroll', () => {
-        if (chatMessages.scrollTop === 0) {
-            let span = document.querySelector('.chat .header span')
-            msgID = chatMessages.querySelector('p').dataset.id
-            scrollValue = chatMessages.scrollHeight
-            GetMessages(span.dataset.id)
-            isScroll = true
-        }
-    })
+    chatMessages.addEventListener('scroll', scrollEventLoadMessages)
 }
+
+function scrollEventLoadMessages() {
+    if (chatMessages.scrollTop === 0) {
+        let span = document.querySelector('.chat .header span')
+        msgID = chatMessages.querySelector('p').dataset.id
+        scrollValue = chatMessages.scrollHeight
+        GetMessages(span.dataset.id)
+        isScroll = true
+    }
+}
+
 export const nbrMsg={nbr:0};
 export function notify(id){
     console.log(id);
