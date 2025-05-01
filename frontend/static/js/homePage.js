@@ -63,9 +63,12 @@ export async function homePage(param) {
             </aside>
             <section>
                 ${await PostForm()}
-                <div class="posts">
-                ${await PostsPage(param)}
+                <div class="postContainer">
+                    <div class="posts">
+                    ${await PostsPage(param)}
+                    </div>
                 </div>
+                
             </section>
             <aside>
                 <div class="profile">
