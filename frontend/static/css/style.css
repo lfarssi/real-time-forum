@@ -196,6 +196,9 @@ aside > .profile{
     align-items: center;
     padding: 10px 20px;
 }
+.profile{
+    color: var(--text-light);
+}
 
 aside > .friends{
     height: 75vh;
