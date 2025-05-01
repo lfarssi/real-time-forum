@@ -34,6 +34,7 @@ export function chatFriend() {
         if (li) {
             document.querySelector(".chat .messages").innerHTML = ""
             msgID = -1
+            isScroll = false
             chat.style.display = 'flex';
             let span = chat.querySelector('.header span')
             span.textContent = li.children[1].textContent
