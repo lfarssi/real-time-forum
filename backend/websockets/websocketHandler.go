@@ -2,6 +2,7 @@ package websockets
 
 import (
 	"encoding/json"
+	"html"
 	"net/http"
 	"time"
 
@@ -58,7 +59,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		message.SenderID = userID
-
+		message.Content = html.EscapeString(message.Content)
 		switch message.Type {
 		case "addMessage":
 			err = models.AddMessage(&message)
@@ -112,7 +113,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"status":  http.StatusOK,
 				"data":    messages,
 			})
-		
+
 		}
 
 	}
@@ -138,7 +139,7 @@ func broadcastStatus(userID int, isOnline bool) {
 		"isOnline": isOnline,
 	}
 
-	for key, _ := range userConnections {
+	for key := range userConnections {
 		if conns, ok := userConnections[key]; ok {
 			for _, c := range conns {
 				c.WriteJSON(statusMessage)
