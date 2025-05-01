@@ -85,9 +85,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 
 		case "loadMessage":
 
-			page := (message.Limit - 1) * 10
-
-			messages, err := models.GetMessage(message.SenderID, message.RecipientID, page)
+			messages, err := models.GetMessage(message.SenderID, message.RecipientID, message.LastID)
 			if err != nil {
 				for _, c := range userConnections[message.SenderID] {
 					c.WriteJSON(map[string]any{
@@ -116,7 +114,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
-
 
 func removeConnection(userID int, conn *websocket.Conn) {
 	conns := userConnections[userID]

@@ -4,6 +4,7 @@ import { ws } from "./homePage.js"
 let messagesPage = 1
 let isScroll = false
 let scrollValue;
+let msgID = 55
 
 export async function FriendsPage() {
     const response = await fetch("/api/getFriends")
@@ -77,7 +78,7 @@ function GetMessages(receiverID) {
     ws.send(JSON.stringify({
         recipientID: parseInt(receiverID),
         type: "loadMessage",
-        page: messagesPage
+        lastID: parseInt(msgID)
     }))
 }
 
@@ -88,6 +89,7 @@ function loadMessages() {
         if (chatMessages.scrollTop === 0) {
             messagesPage++
             let span = document.querySelector('.chat .header span')
+            msgID = chatMessages.querySelector('p').dataset.id
             scrollValue = chatMessages.scrollHeight
             GetMessages(span.dataset.id)
             isScroll = true
@@ -98,20 +100,22 @@ function loadMessages() {
 export function displayMessage(msg, sender, isSender, isLastMsg = false) {
     const chatMessages = document.querySelector(".chat .messages");
 
+    // console.log(msgID)
+
     if (chatMessages) {
         let html = "";
         if (msg.username === sender || isSender) {
             html = /*html*/`
                 <div class="messagesSender">
                     <div>
-                        <p>${msg.content}  <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>
+                        <p data-id=${msg.id}>${msg.content} <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>
                     </div>
                 </div>
             `;
         } else {
             html = /*html*/`
                 <div class="messagesReceiver">
-                    <p>${msg.content} <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>
+                    <p data-id=${msg.id}>${msg.content} <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>
                 </div>
             `;
         }
@@ -133,9 +137,6 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
         if (!isScroll) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         } else {
-
-            console.log(scrollValue)
-
             chatMessages.scrollTop = chatMessages.scrollHeight - scrollValue
 
             // console.log(chatMessages.scrollTop, chatMessages.scrollHeight - a)
