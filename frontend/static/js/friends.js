@@ -16,7 +16,7 @@ export async function FriendsPage() {
         let onlineClass = friend.isOnline ? 'online' : 'offline';
         let status = `<i class="fa-solid fa-user ${onlineClass}"></i>`
         return /*html*/`
-            <li data-id="${friend.id}">${status} <span>${friend.firstName} ${friend.lastName}</span></li>
+            <li data-id="${friend.id}" id="friend${friend.id}">${status} <span>${friend.firstName} ${friend.lastName}</span></li>
     `
     })
     return /*html*/`
@@ -92,6 +92,21 @@ function loadMessages() {
             isScroll = true
         }
     })
+}
+let nbrMsg=0;
+export function notify(id){
+    console.log(id);
+    nbrMsg++
+    const friend= document.getElementById(`friend${id}`)
+    console.log(friend);
+    
+    let span=document.createElement("span")
+    span.style.backgroundColor="green"
+    span.style.borderRadius="50%"
+    span.style.left="2px"
+    span.className="notification"
+    span.textContent=nbrMsg
+    friend.append(span)
 }
 
 export function displayMessage(msg, sender, isSender, isLastMsg = false) {
