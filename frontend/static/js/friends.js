@@ -1,5 +1,5 @@
 import { errorPage } from "./errorPage.js"
-import { ws } from "./homePage.js"
+import {  ws } from "./homePage.js"
 
 let isScroll = false
 let scrollValue;
@@ -100,17 +100,16 @@ function scrollEventLoadMessages() {
     }
 }
 
-export const nbrMsg={nbr:0};
-export function notify(id){
-    console.log(id);
-    nbrMsg.nbr++
-    const friend= document.getElementById(`friend${id}`)
-    console.log(friend);
-    
-    let span=document.createElement("span")
-    span.className="notification"
-    span.textContent=nbrMsg.nbr
-    friend.append(span)
+export function notify(sender){
+    const friend= document.getElementById(`friend${sender}`)
+    const notification= friend.querySelector(".notification")
+    if (!notification){
+            let span=document.createElement("span")
+            span.className="notification"
+            span.innerHTML=/*html*/`<i class="fa-solid fa-circle-exclamation"></i>`
+            friend.append(span)
+        }
+    notification.innerHTML=/*html*/`<i class="fa-solid fa-circle-exclamation"></i>`
 }
 
 export function displayMessage(msg, sender, isSender, isLastMsg = false) {
