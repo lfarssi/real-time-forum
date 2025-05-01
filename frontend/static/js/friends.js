@@ -1,10 +1,9 @@
 import { errorPage } from "./errorPage.js"
 import { ws } from "./homePage.js"
 
-let messagesPage = 1
 let isScroll = false
 let scrollValue;
-let msgID = 58
+let msgID = -1
 
 export async function FriendsPage() {
     const response = await fetch("/api/getFriends")
@@ -33,7 +32,6 @@ export function chatFriend() {
     friends.addEventListener('click', (e) => {
         let li = e.target.closest("li")
         if (li) {
-            messagesPage = 1
             document.querySelector(".chat .messages").innerHTML = ""
             chat.style.display = 'flex';
             let span = chat.querySelector('.header span')
@@ -85,7 +83,6 @@ function loadMessages() {
 
     chatMessages.addEventListener('scroll', () => {
         if (chatMessages.scrollTop === 0) {
-            messagesPage++
             let span = document.querySelector('.chat .header span')
             msgID = chatMessages.querySelector('p').dataset.id
             scrollValue = chatMessages.scrollHeight

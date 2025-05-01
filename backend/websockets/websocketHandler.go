@@ -2,6 +2,7 @@ package websockets
 
 import (
 	"encoding/json"
+	"fmt"
 	"html"
 	"net/http"
 	"time"
@@ -47,6 +48,12 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"status":  http.StatusBadRequest,
 			})
 			return
+		}
+
+		if message.LastID == -1 {
+			fmt.Println(message.LastID)
+		} else {
+			fmt.Println("aaaaa")
 		}
 
 		message.SenderID = userID
