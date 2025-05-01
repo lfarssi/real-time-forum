@@ -99,17 +99,24 @@ function scrollEventLoadMessages() {
         isScroll = true
     }
 }
+export const notified = {}
 
-export function notify(sender){
-    const friend= document.getElementById(`friend${sender}`)
-    const notification= friend.querySelector(".notification")
-    if (!notification){
-            let span=document.createElement("span")
-            span.className="notification"
-            span.innerHTML=/*html*/`<i class="fa-solid fa-circle-exclamation"></i>`
-            friend.append(span)
-        }
-    notification.innerHTML=/*html*/`<i class="fa-solid fa-circle-exclamation"></i>`
+export function notify(sender) {
+    const friend = document.getElementById(`friend${sender}`)
+    const notification = friend.querySelector(".notification")
+
+    if (!notified[sender]) {
+        notified[sender] = 0
+    }
+    notified[sender] += 1
+    if (!notification) {
+        let span = document.createElement("span")
+        span.className = "notification"
+        span.textContent = notified[sender]
+        friend.append(span)
+    } else {
+        notification.textContent = notified[sender]
+    }
 }
 
 export function displayMessage(msg, sender, isSender, isLastMsg = false) {
