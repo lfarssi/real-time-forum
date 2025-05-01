@@ -1,6 +1,6 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
-import { chatFriend, displayMessage, FriendsPage, sendMessage } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage, notify, sendMessage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 
@@ -120,8 +120,11 @@ export async function homePage(param) {
                 ws.close()
                 return
             }
+            const chat= document.querySelector(".chat")
+            
             const msg = JSON.parse(event.data);
-            console.log(msg)
+            console.log(msg);
+            
             if (msg.type == "userStatus") {
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
@@ -129,17 +132,23 @@ export async function homePage(param) {
                 `
             } else if (msg.type == "allMessages") {
                 msg.data.map(m => displayMessage(m, logged.username))
+                
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
                 ${await FriendsPage()}
             `
             } else if (msg.type = "newMessage") {
-                const chatMessages = document.querySelector(".chat .messages");
-                displayMessage(msg.data, logged.username, msg.isSender, true)
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
                 ${await FriendsPage()}
             `
+                if (chat.style.display==="" || chat.style.display==="none"){
+                    notify(msg.data.senderID)
+                } else{
+                    displayMessage(msg.data, logged.username, msg.isSender, true)
+                }
+                const chatMessages = document.querySelector(".chat .messages");
+                
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             } else if (msg.type = "loggedOut") {
                 const ul = document.querySelector(".listFriends")
