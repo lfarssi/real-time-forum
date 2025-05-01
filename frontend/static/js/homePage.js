@@ -1,6 +1,6 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
-import { chatFriend, displayMessage, FriendsPage, nbrMsg, notify, sendMessage } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage,  notify, sendMessage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 
@@ -128,12 +128,9 @@ export async function homePage(param) {
             const chat= document.querySelector(".chat")
             let user = document.querySelector('.chat .header span')
             const msg = JSON.parse(event.data);
-            console.log(msg.data);
             
             if (msg.type == "userStatus") {
-              
             } else if (msg.type == "allMessages") {
-                nbrMsg.nbr=0
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username))
                 }
@@ -147,7 +144,6 @@ export async function homePage(param) {
                 if (chat.style.display==="" || chat.style.display==="none"){
                     notify(msg.data.senderID)
                 } else{
-                    console.log(user.dataset.id);
                     
                     if(user.dataset.id==msg.data.senderID || user.dataset.id==msg.data.recipientID){
                         displayMessage(msg.data, logged.username, msg.isSender, true)

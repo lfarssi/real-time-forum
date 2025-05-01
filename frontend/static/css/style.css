@@ -476,11 +476,12 @@ aside > .filter ul input:checked + label span::after{
     border-radius: var(--radius);
     word-break: break-all;
 }
-.notification{
-    background-color: var(--accent-dark);
+.notification i{
+    color: var(--accent) !important;
+    /* background-color: var(--accent-dark); */
     border-radius: 50%;
     font-size: 0.8em;
-    margin-left: 70px;
+    margin-left: 50px;
     padding: 0.2em 0.5em;
 }
 
