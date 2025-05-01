@@ -192,12 +192,18 @@ aside > div{
 
 aside > .profile{
     width: 300px;
-    display: flex;
-    align-items: center;
     padding: 10px 20px;
 }
-.profile{
-    color: var(--text-light);
+
+aside > .profile > div {
+    display: flex;
+    align-items: center;
+}
+
+.profile span{
+    color: var(--text-muted );
+    margin-left: 34px;
+    font-size: 14px;
 }
 
 aside > .friends{
