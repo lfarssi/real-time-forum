@@ -33,6 +33,7 @@ export function chatFriend() {
         let li = e.target.closest("li")
         if (li) {
             document.querySelector(".chat .messages").innerHTML = ""
+            msgID = -1
             chat.style.display = 'flex';
             let span = chat.querySelector('.header span')
             span.textContent = li.children[1].textContent
@@ -46,6 +47,7 @@ export function chatFriend() {
     closeChat.addEventListener('click', () => {
         chat.style.display = 'none';
         isScroll = false
+        msgID = -1
     })
 }
 

@@ -52,6 +52,18 @@ func AddMessage(message *Message) error {
 	return nil
 }
 
-// func GetLastMessageID() int {
+func GetLastMessageID() (int, error) {
+	query := `
+		SELECT m.id FROM messages m
+		ORDER BY m.id DESC 
+		LIMIT 1;
+	`
 
-// }
+	var id int
+	err := database.DB.QueryRow(query).Scan(&id)
+	if err != nil && err.Error() != "sql: no rows in result set" {
+		return -1, err
+	}
+
+	return id + 1, nil
+}
