@@ -33,7 +33,9 @@ export function chatFriend() {
     friends.addEventListener('click', (e) => {
         let li = e.target.closest("li")
         if (li) {
-            document.querySelector(".chat .messages").innerHTML = ""
+            chatMessages = document.querySelector(".chat .messages")
+            chatMessages.innerHTML = ""
+            chatMessages.removeEventListener('scroll', scrollEventLoadMessages)
             msgID = -1
             isScroll = false
             chat.style.display = 'flex';

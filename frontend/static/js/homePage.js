@@ -132,7 +132,9 @@ export async function homePage(param) {
                 `
             } else if (msg.type == "allMessages") {
                 nbrMsg.nbr=0
-                msg.data.map(m => displayMessage(m, logged.username))
+                if (msg.data) {
+                    msg.data.map(m => displayMessage(m, logged.username))
+                }
                 
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
