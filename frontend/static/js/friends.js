@@ -4,7 +4,7 @@ import { ws } from "./homePage.js"
 let messagesPage = 1
 let isScroll = false
 let scrollValue;
-let msgID = 55
+let msgID = 58
 
 export async function FriendsPage() {
     const response = await fetch("/api/getFriends")
@@ -50,8 +50,6 @@ export function chatFriend() {
         isScroll = false
     })
 }
-
-
 
 export function sendMessage() {
     let form = document.querySelector('.chatForm')
@@ -100,8 +98,6 @@ function loadMessages() {
 export function displayMessage(msg, sender, isSender, isLastMsg = false) {
     const chatMessages = document.querySelector(".chat .messages");
 
-    // console.log(msgID)
-
     if (chatMessages) {
         let html = "";
         if (msg.username === sender || isSender) {
@@ -120,27 +116,17 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
             `;
         }
 
-
-    
-
-        // let a= chatMessages.scrollHeight
-
         if (isLastMsg) {
             chatMessages.innerHTML += html
         } else {
             chatMessages.insertAdjacentHTML("afterbegin", html);
         }
-        // scroll to top if you want to auto-scroll to latest
-        // chatMessages.scrollTop = 0;
-
+    
 
         if (!isScroll) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         } else {
             chatMessages.scrollTop = chatMessages.scrollHeight - scrollValue
-
-            // console.log(chatMessages.scrollTop, chatMessages.scrollHeight - a)
-            // chatMessages.scrollTop = chatMessages.scrollHeight - a
         }
 
     }
