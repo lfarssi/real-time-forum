@@ -1,6 +1,6 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
-import { chatFriend, displayMessage, FriendsPage, notify, sendMessage } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage, nbrMsg, notify, sendMessage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 
@@ -121,7 +121,6 @@ export async function homePage(param) {
                 return
             }
             const chat= document.querySelector(".chat")
-            
             const msg = JSON.parse(event.data);
             console.log(msg);
             
@@ -131,6 +130,7 @@ export async function homePage(param) {
                 ${await FriendsPage()}
                 `
             } else if (msg.type == "allMessages") {
+                nbrMsg.nbr=0
                 msg.data.map(m => displayMessage(m, logged.username))
                 
                 const ul = document.querySelector(".listFriends")
