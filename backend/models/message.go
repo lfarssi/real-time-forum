@@ -51,3 +51,7 @@ func AddMessage(message *Message) error {
 	}
 	return nil
 }
+
+// func GetLastMessageID() int {
+
+// }
