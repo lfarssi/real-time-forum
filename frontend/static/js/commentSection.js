@@ -51,7 +51,6 @@ export  function CommentForm(postId) {
 
  
 export async function AddComments(postId) {
-  let comments= document.querySelectorAll(".comment")
   const form = document.querySelector(`#commentForm-${postId}`); // Target the specific form for this post
   const errorSpan = document.querySelector(`#errComment-${postId}`); // Target the error span for this form
 
@@ -79,17 +78,7 @@ export async function AddComments(postId) {
             <div>${formData.content}</div>
           </div>
         `;
-
-        // Insert the new comment right before the form
-        if(comments.length>0){
-          comments[0].insertAdjacentHTML("beforebegin", newCommentHtml);
-        } else{
-          comments.insertAdjacentHTML("beforebegin", newCommentHtml);
-
-        }
-
-        comments= document.querySelectorAll(".comment")
-
+          form.insertAdjacentHTML("beforebegin", newCommentHtml);     
         form.reset(); // Clear the form
         errorSpan.textContent = ""; // Clear any previous error message
       } else {
