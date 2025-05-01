@@ -81,7 +81,12 @@ export async function AddComments(postId) {
         `;
 
         // Insert the new comment right before the form
-        comments[0].insertAdjacentHTML("beforebegin", newCommentHtml);
+        if(comments.length>0){
+          comments[0].insertAdjacentHTML("beforebegin", newCommentHtml);
+        } else{
+          comments.insertAdjacentHTML("beforebegin", newCommentHtml);
+
+        }
 
         comments= document.querySelectorAll(".comment")
 

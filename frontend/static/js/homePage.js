@@ -1,6 +1,6 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
-import { chatFriend, displayMessage, FriendsPage,  notify, sendMessage } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage,    notify, sendMessage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 
@@ -116,44 +116,35 @@ export async function homePage(param) {
 
         ws.onmessage = async function (event) {
             const logged = await isLogged();
-
             if (!logged) {
                 ws.close()
                 return
             }
-            const ul = document.querySelector(".listFriends")
-                ul.innerHTML = `
-                ${await FriendsPage()}
-            `
             const chat= document.querySelector(".chat")
             let user = document.querySelector('.chat .header span')
             const msg = JSON.parse(event.data);
-            
+            if(msg.type!="newMessage"){
+                const ul = document.querySelector(".listFriends")
+                ul.innerHTML = `
+                ${await FriendsPage()}
+            `
+            }
             if (msg.type == "userStatus") {
             } else if (msg.type == "allMessages") {
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username))
                 }
-                
-                const ul = document.querySelector(".listFriends")
-                ul.innerHTML = `
-                ${await FriendsPage()}
-            `
             } else if (msg.type = "newMessage") {
-                
                 if (chat.style.display==="" || chat.style.display==="none"){
                     notify(msg.data.senderID)
                 } else{
-                    
                     if(user.dataset.id==msg.data.senderID || user.dataset.id==msg.data.recipientID){
                         displayMessage(msg.data, logged.username, msg.isSender, true)
                     }
                 }
                 const chatMessages = document.querySelector(".chat .messages");
-                
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
-
         };
     } else {
         let posts = document.querySelector('.posts')
