@@ -121,8 +121,9 @@ export async function homePage(param) {
                 return
             }
             const chat= document.querySelector(".chat")
+            let user = document.querySelector('.chat .header span')
             const msg = JSON.parse(event.data);
-            console.log(msg);
+            console.log(msg.data);
             
             if (msg.type == "userStatus") {
                 const ul = document.querySelector(".listFriends")
@@ -145,7 +146,11 @@ export async function homePage(param) {
                 if (chat.style.display==="" || chat.style.display==="none"){
                     notify(msg.data.senderID)
                 } else{
-                    displayMessage(msg.data, logged.username, msg.isSender, true)
+                    console.log(user.dataset.id);
+                    
+                    if(user.dataset.id==msg.data.senderID || user.dataset.id==msg.data.recipientID){
+                        displayMessage(msg.data, logged.username, msg.isSender, true)
+                    }
                 }
                 const chatMessages = document.querySelector(".chat .messages");
                 
