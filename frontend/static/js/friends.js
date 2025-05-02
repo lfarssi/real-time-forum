@@ -118,6 +118,12 @@ export function notify(sender) {
         notification.textContent = notified[sender]
     }
 }
+// export function clearNotify(sender) {
+//     notified[sender] = 0
+//     const friend = document.getElementById(`friend${sender}`)
+//     const notification = friend.querySelector(".notification")
+//     if (notification) notification.remove()
+//   }
 
 export function displayMessage(msg, sender, isSender, isLastMsg = false) {
     const chatMessages = document.querySelector(".chat .messages");
