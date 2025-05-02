@@ -11,7 +11,7 @@ export async function FriendsPage() {
     const data = await response.json()
 
     if (!data.data) {
-        return errorPage("You Don't Have Friends", 404)
+        return errorPage("You Don't Have Friends")
     }
     let friends = data.data.map(friend => {
         let onlineClass = friend.isOnline ? 'online' : 'offline';

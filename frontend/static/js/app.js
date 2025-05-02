@@ -37,7 +37,7 @@ const router = async () => {
 
     let match = potentialMatches.find(p => p.isMatch)
     if (!match) {
-        document.body.innerHTML = errorPage("Page not found", 404)
+        document.body.innerHTML = errorPage("Page not found")
         return
     }
 

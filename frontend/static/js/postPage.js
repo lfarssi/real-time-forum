@@ -23,7 +23,7 @@ export async function PostsPage(params, page=1) {
 
   const data = await response.json()
   if (!data.data && page==1 ) {
-    return errorPage("No Post Available", 404)
+    return errorPage("No Post Available")
   } 
 
   let posts = data.data.map(post => {
