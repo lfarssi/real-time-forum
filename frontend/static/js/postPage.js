@@ -250,6 +250,7 @@ export function AddPosts() {
     const formDataRaw = new FormData(form);
     const formData = Object.fromEntries(formDataRaw.entries());
 
+    
     // ✅ Fix: ensure "categories" is always an array
     formData.categories = formDataRaw.getAll("categories");
     try {
