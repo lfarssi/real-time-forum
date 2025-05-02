@@ -102,7 +102,7 @@ async function loadPosts() {
     }
   } catch (error) {
     // console.error('Failed to load posts:', error);
-    //  popup("No Post Available")
+      popup("No Post Available")
   } finally {
     loading = false;
     document.querySelectorAll(".displayComment").forEach(button => {
@@ -250,7 +250,7 @@ export function AddPosts() {
     const formDataRaw = new FormData(form);
     const formData = Object.fromEntries(formDataRaw.entries());
 
-    
+
     // ✅ Fix: ensure "categories" is always an array
     formData.categories = formDataRaw.getAll("categories");
     try {
@@ -272,7 +272,6 @@ export function AddPosts() {
         navigateTo(location.pathname)
       }
     } catch (err) {
-      console.log(err);
       document.body.innerHTML = popup("Something went wrong!", "failed")
 
     }

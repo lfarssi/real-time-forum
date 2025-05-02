@@ -114,7 +114,6 @@ export async function homePage(param) {
         
         ws = new WebSocket(`/ws/messages`);
         ws.onclose = function (event) {
-            console.log('WebSocket closed:', event);
             navigateTo("/register")
         };
 
@@ -135,7 +134,6 @@ export async function homePage(param) {
             }
             
             if (msg.type == "allMessages") {
-                console.log(msg.data);
                 
                 notified[msg.data[0].senderID]=0
                 if (msg.data) {
