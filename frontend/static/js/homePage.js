@@ -133,9 +133,11 @@ export async function homePage(param) {
                 ${await FriendsPage()}
             `
             }
-            if (msg.type == "userStatus") {
-            } else if (msg.type == "allMessages") {
-                notified[msg.data.recipientID]=0
+            
+            if (msg.type == "allMessages") {
+                console.log(msg.data);
+                
+                notified[msg.data[0].senderID]=0
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username))
                 }
@@ -143,8 +145,8 @@ export async function homePage(param) {
                 if (chat.style.display==="" || chat.style.display==="none"){
                     notify(msg.data.senderID)
                 } else{
-                    if(user.dataset.id==msg.data.senderID || user.dataset.id==msg.data.recipientID){
-                        notified[msg.data.recipientID]=0
+                    if(user.dataset.id==msg.data.recipientID || user.dataset.id==msg.data.senderID){
+                        notified[msg.data[0].senderID]=0
                         displayMessage(msg.data, logged.username, msg.isSender, true)
                     }
                 }
