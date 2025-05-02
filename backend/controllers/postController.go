@@ -6,6 +6,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"html"
+
 
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
@@ -191,7 +193,8 @@ func AddPostController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post.UserID = r.Context().Value("userId").(int)
-
+	post.Title= html.EscapeString(post.Title)
+	post.Content= html.EscapeString(post.Content)
 	err := models.AddPost(post)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{

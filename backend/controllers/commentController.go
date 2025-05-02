@@ -3,6 +3,8 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"html"
+
 
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
@@ -63,6 +65,7 @@ func AddCommentController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	comment.UserID = r.Context().Value("userId").(int)
+	comment.Content= html.EscapeString(comment.Content)
 
 	err := models.AddComment(comment)
 	if err != nil {
