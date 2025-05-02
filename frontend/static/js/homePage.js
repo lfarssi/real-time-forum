@@ -1,6 +1,6 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
-import { chatFriend, displayMessage, FriendsPage,    notify, sendMessage } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage,    notified,    notify, sendMessage } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 
@@ -111,6 +111,7 @@ export async function homePage(param) {
         chatFriend()
         sendMessage()
 
+        
         ws = new WebSocket(`/ws/messages`);
         ws.onclose = function (event) {
             console.log('WebSocket closed:', event);
@@ -134,6 +135,7 @@ export async function homePage(param) {
             }
             if (msg.type == "userStatus") {
             } else if (msg.type == "allMessages") {
+                notified[msg.data.senderID]=0
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username))
                 }
@@ -142,6 +144,7 @@ export async function homePage(param) {
                     notify(msg.data.senderID)
                 } else{
                     if(user.dataset.id==msg.data.senderID || user.dataset.id==msg.data.recipientID){
+                        notified[msg.data.senderID]=0
                         displayMessage(msg.data, logged.username, msg.isSender, true)
                     }
                 }
