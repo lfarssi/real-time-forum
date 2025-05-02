@@ -135,7 +135,7 @@ export async function homePage(param) {
             }
             if (msg.type == "userStatus") {
             } else if (msg.type == "allMessages") {
-                notified[msg.data.senderID]=0
+                notified[msg.data.recipientID]=0
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username))
                 }
@@ -144,7 +144,7 @@ export async function homePage(param) {
                     notify(msg.data.senderID)
                 } else{
                     if(user.dataset.id==msg.data.senderID || user.dataset.id==msg.data.recipientID){
-                        notified[msg.data.senderID]=0
+                        notified[msg.data.recipientID]=0
                         displayMessage(msg.data, logged.username, msg.isSender, true)
                     }
                 }
