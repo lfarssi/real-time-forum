@@ -130,10 +130,9 @@ export async function homePage(param) {
                 ul.innerHTML = `
                 ${await FriendsPage()}
             `               
-            if (msg.type == "unreadCounts") {
-                console.log(msg.counts);
-                updateUnreadBadges(msg.counts);
-            }
+            // if (msg.type == "unreadCounts") {
+            //     console.log(msg.counts);
+            // }
             if (msg.type == "allMessages") {
                 notified[msg.data[0].senderID]=0
                 if (msg.data) {
@@ -151,6 +150,10 @@ export async function homePage(param) {
                 // const chatMessages = document.querySelector(".chat .messages");
                 // chatMessages.scrollTop = chatMessages.scrollHeight;
             }
+            console.log(msg);
+            
+            updateUnreadBadges(msg.counts);
+
         };
     } else {
         let posts = document.querySelector('.posts')

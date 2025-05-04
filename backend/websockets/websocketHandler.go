@@ -2,7 +2,6 @@ package websockets
 
 import (
 	"encoding/json"
-	"fmt"
 	"html"
 	"net/http"
 	"time"
@@ -60,17 +59,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 
 		message.SenderID = userID
 		message.Content = html.EscapeString(message.Content)
-		unreadCounts, err := models.GetUnreadCountsPerFriend(userID)
-		fmt.Println("uu", unreadCounts)
-		if err == nil {
-			// Push to all connections for this user
-			for _, conn := range userConnections[userID] {
-				conn.WriteJSON(map[string]any{
-					"type":   "unreadCounts",
-					"counts": unreadCounts,
-				})
-			}
-		}
+		
 		switch message.Type {
 		case "addMessage":
 			err = models.AddMessage(&message)
@@ -90,6 +79,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 						"status":   http.StatusOK,
 						"data":     message,
 						"isSender": false,
+
 					})
 				}
 			}
@@ -100,6 +90,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"status":   http.StatusOK,
 					"data":     message,
 					"isSender": true,
+
 				})
 			}
 
@@ -121,6 +112,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"type":    "allMessages",
 				"status":  http.StatusOK,
 				"data":    messages,
+
 			})
 
 		case "logout":
@@ -128,6 +120,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"message": "user logged out",
 				"type":    "loggedOut",
 				"status":  http.StatusOK,
+
 			})
 
 		}
@@ -150,10 +143,22 @@ func removeConnection(userID int, conn *websocket.Conn) {
 }
 
 func broadcastStatus(userID int, isOnline bool) {
+	unreadCounts, err := models.GetUnreadCountsPerFriend(userID)
+		if err == nil {
+			// Push to all connections for this user
+			for _, conn := range userConnections[userID] {
+				conn.WriteJSON(map[string]any{
+					"type":   "unreadCounts",
+					"counts": unreadCounts,
+				})
+			}
+		}
 	statusMessage := map[string]any{
 		"type":     "userStatus",
 		"userID":   userID,
 		"isOnline": isOnline,
+		"counts": unreadCounts,
+
 	}
 
 	for key := range userConnections {
