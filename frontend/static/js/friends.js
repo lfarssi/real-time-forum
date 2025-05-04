@@ -148,6 +148,8 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
             `;
         }
 
+        console.log(chatMessages.scroll())
+
         if (isLastMsg) {
             chatMessages.innerHTML += html
         } else {
