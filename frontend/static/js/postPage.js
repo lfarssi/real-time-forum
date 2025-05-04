@@ -102,7 +102,9 @@ async function loadPosts() {
     }
   } catch (error) {
     // console.error('Failed to load posts:', error);
+    setTimeout(()=>{
       popup("No Post Available")
+    },3000)
   } finally {
     loading = false;
     document.querySelectorAll(".displayComment").forEach(button => {
