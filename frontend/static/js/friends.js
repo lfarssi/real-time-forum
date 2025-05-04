@@ -1,5 +1,5 @@
 import { errorPage } from "./errorPage.js"
-import {  ws } from "./homePage.js"
+import { ws } from "./homePage.js"
 
 let isScroll = false
 let scrollValue;
@@ -62,7 +62,7 @@ export function sendMessage() {
         e.preventDefault()
         let input = document.querySelector('.chatForm input')
         let receiverID = document.querySelector('.header span').dataset.id
-        
+
         ws.send(JSON.stringify({
             content: input.value,
             recipientID: parseInt(receiverID),
@@ -98,6 +98,8 @@ function scrollEventLoadMessages() {
         GetMessages(span.dataset.id)
         isScroll = true
     }
+
+    console.log(chatMessages.scrollTop + chatMessages.scrollHeight, chatMessages.scrollHeight)
 }
 export const notified = {}
 
@@ -151,12 +153,12 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
         } else {
             chatMessages.insertAdjacentHTML("afterbegin", html);
         }
-    
 
-        if (!isScroll) {
+        if (!isScroll || isSender) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
-        } else {
+        } else if (isScroll && !isLastMsg) {
             chatMessages.scrollTop = chatMessages.scrollHeight - scrollValue
+
         }
 
     }
