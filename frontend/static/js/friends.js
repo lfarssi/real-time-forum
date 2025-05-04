@@ -1,6 +1,6 @@
 import { isLogged } from "./app.js";
 import { errorPage } from "./errorPage.js"
-import {  ws } from "./homePage.js"
+import { ws } from "./homePage.js"
 
 let isScroll = false
 let scrollValue;
@@ -103,6 +103,8 @@ function scrollEventLoadMessages() {
         GetMessages(span.dataset.id)
         isScroll = true
     }
+
+    console.log(chatMessages.scrollTop + chatMessages.scrollHeight, chatMessages.scrollHeight)
 }
 export const notified = {}
 
@@ -151,17 +153,19 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
             `;
         }
 
+        console.log(chatMessages.scroll())
+
         if (isLastMsg) {
             chatMessages.innerHTML += html
         } else {
             chatMessages.insertAdjacentHTML("afterbegin", html);
         }
-    
 
-        if (!isScroll) {
+        if (!isScroll || isSender) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
-        } else {
+        } else if (isScroll && !isLastMsg) {
             chatMessages.scrollTop = chatMessages.scrollHeight - scrollValue
+
         }
 
     }

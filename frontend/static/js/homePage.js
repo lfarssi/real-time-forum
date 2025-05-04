@@ -152,8 +152,8 @@ export async function homePage(param) {
                         displayMessage(msg.data, logged.username, msg.isSender, true)
                     }
                 }
-                const chatMessages = document.querySelector(".chat .messages");
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                // const chatMessages = document.querySelector(".chat .messages");
+                // chatMessages.scrollTop = chatMessages.scrollHeight;
             }
         };
     } else {
