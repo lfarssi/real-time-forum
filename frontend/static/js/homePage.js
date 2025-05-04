@@ -139,7 +139,6 @@ export async function homePage(param) {
             }
             
             if (msg.type === "allMessages") {
-                
                 notified[msg.data[0].senderID]=0
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username))
