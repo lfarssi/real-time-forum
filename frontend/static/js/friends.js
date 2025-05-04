@@ -127,19 +127,21 @@ export function notify(sender) {
 }
 
 export function updateUnreadBadges(counts) {
-    // For each friend in your friends list, update the badge
     document.querySelectorAll(".listFriends li").forEach(li => {
         const friendID = parseInt(li.dataset.id);
         const badge = li.querySelector(".notification");
-        console.log("coutn ",counts);
+        console.log(counts);
         
         const count = counts[friendID] || 0;
+        
         if (count > 0) {
             if (!badge) {
                 const span = document.createElement("span");
                 span.className = "notification";
                 span.textContent = count;
-                li.appendChild(span);
+                
+                li.append(span);
+                
             } else {
                 badge.textContent = count;
             }
