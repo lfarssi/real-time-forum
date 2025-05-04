@@ -4,9 +4,8 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    /* scroll-behavior: smooth; */
     font-family: "Poppins", sans-serif;
-    scrollbar-color: rgb(162, 250, 162) transparent;
+    scrollbar-color: var(--text-muted) transparent;
     scrollbar-width: thin;
 }
 
@@ -212,6 +211,7 @@ aside > .friends{
     overflow: auto;
     margin-top: 20px;
     width: 300px;
+
 
 }
 
@@ -540,6 +540,7 @@ aside > .filter ul input:checked + label span::after{
 
 #postForm h3 {
     color: var(--accent-dark);
+    margin: auto;
     font-size: 1.1rem;
 }
 
@@ -560,39 +561,53 @@ aside > .filter ul input:checked + label span::after{
 .category-section label {
     padding: 5px 10px;
     font-size: 0.85rem;
-    border: 1px solid var(--accent);
     border-radius: var(--radius);
-    color: var(--accent);
+    color: var(--text-light);
     background-color: transparent;
     cursor: pointer;
+    position: relative;
 }
-
-.category-section input[type="checkbox"]:checked + label {
+.category-section label::after{
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -1px;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-dark);
+    transition: .3s;
+    width: 0;
+}
+.category-section input[type="checkbox"]:checked + label::after {
     color: var(--text-light);
-    border-color: var(--accent-dark);
-    font-weight: 500;
-    background-color: var(--accent);
-    color: var(--bg-dark);
+    /* font-weight: 500; */
+    width: 80%;
 }
 
-.category-section label:hover {
-    background-color: var(--accent);
-    color: var(--bg-dark);
+
+
+
+.category-section label:hover::after{
+    width: 80%;
 }
 
 #postForm button[type="submit"] {
+    width: 70%;
+    margin: auto;
     padding: 0.50rem;
     font-size: 1rem;
-    background-color: var(--accent);
-    color: var(--bg-dark);
-    border: none;
+    background-color: var(--card-dark);
+    color: var(--accent);
+    border: 1px solid var(--accent);
     border-radius: var(--radius);
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+    transition: 0.5s ease-in-out;
 }
 
 #postForm button[type="submit"]:hover {
-    background-color: var(--accent-dark);
+    color: var(--card-dark);
+    background-color: var(--accent);
 }
 .commentForm input{
     width: 100%;
