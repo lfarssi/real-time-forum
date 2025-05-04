@@ -125,6 +125,29 @@ export function notify(sender) {
         notification.textContent = notified[sender]
     }
 }
+
+export function updateUnreadBadges(counts) {
+    // For each friend in your friends list, update the badge
+    document.querySelectorAll(".listFriends li").forEach(li => {
+        const friendID = parseInt(li.dataset.id);
+        const badge = li.querySelector(".notification");
+        console.log("coutn ",counts);
+        
+        const count = counts[friendID] || 0;
+        if (count > 0) {
+            if (!badge) {
+                const span = document.createElement("span");
+                span.className = "notification";
+                span.textContent = count;
+                li.appendChild(span);
+            } else {
+                badge.textContent = count;
+            }
+        } else if (badge) {
+            badge.remove();
+        }
+    });
+}
 // export function clearNotify(sender) {
 //     notified[sender] = 0
 //     const friend = document.getElementById(`friend${sender}`)
