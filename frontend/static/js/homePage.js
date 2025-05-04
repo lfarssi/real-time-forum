@@ -126,7 +126,7 @@ export async function homePage(param) {
             const chat= document.querySelector(".chat")
             let user = document.querySelector('.chat .header span')
             const msg = JSON.parse(event.data);
-            if(msg.type!="newMessage"){
+            if( msg.type!="newMessage"){
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
                 ${await FriendsPage()}
