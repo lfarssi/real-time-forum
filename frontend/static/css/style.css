@@ -576,7 +576,7 @@ aside > .filter ul input:checked + label span::after{
     width: 0;
     height: 2px;
     background-color: var(--accent-dark);
-    transition: .3s;
+    transition: .5s;
     width: 0;
 }
 .category-section input[type="checkbox"]:checked + label::after {
