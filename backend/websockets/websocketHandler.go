@@ -2,6 +2,7 @@ package websockets
 
 import (
 	"encoding/json"
+	"fmt"
 	"html"
 	"net/http"
 	"time"
@@ -59,6 +60,17 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 
 		message.SenderID = userID
 		message.Content = html.EscapeString(message.Content)
+		unreadCounts, err := models.GetUnreadCountsPerFriend(userID)
+		fmt.Println("uu", unreadCounts)
+		if err == nil {
+			// Push to all connections for this user
+			for _, conn := range userConnections[userID] {
+				conn.WriteJSON(map[string]any{
+					"type":   "unreadCounts",
+					"counts": unreadCounts,
+				})
+			}
+		}
 		switch message.Type {
 		case "addMessage":
 			err = models.AddMessage(&message)

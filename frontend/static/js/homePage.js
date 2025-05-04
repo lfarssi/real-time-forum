@@ -1,6 +1,6 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
-import { chatFriend, displayMessage, FriendsPage,    notified,    notify, sendMessage } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage,    notified,    notify, sendMessage, updateUnreadBadges } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 
@@ -125,12 +125,15 @@ export async function homePage(param) {
             const chat= document.querySelector(".chat")
             let user = document.querySelector('.chat .header span')
             const msg = JSON.parse(event.data);
-            if( msg.type!="newMessage"){
+           
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
                 ${await FriendsPage()}
-            `             }
-            
+            `               
+            if (msg.type == "unreadCounts") {
+                console.log(msg.counts);
+                updateUnreadBadges(msg.counts);
+            }
             if (msg.type == "allMessages") {
                 notified[msg.data[0].senderID]=0
                 if (msg.data) {
