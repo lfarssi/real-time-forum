@@ -1,3 +1,4 @@
+import { isLogged } from "./app.js";
 import { errorPage } from "./errorPage.js"
 import { ws } from "./homePage.js"
 
@@ -62,7 +63,11 @@ export function sendMessage() {
         e.preventDefault()
         let input = document.querySelector('.chatForm input')
         let receiverID = document.querySelector('.header span').dataset.id
-
+        let logged=await isLogged()
+        if (!logged){
+            ws.close()
+            return
+        }
         ws.send(JSON.stringify({
             content: input.value,
             recipientID: parseInt(receiverID),
