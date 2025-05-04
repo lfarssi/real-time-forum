@@ -11,10 +11,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var upgrade = websocket.Upgrader{
-	CheckOrigin: func(r *http.Request) bool { return true },
-}
-
+var upgrade = websocket.Upgrader{}
 var userConnections = make(map[int][]*websocket.Conn)
 
 func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {

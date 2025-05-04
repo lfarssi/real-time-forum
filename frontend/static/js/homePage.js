@@ -144,7 +144,7 @@ export async function homePage(param) {
                     notify(msg.data.senderID)
                 } else{
                     if(user.dataset.id==msg.data.recipientID || user.dataset.id==msg.data.senderID){
-                        notified[msg.data[0].senderID]=0
+                        notified[msg.data.senderID]=0
                         displayMessage(msg.data, logged.username, msg.isSender, true)
                     }
                 }

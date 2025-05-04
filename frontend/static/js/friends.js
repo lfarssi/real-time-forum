@@ -62,7 +62,7 @@ export function sendMessage() {
         e.preventDefault()
         let input = document.querySelector('.chatForm input')
         let receiverID = document.querySelector('.header span').dataset.id
-
+        
         ws.send(JSON.stringify({
             content: input.value,
             recipientID: parseInt(receiverID),
