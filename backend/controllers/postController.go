@@ -2,12 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
+	"html"
 	"net/http"
 	"sort"
 	"strconv"
 	"strings"
-	"html"
-
 
 	"real_time_forum/backend/models"
 	"real_time_forum/backend/utils"
@@ -193,8 +192,8 @@ func AddPostController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	post.UserID = r.Context().Value("userId").(int)
-	post.Title= html.EscapeString(post.Title)
-	post.Content= html.EscapeString(post.Content)
+	post.Title = html.EscapeString(post.Title)
+	post.Content = html.EscapeString(post.Content)
 	err := models.AddPost(post)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
@@ -225,16 +224,16 @@ func verifyPostData(w http.ResponseWriter, title, content string, categories []s
 	if content == "" {
 		message.ContentMessage = "Content is required."
 		isValid = false
-	} else if len([]rune(content)) > 1000 {
-		message.ContentMessage = "Content must be less than or equal to 1000 characters."
+	} else if len([]rune(content)) > 10000 {
+		message.ContentMessage = "Content must be less than or equal to 10000 characters."
 		isValid = false
 	}
 
 	if len(categories) == 0 {
 		message.CategoryMessage = "At least one category is required."
 		isValid = false
-	} else if len(categories) > 100 {
-		message.CategoryMessage = "You can add up to 100 categories only."
+	} else if len(categories) > 7 {
+		message.CategoryMessage = "You can add up to 7 categories only."
 		isValid = false
 	} else {
 		for _, category := range categories {

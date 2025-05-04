@@ -101,10 +101,9 @@ async function loadPosts() {
       page += 1;
     }
   } catch (error) {
-    // console.error('Failed to load posts:', error);
     setTimeout(()=>{
       popup("No Post Available")
-    },3000)
+    },5000)
   } finally {
     loading = false;
     document.querySelectorAll(".displayComment").forEach(button => {
@@ -220,7 +219,7 @@ export async function PostForm() {
       <input maxlength="100" type="text" name="title" required placeholder="title" />
       <span class="errPost" id="title"></span>
       
-      <input maxlength="1000" type="text" name="content" required placeholder="content" />
+      <input maxlength="10000" type="text" name="content" required placeholder="content" />
       <span class="errPost" id="content"></span>
       
       <h3>Categories</h3>
@@ -263,7 +262,11 @@ export function AddPosts() {
       });
       const data = await response.json()
       if (!response.ok) {
+        console.log(data);
         for (let span of spans) {
+          if(data["category"]){
+            popup(data["category"])
+          }
           if (data.hasOwnProperty(span.id))
             showInputError(data[span.id], span)
         }
