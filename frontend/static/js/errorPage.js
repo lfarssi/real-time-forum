@@ -5,7 +5,18 @@ export function errorPage(msg) {
         </div>
     `
 }
-export function popup(msg, status) {
+function throttle(fn, delay=2000) {
+    let inThrottle = false;
+    return function (...args) {
+      if (inThrottle) return;
+      fn.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, delay);
+    };
+  }
+  
+  
+  export function popup(msg, status) {
     const popupDiv = document.createElement('div');
     popupDiv.className = 'popup';
 
@@ -38,3 +49,6 @@ export function popup(msg, status) {
         popupDiv.remove();
     }, 3000);
 }
+
+
+export const popupThrottled = throttle(popup, 3000);

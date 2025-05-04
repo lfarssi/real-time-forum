@@ -1,4 +1,4 @@
-import { errorPage, popup } from "./errorPage.js";
+import { errorPage,  popupThrottled as popup } from "./errorPage.js";
 import { isLogged, navigateTo } from "./app.js";
 import { showInputError } from "./authPage.js";
 import { CommentSection } from "./commentSection.js";

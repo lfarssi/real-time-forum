@@ -1,5 +1,5 @@
 import { navigateTo } from "./app.js";
-import {  popup } from "./errorPage.js";
+import {   popupThrottled as popup } from "./errorPage.js";
 import { ws } from "./homePage.js";
 
 export function loginPage() {
