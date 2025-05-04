@@ -118,32 +118,25 @@ export async function homePage(param) {
         };
 
         ws.onmessage = async function (event) {
-            const logged = await isLogged();
-            if (!logged) {
+            if (!await isLogged()) {
                 ws.close()
                 return
             }
             const chat= document.querySelector(".chat")
             let user = document.querySelector('.chat .header span')
             const msg = JSON.parse(event.data);
-            if( msg.type!=="newMessage"){
-                msg.data.forEach(s => {
-                    const icon = document.querySelector(
-                      `[data-id="${s.userID}"] .status-icon`
-                    );
-                    if (icon) {
-                      icon.classList.toggle('online', s.isOnline);
-                      icon.classList.toggle('offline', !s.isOnline);
-                    }
-                  });
-            }
+            if( msg.type!="newMessage"){
+                const ul = document.querySelector(".listFriends")
+                ul.innerHTML = `
+                ${await FriendsPage()}
+            `             }
             
-            if (msg.type === "allMessages") {
+            if (msg.type == "allMessages") {
                 notified[msg.data[0].senderID]=0
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username))
                 }
-            } else if (msg.type === "newMessage") {
+            } else if (msg.type == "newMessage") {
                 if (chat.style.display==="" || chat.style.display==="none"){
                     notify(msg.data.senderID)
                 } else{

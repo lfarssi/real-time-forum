@@ -1,5 +1,5 @@
 import { isLogged } from "./app.js";
-import {  popup } from "./errorPage.js";
+import {   popupThrottled as popup } from "./errorPage.js";
 export async function CommentSection(event) {  
   const postElement = event.target.closest(".post");
   const postId = parseInt(postElement.dataset.id);
