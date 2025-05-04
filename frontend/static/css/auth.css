@@ -74,16 +74,17 @@ form.authForm button {
     width: 100%;
     padding: 0.8rem;
     margin-top: 1rem;
-    border: none;
+    border: 1px solid var(--accent-dark);
     border-radius: var(--radius);
-    background-color: var(--accent);
-    color: var(--bg-dark);
+    background-color: var(--card-dark);
+    color: var(--accent-dark);
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition:  0.5s ease-in-out;
 }
 
 form.authForm button:hover {
+    color: var(--card-dark);
     background-color: var(--accent-dark);
 }
 
