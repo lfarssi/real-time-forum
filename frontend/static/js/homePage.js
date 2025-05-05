@@ -125,6 +125,9 @@ export async function homePage(param) {
             const chat= document.querySelector(".chat")
             let user = document.querySelector('.chat .header span')
             const msg = JSON.parse(event.data);
+
+
+            console.log(msg)
            
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
@@ -150,7 +153,7 @@ export async function homePage(param) {
                 // const chatMessages = document.querySelector(".chat .messages");
                 // chatMessages.scrollTop = chatMessages.scrollHeight;
             }
-            console.log(msg);
+            // console.log(msg);
             
             updateUnreadBadges(msg.counts);
 
