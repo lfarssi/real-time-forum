@@ -11,8 +11,10 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var upgrade = websocket.Upgrader{}
-var userConnections = make(map[int][]*websocket.Conn)
+var (
+	upgrade         = websocket.Upgrader{}
+	userConnections = make(map[int][]*websocket.Conn)
+)
 
 func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrade.Upgrade(w, r, nil)
@@ -59,7 +61,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 
 		message.SenderID = userID
 		message.Content = html.EscapeString(message.Content)
-		
+
 		switch message.Type {
 		case "addMessage":
 			err = models.AddMessage(&message)
@@ -79,7 +81,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 						"status":   http.StatusOK,
 						"data":     message,
 						"isSender": false,
-
 					})
 				}
 			}
@@ -90,7 +91,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"status":   http.StatusOK,
 					"data":     message,
 					"isSender": true,
-
 				})
 			}
 
@@ -112,7 +112,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"type":    "allMessages",
 				"status":  http.StatusOK,
 				"data":    messages,
-
 			})
 
 		case "logout":
@@ -120,7 +119,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"message": "user logged out",
 				"type":    "loggedOut",
 				"status":  http.StatusOK,
-
 			})
 
 		}
@@ -144,21 +142,19 @@ func removeConnection(userID int, conn *websocket.Conn) {
 
 func broadcastStatus(userID int, isOnline bool) {
 	unreadCounts, err := models.GetUnreadCountsPerFriend(userID)
-		if err == nil {
-			// Push to all connections for this user
-			for _, conn := range userConnections[userID] {
-				conn.WriteJSON(map[string]any{
-					"type":   "unreadCounts",
-					"counts": unreadCounts,
-				})
-			}
+	if err == nil {
+		for _, conn := range userConnections[userID] {
+			conn.WriteJSON(map[string]any{
+				"type":   "unreadCounts",
+				"counts": unreadCounts,
+			})
 		}
+	}
 	statusMessage := map[string]any{
 		"type":     "userStatus",
 		"userID":   userID,
 		"isOnline": isOnline,
-		"counts": unreadCounts,
-
+		"counts":   unreadCounts,
 	}
 
 	for key := range userConnections {
