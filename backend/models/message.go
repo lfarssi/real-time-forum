@@ -43,22 +43,30 @@ func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
     }
 
     if len(ids) > 0 {
+        // Prepare placeholders for the IN clause: "?, ?, ?, ..."
         ph := make([]string, len(ids))
         args := make([]any, len(ids)+1) // +1 for receiverID param
+    
         for i, id := range ids {
             ph[i] = "?"
             args[i] = id
         }
-        args[len(ids)] = receiver // the current user fetching messages
-
+    
+        // Add receiverID as the last argument
+        args[len(ids)] = sender
+    
+        // Build the query with placeholders and receiverID condition
         upd := fmt.Sprintf(
             "UPDATE messages SET status = 'read' WHERE id IN (%s) AND receiverID = ? AND status = 'unread'",
             strings.Join(ph, ","),
         )
+    
+        // Execute the update query with arguments
         if _, err := database.DB.Exec(upd, args...); err != nil {
             return nil, err
         }
     }
+    
 
     return messages, nil
 }
