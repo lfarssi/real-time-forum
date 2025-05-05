@@ -19,8 +19,11 @@ console.log("user");
     let onlineClass = friend.isOnline ? "online" : "offline";
     let status = `<i class="fa-solid fa-user ${onlineClass}"></i>`;
     return /*html*/ `
-            <li data-id="${friend.id}" id="friend${friend.id}">${status} <span>${friend.firstName} ${friend.lastName}</span></li>
-    `;
+  <li data-id="${friend.id}" id="friend${friend.id}">
+    <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.firstName} ${friend.lastName}</span>
+  </li>
+`;
+
   });
   return /*html*/ `
         ${friends.join("")}
