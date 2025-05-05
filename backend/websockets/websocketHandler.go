@@ -11,8 +11,10 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var upgrade = websocket.Upgrader{}
-var userConnections = make(map[int][]*websocket.Conn)
+var (
+	upgrade         = websocket.Upgrader{}
+	userConnections = make(map[int][]*websocket.Conn)
+)
 
 func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrade.Upgrade(w, r, nil)
@@ -152,7 +154,6 @@ func removeConnection(userID int, conn *websocket.Conn) {
 }
 
 func broadcastStatus(userID int, isOnline bool) {
-
 	statusMessage := map[string]any{
 		"type":     "userStatus",
 		"userID":   userID,

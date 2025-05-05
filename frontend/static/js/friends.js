@@ -99,13 +99,15 @@ function loadMessages() {
 }
 
 function scrollEventLoadMessages() {
-  if (chatMessages.scrollTop === 0 && chatMessages.querySelector("p")) {
-    let span = document.querySelector(".chat .header span");
-    msgID = chatMessages.querySelector("p").dataset.id;
-    scrollValue = chatMessages.scrollHeight;
-    GetMessages(span.dataset.id);
-    isScroll = true;
-  }
+    if (chatMessages.scrollTop === 0 && chatMessages.querySelector('p')) {
+        let span = document.querySelector('.chat .header span')
+        msgID = chatMessages.querySelector('p').dataset.id
+        scrollValue = chatMessages.scrollHeight
+        GetMessages(span.dataset.id)
+        isScroll = true
+    }
+
+    // console.log(chatMessages.scrollTop + chatMessages.scrollHeight, chatMessages.scrollHeight)
 }
 export const notified = {};
 
@@ -182,6 +184,23 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
       } <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>
                 </div>
             `;
+        }
+
+        // console.log("iam heeeeeeeeeeeere =>  ",)
+
+        if (isLastMsg) {
+            chatMessages.innerHTML += html
+        } else {
+            chatMessages.insertAdjacentHTML("afterbegin", html);
+        }
+
+        if (!isScroll || isSender) {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        } else if (isScroll && !isLastMsg) {
+            chatMessages.scrollTop = chatMessages.scrollHeight - scrollValue
+
+        }
+
     }
 
     if (isLastMsg) {
@@ -196,4 +215,4 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
       chatMessages.scrollTop = chatMessages.scrollHeight - scrollValue;
     }
   }
-}
+
