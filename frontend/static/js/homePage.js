@@ -143,9 +143,9 @@ export async function homePage(param) {
                         // notified[msg.data.senderID]=0
                         displayMessage(msg.data, logged.username, msg.isSender, true)
                     }
-                }else if (!msg.isSender){
-                    updateUnreadBadges(msg.counts);
                 }
+                    updateUnreadBadges(msg.counts);
+                
 
                 // const chatMessages = document.querySelector(".chat .messages");
                 // chatMessages.scrollTop = chatMessages.scrollHeight;
