@@ -123,7 +123,11 @@ export async function homePage(param) {
                 ws.close()
                 return
             }
-        
+            let user = document.querySelector('.chat .header span');
+            let openChatUserId = user ? parseInt(user.dataset.id) : null;
+
+            console.log(user);
+            
             const msg = JSON.parse(event.data);
         
             if (msg.type === "userStatus") {
@@ -149,8 +153,9 @@ export async function homePage(param) {
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username));
                 }
+                updateUnreadBadges(msg.counts);
+
             } else if (msg.type === "newMessage") {
-                let user = document.querySelector('.chat .header span');
                 if (user.dataset.id == msg.data.recipientID || user.dataset.id == msg.data.senderID) {
                     displayMessage(msg.data, logged.username, msg.isSender, true);
                 }
@@ -159,8 +164,20 @@ export async function homePage(param) {
                 ul.innerHTML = `${await FriendsPage()}`;
                 return;
             }
-        
-            updateUnreadBadges(msg.counts);
+            console.log(msg.data);
+            
+            if (msg.data && Array.isArray(msg.data) && msg.data.length > 0) {
+                console.log("fff");
+
+                if (openChatUserId != msg.data[0].senderID) {
+                    updateUnreadBadges(msg.counts);
+                    console.log("dddddd");
+                    
+                } 
+            } else{
+                updateUnreadBadges(msg.counts);
+
+            }
         };
         
             

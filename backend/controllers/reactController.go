@@ -29,13 +29,30 @@ func ReactPostController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	react.UserID= r.Context().Value("userId").(int)
-
+	var like, dislike []*models.React
+	var clike, cdislike []*models.React
 	if react.Sender == "post" {
 		err = models.InsertReactPost(react)
 
 		if err != nil {
 			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 				"message": "Cannot react Try Again",
+				"status":  http.StatusInternalServerError,
+			})
+			return
+		}
+		like,err = models.GetReactionPost(react.PostID,"like")
+		if err != nil {
+			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+				"message": "Error getting number of reaction",
+				"status":  http.StatusInternalServerError,
+			})
+			return
+		}
+		dislike, err = models.GetReactionPost(react.PostID,"dislike")
+		if err != nil {
+			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+				"message": "Error getting number of reaction",
 				"status":  http.StatusInternalServerError,
 			})
 			return
@@ -50,29 +67,35 @@ func ReactPostController(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
-
+		clike,err = models.GetReactionComment(react.CommentID,"like")
+		if err != nil {
+			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+				"message": "Error getting number of reaction",
+				"status":  http.StatusInternalServerError,
+			})
+			return
+		}
+		cdislike, err = models.GetReactionComment(react.CommentID,"dislike")
+		if err != nil {
+			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+				"message": "Error getting number of reaction",
+				"status":  http.StatusInternalServerError,
+			})
+			return
+		}
 	}
 
-	like,err := models.GetReactionPost(react.PostID,"like")
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Error getting number of reaction",
-			"status":  http.StatusInternalServerError,
-		})
-		return
-	}
-	dislike, err := models.GetReactionPost(react.PostID,"dislike")
-	if err != nil {
-		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
-			"message": "Error getting number of reaction",
-			"status":  http.StatusInternalServerError,
-		})
-		return
-	}
 	utils.ResponseJSON(w, http.StatusOK, map[string]any{
 		"message": "React added successfully!",
 		"status":  http.StatusOK,
-		"data": map[string]any{"nbLikes": len(like), "nbDislikes": len(dislike)},
+		"data": map[string]any{
+			"nbLikes": len(like),
+			"nbDislikes": len(dislike),
+			"cnbLikes": len(clike),
+			"cnbDislikes": len(cdislike),
+
+	
+	},
 
 	})
 }

@@ -114,7 +114,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"type":    "newMessage",
 					"status":  http.StatusOK,
 					"data":    message,
-
 					"isSender": true,
 				})
 			}

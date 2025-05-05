@@ -72,9 +72,10 @@ export function attachCommentReactionListeners() {
 
         if (response.ok) {
           const result = await response.json();
-
+          console.log(result.data);
+          
           const currentCount = parseInt(button.children[0].textContent);
-          const newCount = status === "like" ? result.data.nbLikes : result.data.nbDislikes;
+          const newCount = status === "like" ? result.data.cnbLikes : result.data.cnbDislikes;
 
           button.innerHTML = /*html*/ `
             <span>${newCount}</span>
