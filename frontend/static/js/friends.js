@@ -10,6 +10,7 @@ let chatMessages;
 export async function FriendsPage() {
   const response = await fetch("/api/getFriends");
   const data = await response.json();
+console.log("user");
 
   if (!data.data) {
     return errorPage("You Don't Have Friends");
@@ -130,6 +131,8 @@ export function notify(sender) {
 }
 
 export function updateUnreadBadges(counts) {
+    console.log("count");
+    
   document.querySelectorAll(".listFriends li").forEach((li) => {
     const friendID = parseInt(li.dataset.id);
     const badge = li.querySelector(".notification");
@@ -186,7 +189,6 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
             `;
         }
 
-        // console.log("iam heeeeeeeeeeeere =>  ",)
 
         if (isLastMsg) {
             chatMessages.innerHTML += html

@@ -90,8 +90,9 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 						"type":     "newMessage",
 						"status":   http.StatusOK,
 						"data":     message,
-						"counts":   unreadCounts,
 						"isSender": false,
+						"counts":  unreadCounts,
+
 					})
 				}
 			}
@@ -101,11 +102,11 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"type":    "newMessage",
 					"status":  http.StatusOK,
 					"data":    message,
-					"counts":  unreadCounts,
 
 					"isSender": true,
 				})
 			}
+			
 
 		case "loadMessage":
 
@@ -126,6 +127,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"status":  http.StatusOK,
 				"data":    messages,
 			})
+			
 
 		case "logout":
 			conn.WriteJSON(map[string]any{
@@ -159,6 +161,7 @@ func broadcastStatus(userID int, isOnline bool) {
 		"userID":   userID,
 		"isOnline": isOnline,
 	}
+	
 
 	for key := range userConnections {
 		if conns, ok := userConnections[key]; ok {
