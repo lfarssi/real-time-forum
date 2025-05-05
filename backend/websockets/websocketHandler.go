@@ -25,6 +25,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	
 	userID, ok := r.Context().Value("userId").(int)
 	if !ok {
 		conn.WriteJSON(map[string]any{
@@ -57,6 +58,8 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			})
 			return
 		}
+
+
 
 		if message.LastID == -1 {
 			message.LastID, err = models.GetLastMessageID()
@@ -91,8 +94,17 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 						"status":   http.StatusOK,
 						"data":     message,
 						"isSender": false,
-						"counts":  unreadCounts,
 
+					})
+				}
+			}
+
+			unreadCounts, err := models.GetUnreadCountsPerFriend(message.RecipientID)
+			if err == nil {
+				for _, conn := range userConnections[message.RecipientID] {
+					conn.WriteJSON(map[string]any{
+						"type":   "unreadCounts",
+						"counts": unreadCounts,
 					})
 				}
 			}
@@ -156,21 +168,24 @@ func removeConnection(userID int, conn *websocket.Conn) {
 }
 
 func broadcastStatus(userID int, isOnline bool) {
-	statusMessage := map[string]any{
-		"type":     "userStatus",
-		"userID":   userID,
-		"isOnline": isOnline,
-	}
-	
+    statusMessage := map[string]any{
+        "type":     "userStatus",
+        "userID":   userID,
+        "isOnline": isOnline,
+    }
 
-	for key := range userConnections {
-		if conns, ok := userConnections[key]; ok {
-			for _, c := range conns {
-				c.WriteJSON(statusMessage)
-			}
-		}
-	}
+    friends, _ := models.Friends(userID)
+    for _, friend := range friends {
+        if conns, ok := userConnections[friend.ID]; ok {
+            for _, c := range conns {
+                c.WriteJSON(statusMessage)
+                // Remove "refreshFriends" here
+            }
+        }
+    }
 }
+
+
 
 func OnlineFriends(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {

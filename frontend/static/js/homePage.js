@@ -125,11 +125,8 @@ export async function homePage(param) {
             // const chat= document.querySelector(".chat")
             let user = document.querySelector('.chat .header span')
             const msg = JSON.parse(event.data);
-
-                const ul = document.querySelector(".listFriends")
-                ul.innerHTML = `
-                ${await FriendsPage()}
-            `               
+                    
+                
             // if (msg.type == "unreadCounts") {
             //     console.log(msg.counts);
             // }
@@ -143,9 +140,13 @@ export async function homePage(param) {
                         // notified[msg.data.senderID]=0
                         displayMessage(msg.data, logged.username, msg.isSender, true)
                     }
-                }
+                } else  if (msg.type === "refreshFriends") {
+                    const ul = document.querySelector(".listFriends");
+                    ul.innerHTML = `${await FriendsPage()}`;
+                    return;
+                }   
                     updateUnreadBadges(msg.counts);
-                
+
 
                 // const chatMessages = document.querySelector(".chat .messages");
                 // chatMessages.scrollTop = chatMessages.scrollHeight;
