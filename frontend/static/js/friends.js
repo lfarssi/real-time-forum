@@ -104,7 +104,7 @@ function scrollEventLoadMessages() {
         isScroll = true
     }
 
-    console.log(chatMessages.scrollTop + chatMessages.scrollHeight, chatMessages.scrollHeight)
+    // console.log(chatMessages.scrollTop + chatMessages.scrollHeight, chatMessages.scrollHeight)
 }
 export const notified = {}
 
@@ -130,7 +130,7 @@ export function updateUnreadBadges(counts) {
     document.querySelectorAll(".listFriends li").forEach(li => {
         const friendID = parseInt(li.dataset.id);
         const badge = li.querySelector(".notification");
-        console.log(counts);
+        // console.log(counts);
         
         const count = counts[friendID] || 0;
         
@@ -178,7 +178,7 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
             `;
         }
 
-        console.log(chatMessages.scroll())
+        // console.log("iam heeeeeeeeeeeere =>  ",)
 
         if (isLastMsg) {
             chatMessages.innerHTML += html
