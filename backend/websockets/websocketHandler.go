@@ -145,7 +145,6 @@ func removeConnection(userID int, conn *websocket.Conn) {
 func broadcastStatus(userID int, isOnline bool) {
 	unreadCounts, err := models.GetUnreadCountsPerFriend(userID)
 		if err == nil {
-			// Push to all connections for this user
 			for _, conn := range userConnections[userID] {
 				conn.WriteJSON(map[string]any{
 					"type":   "unreadCounts",

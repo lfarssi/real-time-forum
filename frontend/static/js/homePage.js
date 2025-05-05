@@ -139,9 +139,7 @@ export async function homePage(param) {
                     msg.data.map(m => displayMessage(m, logged.username))
                 }
             } else if (msg.type == "newMessage") {
-                if (chat.style.display==="" || chat.style.display==="none"){
-                    notify(msg.data.senderID)
-                } else{
+                
                     if(user.dataset.id==msg.data.recipientID || user.dataset.id==msg.data.senderID){
                         notified[msg.data.senderID]=0
                         displayMessage(msg.data, logged.username, msg.isSender, true)
@@ -149,12 +147,12 @@ export async function homePage(param) {
                 }
                 // const chatMessages = document.querySelector(".chat .messages");
                 // chatMessages.scrollTop = chatMessages.scrollHeight;
+                updateUnreadBadges(msg.counts);
             }
             console.log(msg);
             
-            updateUnreadBadges(msg.counts);
 
-        };
+        
     } else {
         let posts = document.querySelector('.posts')
         posts.innerHTML = `${await PostsPage(param)}`
