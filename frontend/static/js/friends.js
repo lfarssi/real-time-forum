@@ -107,7 +107,11 @@ function scrollEventLoadMessages() {
         isScroll = true
     }
 
-    // console.log(chatMessages.scrollTop + chatMessages.scrollHeight, chatMessages.scrollHeight)
+    if (Math.ceil(chatMessages.scrollTop + chatMessages.clientHeight) >= chatMessages.scrollHeight - 50) {
+      isScroll = false
+    }
+
+    // console.log(isScroll)
 }
 export const notified = {};
 
