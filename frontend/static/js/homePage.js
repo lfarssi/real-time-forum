@@ -110,6 +110,7 @@ export async function homePage(param) {
         filterByCategories()
         chatFriend()
         sendMessage()
+        categoryNav()
 
         
         ws = new WebSocket(`/ws/messages`);
@@ -196,5 +197,14 @@ function activePage() {
         if (element.pathname === location.pathname) {
             element.style.color = "var(--accent)"
         }
+    })
+}
+
+function categoryNav() {
+    let btn = document.querySelector('header .postsByCategory')
+    let category = document.querySelector('aside .filter')
+
+    btn.addEventListener('click', () => {
+        console.log(category)
     })
 }

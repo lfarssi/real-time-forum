@@ -149,6 +149,7 @@ nav>ul li button {
     font-size: 1.25em;
     cursor: pointer;
     position: relative;
+    display: none;
 }
 
 nav>.logout {
@@ -211,8 +212,6 @@ aside > .friends{
     overflow: auto;
     margin-top: 20px;
     width: 300px;
-
-
 }
 
 aside > .filter{
@@ -860,4 +859,25 @@ aside > .filter ul input:checked + label span::after{
         max-width: 400px;
     }
 
+    aside .filter {
+        display: none;
+    }
+
+    header .postsByCategory{
+        display: block;
+    }
+}
+
+@media (max-width: 770px) {
+    aside .profile, aside .friends{
+        display: none;
+    }
+
+    section{
+        /* background-color: red; */
+        width: 90%;
+        align-items: center;
+    }
+
+    
 }
