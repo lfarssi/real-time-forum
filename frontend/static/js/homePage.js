@@ -122,35 +122,46 @@ export async function homePage(param) {
                 ws.close()
                 return
             }
-            // const chat= document.querySelector(".chat")
-            let user = document.querySelector('.chat .header span')
+        
             const msg = JSON.parse(event.data);
-
-                const ul = document.querySelector(".listFriends")
-                ul.innerHTML = `
-                ${await FriendsPage()}
-            `               
-            // if (msg.type == "unreadCounts") {
-            //     console.log(msg.counts);
-            // }
-            if (msg.type == "allMessages") {
-                // notified[msg.data[0].senderID]=0
-                if (msg.data) {
-                    msg.data.map(m => displayMessage(m, logged.username))
-                }
-            } else if (msg.type == "newMessage") {
-                    if(user.dataset.id==msg.data.recipientID || user.dataset.id==msg.data.senderID){
-                        // notified[msg.data.senderID]=0
-                        displayMessage(msg.data, logged.username, msg.isSender, true)
+        
+            if (msg.type === "userStatus") {
+                // Find the friend <li> with matching data-id
+                const friendLi = document.querySelector(`.listFriends li[data-id="${msg.userID}"]`);
+                if (friendLi) {
+                    const icon = friendLi.querySelector("i.fa-user");
+                    if (icon) {
+                        if (msg.isOnline) {
+                            icon.classList.remove("offline");
+                            icon.classList.add("online");
+                        } else {
+                            icon.classList.remove("online");
+                            icon.classList.add("offline");
+                        }
                     }
-                }else if (!msg.isSender){
-                    updateUnreadBadges(msg.counts);
                 }
-
-                // const chatMessages = document.querySelector(".chat .messages");
-                // chatMessages.scrollTop = chatMessages.scrollHeight;
-                // console.log(msg);
+                return; // Don't reload the whole friends list
             }
+        
+            // Your existing handlers for other message types...
+            if (msg.type === "allMessages") {
+                if (msg.data) {
+                    msg.data.map(m => displayMessage(m, logged.username));
+                }
+            } else if (msg.type === "newMessage") {
+                let user = document.querySelector('.chat .header span');
+                if (user.dataset.id == msg.data.recipientID || user.dataset.id == msg.data.senderID) {
+                    displayMessage(msg.data, logged.username, msg.isSender, true);
+                }
+            } else if (msg.type === "refreshFriends") {
+                const ul = document.querySelector(".listFriends");
+                ul.innerHTML = `${await FriendsPage()}`;
+                return;
+            }
+        
+            updateUnreadBadges(msg.counts);
+        };
+        
             
 
         
