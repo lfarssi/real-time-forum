@@ -30,8 +30,22 @@ func GetCommnets(postID string) ([]*Comment, error) {
 		if err != nil {
 			return nil, err
 		}
+		
 
 		comment.DateCreation = CreatedAt.Format(time.DateTime)
+
+        // Get like and dislike counts
+        likes, err := GetReactionComment(comment.ID, "like")
+        if err != nil {
+            return nil, err
+        }
+        dislikes, err := GetReactionComment(comment.ID, "dislike")
+        if err != nil {
+            return nil, err
+        }
+
+        comment.Likes = len(likes)
+        comment.Dislikes = len(dislikes)
 		comments = append(comments, &comment)
 	}
 

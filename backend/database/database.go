@@ -53,5 +53,10 @@ func Migrate() error {
 		return err
 	}
 
+	_, err = DB.Exec("PRAGMA journal_mode=WAL;")
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
