@@ -44,7 +44,7 @@ func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
 
     if len(ids) > 0 {
         ph := make([]string, len(ids))
-        args := make([]interface{}, len(ids))
+        args := make([]any, len(ids))
         for i, id := range ids {
             ph[i] = "?"
             args[i] = id

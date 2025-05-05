@@ -122,10 +122,10 @@ export async function homePage(param) {
                 ws.close()
                 return
             }
-            const chat= document.querySelector(".chat")
+            // const chat= document.querySelector(".chat")
             let user = document.querySelector('.chat .header span')
             const msg = JSON.parse(event.data);
-           
+
                 const ul = document.querySelector(".listFriends")
                 ul.innerHTML = `
                 ${await FriendsPage()}
@@ -134,22 +134,23 @@ export async function homePage(param) {
             //     console.log(msg.counts);
             // }
             if (msg.type == "allMessages") {
-                notified[msg.data[0].senderID]=0
+                // notified[msg.data[0].senderID]=0
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username))
                 }
             } else if (msg.type == "newMessage") {
-                
                     if(user.dataset.id==msg.data.recipientID || user.dataset.id==msg.data.senderID){
-                        notified[msg.data.senderID]=0
+                        // notified[msg.data.senderID]=0
                         displayMessage(msg.data, logged.username, msg.isSender, true)
                     }
+                }else if (!msg.isSender){
+                    updateUnreadBadges(msg.counts);
                 }
+
                 // const chatMessages = document.querySelector(".chat .messages");
                 // chatMessages.scrollTop = chatMessages.scrollHeight;
-                updateUnreadBadges(msg.counts);
+                console.log(msg);
             }
-            console.log(msg);
             
 
         

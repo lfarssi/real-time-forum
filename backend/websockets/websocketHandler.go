@@ -32,9 +32,19 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userConnections[userID] = append(userConnections[userID], conn)
+	broadcastStatus(userID, true)
+
+	unreadCounts, err := models.GetUnreadCountsPerFriend(userID)
+	if err == nil {
+		for _, conn := range userConnections[userID] {
+			conn.WriteJSON(map[string]any{
+				"type":   "unreadCounts",
+				"counts": unreadCounts,
+			})
+		}
+	}
 	defer removeConnection(userID, conn)
 
-	broadcastStatus(userID, true)
 	for {
 		var message models.Message
 		err := conn.ReadJSON(&message)
@@ -59,7 +69,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 
 		message.SenderID = userID
 		message.Content = html.EscapeString(message.Content)
-		
+
 		switch message.Type {
 		case "addMessage":
 			err = models.AddMessage(&message)
@@ -78,19 +88,20 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 						"type":     "newMessage",
 						"status":   http.StatusOK,
 						"data":     message,
+						"counts":   unreadCounts,
 						"isSender": false,
-
 					})
 				}
 			}
 			for _, c := range userConnections[message.SenderID] {
 				c.WriteJSON(map[string]any{
-					"message":  "Message Sent",
-					"type":     "newMessage",
-					"status":   http.StatusOK,
-					"data":     message,
-					"isSender": true,
+					"message": "Message Sent",
+					"type":    "newMessage",
+					"status":  http.StatusOK,
+					"data":    message,
+					"counts":  unreadCounts,
 
+					"isSender": true,
 				})
 			}
 
@@ -112,7 +123,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"type":    "allMessages",
 				"status":  http.StatusOK,
 				"data":    messages,
-
 			})
 
 		case "logout":
@@ -120,7 +130,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"message": "user logged out",
 				"type":    "loggedOut",
 				"status":  http.StatusOK,
-
 			})
 
 		}
@@ -143,21 +152,11 @@ func removeConnection(userID int, conn *websocket.Conn) {
 }
 
 func broadcastStatus(userID int, isOnline bool) {
-	unreadCounts, err := models.GetUnreadCountsPerFriend(userID)
-		if err == nil {
-			for _, conn := range userConnections[userID] {
-				conn.WriteJSON(map[string]any{
-					"type":   "unreadCounts",
-					"counts": unreadCounts,
-				})
-			}
-		}
+
 	statusMessage := map[string]any{
 		"type":     "userStatus",
 		"userID":   userID,
 		"isOnline": isOnline,
-		"counts": unreadCounts,
-
 	}
 
 	for key := range userConnections {
