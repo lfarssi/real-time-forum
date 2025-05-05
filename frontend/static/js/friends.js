@@ -189,11 +189,11 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
         // console.log("iam heeeeeeeeeeeere =>  ",)
 
         if (isLastMsg) {
-            chatMessages.innerHTML += html
+          chatMessages.innerHTML += html
         } else {
-            chatMessages.insertAdjacentHTML("afterbegin", html);
+          chatMessages.insertAdjacentHTML("afterbegin", html);
         }
-
+        
         if (!isScroll || isSender) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         } else if (isScroll && !isLastMsg) {
@@ -201,18 +201,6 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
 
         }
 
-    }
-
-    if (isLastMsg) {
-      chatMessages.innerHTML += html;
-    } else {
-      chatMessages.insertAdjacentHTML("afterbegin", html);
-    }
-
-    if (!isScroll || isSender) {
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    } else if (isScroll && !isLastMsg) {
-      chatMessages.scrollTop = chatMessages.scrollHeight - scrollValue;
     }
   }
 

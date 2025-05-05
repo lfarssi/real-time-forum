@@ -149,7 +149,7 @@ export async function homePage(param) {
 
                 // const chatMessages = document.querySelector(".chat .messages");
                 // chatMessages.scrollTop = chatMessages.scrollHeight;
-                console.log(msg);
+                // console.log(msg);
             }
             
 
