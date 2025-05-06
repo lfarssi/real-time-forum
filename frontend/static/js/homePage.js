@@ -151,17 +151,18 @@ export async function homePage(param) {
                         }
                     }
                 }
-                return; 
             }
             
-                if (!openChatUserId) {
-                    updateUnreadBadges(msg.counts);
+            
+                if ( !openChatUserId) {
+                    updateUnreadBadges(msg.counts, openChatUserId);
                 } 
             if (msg.type === "allMessages") {
+                
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username));
                 }
-                updateUnreadBadges(msg.counts);
+                updateUnreadBadges(msg.counts, openChatUserId);
 
             } else if (msg.type === "newMessage") {
                 const senderId = msg.data.senderID;
@@ -180,7 +181,7 @@ export async function homePage(param) {
                     }
                 } 
                 
-            } else if (msg.type === "refreshFriends") {
+            } else if (msg.type === "refreshFriends" || msg.type=="newMessage" || msg.type=="updateMessage") {
                 const ul = document.querySelector(".listFriends");
                 ul.innerHTML = `${await FriendsPage()}`;
                 return;

@@ -7,7 +7,7 @@
     font-family: "Poppins", sans-serif;
     scrollbar-color: var(--text-muted) transparent;
     scrollbar-width: thin;
-}
+} 
 
 :root {
     --bg-dark: #1E1E2F;
@@ -226,7 +226,9 @@ aside > .friends{
     margin-top: 20px;
     width: 300px;
 }
-
+aside > .friends::-webkit-scrollbar{
+    display: none;
+}
 aside > .filter{
     height: 84.5vh;
     width: 300px;
