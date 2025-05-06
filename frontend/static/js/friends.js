@@ -54,14 +54,15 @@ export function chatFriend() {
 
   closeChat.addEventListener("click", () => {
     chat.style.display = "none";
-    // isScroll = false
-    // msgID = -1
+    let span = chat.querySelector(".header span");
+    if (span && span.dataset.id) {
+       span.removeAttribute("data-id");
+    }
   });
 }
 
 export function sendMessage() {
   let form = document.querySelector(".chatForm");
-
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     let input = document.querySelector(".chatForm input");
@@ -75,6 +76,7 @@ export function sendMessage() {
       JSON.stringify({
         content: input.value,
         recipientID: parseInt(receiverID),
+        senderID: logged.id,
         type: "addMessage",
       })
     );
