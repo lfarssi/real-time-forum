@@ -234,6 +234,7 @@ function asideNav() {
     let friends = document.querySelector('aside .friends')
 
     btn.addEventListener('click', () => {
+        friends.classList.remove('showFriends')
         category.classList.toggle('showFilter')
     })
 
@@ -242,6 +243,8 @@ function asideNav() {
     })
 
     chatMessages.addEventListener('click', () => {
+        category.classList.remove('showFilter')
+        friends.classList.toggle('showFriends')
         console.log(friends)
     })
 }
