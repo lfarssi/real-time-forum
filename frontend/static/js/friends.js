@@ -10,7 +10,6 @@ let chatMessages;
 export async function FriendsPage() {
   const response = await fetch("/api/getFriends");
   const data = await response.json();
-console.log("user");
 
   if (!data.data) {
     return errorPage("You Don't Have Friends");
@@ -117,28 +116,9 @@ function scrollEventLoadMessages() {
       isScroll = false
     }
 
-    // console.log(isScroll)
 }
-export const notified = {};
 
-export function notify(sender) {
-  const friend = document.getElementById(`friend${sender}`);
-  const notification = friend.querySelector(".notification");
-
-  if (!notified[sender]) {
-    notified[sender] = 0;
-  }
-  notified[sender] += 1;
-  if (!notification) {
-    let span = document.createElement("span");
-    span.className = "notification";
-    span.textContent = notified[sender];
-    friend.append(span);
-  } else {
-    notification.textContent = notified[sender];
-  }
-}
-export function updateUnreadBadges(counts, openedUserId = null) {
+export async function updateUnreadBadges(counts, openedUserId = null) {
   const openedUserIdNum = openedUserId !== null ? Number(openedUserId) : null;
   document.querySelectorAll(".listFriends li").forEach((li) => {
     const friendID = Number(li.dataset.id);

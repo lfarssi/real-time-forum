@@ -260,7 +260,6 @@ export function AddPosts() {
       });
       const data = await response.json()
       if (!response.ok) {
-        console.log(data);
         for (let span of spans) {
           if(data["category"]){
             popup(data["category"])

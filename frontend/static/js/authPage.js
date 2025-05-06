@@ -101,7 +101,6 @@ export function register() {
         navigateTo("/")
         }
     } catch (err) {
-      console.error(err)
       document.body.innerHTML = popup("Something went wrong!", "failed")
     }
   });
@@ -136,7 +135,6 @@ export function login() {
         navigateTo("/")
             }
     } catch (err) {
-      console.error(err)
       document.body.innerHTML = popup("Something went wrong!", "failed")
     }
   })
@@ -150,7 +148,6 @@ export async function logout() {
     await fetch("/api/logout")
     navigateTo("/register")
     } catch (err) {
-    console.error(err)
     document.body.innerHTML = popup("Something went wrong!", "failed")
   }
 }

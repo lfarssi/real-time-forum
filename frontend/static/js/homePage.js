@@ -1,6 +1,6 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
-import { chatFriend, displayMessage, FriendsPage,    notified,    notify, sendMessage, updateUnreadBadges } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage, sendMessage, updateUnreadBadges } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 
@@ -130,9 +130,13 @@ export async function homePage(param) {
             
             
             const msg = JSON.parse(event.data);
-
+            console.log(msg);
+            if (msg.type=="refreshFriends") {
+                const ul = document.querySelector(".listFriends");
+                ul.innerHTML = `${await FriendsPage()}`;
+            }
             if (msg.type === "userStatus") {
-                const friendLi = document.querySelector(`.listFriends li[data-id="${msg.userID}"]`);
+                const friendLi = document.querySelector(`.listFriends li[data-id="${msg.data.userID}"]`);
                 if (friendLi) {
                     const icon = friendLi.querySelector("i.fa-user");
                     if (icon) {
@@ -148,9 +152,7 @@ export async function homePage(param) {
             }
             
             
-                if ( !openChatUserId) {
-                    updateUnreadBadges(msg.counts, openChatUserId);
-                } 
+                
             if (msg.type === "allMessages") {
                 
                 if (msg.data) {
@@ -161,6 +163,9 @@ export async function homePage(param) {
             } else if (msg.type === "newMessage") {
                 const senderId = msg.data.senderID;
                 const recipientId = msg.data.recipientID;
+                if (openChatUserId !== senderId) {
+                    updateUnreadBadges(msg.counts, openChatUserId);
+                }
                 if (user.dataset.id == recipientId || user.dataset.id == senderId) {
                     displayMessage(msg.data, logged.username, msg.isSender, true);
                     if( user.dataset.id == senderId){
@@ -175,12 +180,10 @@ export async function homePage(param) {
                     }
                 } 
                 
-            } else if (msg.type === "refreshFriends" || msg.type=="newMessage" || msg.type=="updateMessage") {
-                const ul = document.querySelector(".listFriends");
-                ul.innerHTML = `${await FriendsPage()}`;
-                return;
-            }
-            
+            } 
+            if ( !openChatUserId) {
+                updateUnreadBadges(msg.counts, openChatUserId);
+            } 
            
         };
         
