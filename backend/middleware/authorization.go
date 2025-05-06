@@ -150,6 +150,6 @@ func IsLogged(w http.ResponseWriter, r *http.Request) {
 		"username":  userName,
 		"firstName": firstName,
 		"lastName":  lastName,
-		"	":  userId,
+		"id":  userId,
 	})
 }
