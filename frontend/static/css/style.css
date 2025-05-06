@@ -192,6 +192,10 @@ section {
     padding: 100px 0px;
 }
 
+section .profile{
+    display: none;
+}
+
 aside{
     position: sticky;
     top: 100px;
@@ -920,8 +924,11 @@ aside > .filter ul input:checked + label span::after{
 }
 
 @media (max-width: 770px) {
+    nav>ul{
+        gap: 40px;
+    }
+
     aside.asideFriendsProfile{
-        /* background-color: red; */
         position: static;
     }
 
@@ -958,6 +965,7 @@ aside > .filter ul input:checked + label span::after{
         padding: 10px 20px;
         border-radius: var(--radius);
         margin-bottom: 10px;
+        display: block;
     }
 
     section > .profile  p{
@@ -977,4 +985,52 @@ aside > .filter ul input:checked + label span::after{
     }
 
 
+    .friends .chat {
+        z-index: 999999;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    aside.asideFilter{
+        left: 20%;
+    }
+}
+
+@media (max-width: 537px) {
+    nav > ul {
+        gap: 20px;
+    }
+
+    section{
+        margin-left: 0;
+    }
+
+    aside .friends{
+        left: 20%;
+    }
+}
+
+@media (max-width: 450px){
+    header{
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+
+    aside.asideFilter{
+        left: 0;
+    }
+
+    aside > .filter{
+        width: 80vw;
+    }
+
+    aside > .friends{
+        left: 0;
+        width: 100vw;
+    }
+
+    section .post, section #postForm, section .profile{
+        width: 90vw;
+    }
 }
