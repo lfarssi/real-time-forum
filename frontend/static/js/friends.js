@@ -138,18 +138,17 @@ export function notify(sender) {
     notification.textContent = notified[sender];
   }
 }
-
-export function updateUnreadBadges(counts) {
-    console.log("count");
-    
+export function updateUnreadBadges(counts, openedUserId = null) {
+  const openedUserIdNum = openedUserId !== null ? Number(openedUserId) : null;
   document.querySelectorAll(".listFriends li").forEach((li) => {
-    const friendID = parseInt(li.dataset.id);
+    const friendID = Number(li.dataset.id);
     const badge = li.querySelector(".notification");
-    
-    let count = 0;
-    if (counts && counts.hasOwnProperty(friendID)) {
-        count = counts[friendID];
-      }
+    if (openedUserIdNum !== null && friendID === openedUserIdNum) {
+      if (badge) badge.remove();
+      return; 
+    }
+
+    const count = counts && counts[friendID] ? counts[friendID] : 0;
 
     if (count > 0) {
       if (!badge) {
@@ -160,17 +159,10 @@ export function updateUnreadBadges(counts) {
       } else {
         badge.textContent = count;
       }
-    } else if (badge) {
-      badge.remove();
-    }
+    } 
   });
 }
-// export function clearNotify(sender) {
-//     notified[sender] = 0
-//     const friend = document.getElementById(`friend${sender}`)
-//     const notification = friend.querySelector(".notification")
-//     if (notification) notification.remove()
-//   }
+
 
 export function displayMessage(msg, sender, isSender, isLastMsg = false) {
   const chatMessages = document.querySelector(".chat .messages");
