@@ -2,14 +2,13 @@ package models
 
 import (
 	"fmt"
-    "strings"
-    "time"
 	"real_time_forum/backend/database"
+	"strings"
+	"time"
 )
 
-
 func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
-    query := `
+	query := `
         SELECT m.id, m.senderID, m.receiverID, u.username, m.content, m.sentAt, m.status
         FROM messages m
         INNER JOIN users u ON u.id = m.senderID
@@ -18,57 +17,56 @@ func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
         LIMIT 10
     `
 
-    rows, err := database.DB.Query(query, sender, receiver, receiver, sender, lastID)
-    if err != nil {
-        return nil, err
-    }
-    defer rows.Close()
+	rows, err := database.DB.Query(query, sender, receiver, receiver, sender, lastID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-    var (
-        messages []*Message
-        ids      []int
-    )
-    for rows.Next() {
-        var msg Message
-        var t time.Time
-        if err := rows.Scan(&msg.ID, &msg.SenderID, &msg.RecipientID, &msg.Username, &msg.Content, &t, &msg.Status); err != nil {
-            return nil, err
-        }
-        msg.SentAt = t.Format(time.TimeOnly)
-        messages = append(messages, &msg)
-        ids = append(ids, msg.ID)
-    }
-    if err = rows.Err(); err != nil {
-        return nil, err
-    }
+	var (
+		messages []*Message
+		ids      []int
+	)
+	for rows.Next() {
+		var msg Message
+		var t time.Time
+		if err := rows.Scan(&msg.ID, &msg.SenderID, &msg.RecipientID, &msg.Username, &msg.Content, &t, &msg.Status); err != nil {
+			return nil, err
+		}
+		msg.SentAt = t.Format(time.TimeOnly)
+		messages = append(messages, &msg)
+		ids = append(ids, msg.ID)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
 
-    if len(ids) > 0 {
-        // Prepare placeholders for the IN clause: "?, ?, ?, ..."
-        ph := make([]string, len(ids))
-        args := make([]any, len(ids)+1) // +1 for receiverID param
-    
-        for i, id := range ids {
-            ph[i] = "?"
-            args[i] = id
-        }
-    
-        // Add receiverID as the last argument
-        args[len(ids)] = sender
-    
-        // Build the query with placeholders and receiverID condition
-        upd := fmt.Sprintf(
-            "UPDATE messages SET status = 'read' WHERE id IN (%s) AND receiverID = ? AND status = 'unread'",
-            strings.Join(ph, ","),
-        )
-    
-        // Execute the update query with arguments
-        if _, err := database.DB.Exec(upd, args...); err != nil {
-            return nil, err
-        }
-    }
-    
+	if len(ids) > 0 {
+		// Prepare placeholders for the IN clause: "?, ?, ?, ..."
+		ph := make([]string, len(ids))
+		args := make([]any, len(ids)+1) // +1 for receiverID param
 
-    return messages, nil
+		for i, id := range ids {
+			ph[i] = "?"
+			args[i] = id
+		}
+
+		// Add receiverID as the last argument
+		args[len(ids)] = sender
+
+		// Build the query with placeholders and receiverID condition
+		upd := fmt.Sprintf(
+			"UPDATE messages SET status = 'read' WHERE id IN (%s) AND receiverID = ? AND status = 'unread'",
+			strings.Join(ph, ","),
+		)
+
+		// Execute the update query with arguments
+		if _, err := database.DB.Exec(upd, args...); err != nil {
+			return nil, err
+		}
+	}
+
+	return messages, nil
 }
 
 func AddMessage(message *Message) error {
@@ -81,6 +79,16 @@ func AddMessage(message *Message) error {
 	}
 	return nil
 }
+func UpdateMessage(senderID, receiverID int, status string) error {
+	query := `
+        UPDATE messages
+        SET status = $1
+        WHERE senderID = $2 AND receiverID = $3 AND status = 'unread'
+    `
+	_, err := database.DB.Exec(query, status, senderID, receiverID)
+	return err
+}
+
 
 func GetLastMessageID() (int, error) {
 	query := `
@@ -98,28 +106,26 @@ func GetLastMessageID() (int, error) {
 	return id + 1, nil
 }
 
-
 func GetUnreadCountsPerFriend(userID int) (map[int]int, error) {
-    query := `
+	query := `
         SELECT senderID, COUNT(*) 
         FROM messages 
         WHERE receiverID = ? AND status = 'unread'
         GROUP BY senderID
     `
-    rows, err := database.DB.Query(query, userID)
-    if err != nil {
-        return nil, err
-    }
-    defer rows.Close()
+	rows, err := database.DB.Query(query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
 
-    counts := make(map[int]int)
-    for rows.Next() {
-        var friendID, count int
-        if err := rows.Scan(&friendID, &count); err != nil {
-            return nil, err
-        }
-        counts[friendID] = count
-    }
-    return counts, nil
+	counts := make(map[int]int)
+	for rows.Next() {
+		var friendID, count int
+		if err := rows.Scan(&friendID, &count); err != nil {
+			return nil, err
+		}
+		counts[friendID] = count
+	}
+	return counts, nil
 }
-
