@@ -86,6 +86,8 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			message.SentAt = time.Now().Format(time.TimeOnly)
+			unreadCounts, _ := models.GetUnreadCountsPerFriend(message.RecipientID)
+
 			if conns, ok := userConnections[message.RecipientID]; ok {
 				for _, c := range conns {
 					c.WriteJSON(map[string]any{
@@ -93,18 +95,9 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 						"type":     "newMessage",
 						"status":   http.StatusOK,
 						"data":     message,
+						"counts": unreadCounts,
 						"isSender": false,
 
-					})
-				}
-			}
-
-			unreadCounts, err := models.GetUnreadCountsPerFriend(message.RecipientID)
-			if err == nil {
-				for _, conn := range userConnections[message.RecipientID] {
-					conn.WriteJSON(map[string]any{
-						"type":   "unreadCounts",
-						"counts": unreadCounts,
 					})
 				}
 			}
@@ -114,6 +107,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"type":    "newMessage",
 					"status":  http.StatusOK,
 					"data":    message,
+					"counts": unreadCounts,
 					"isSender": true,
 				})
 			}

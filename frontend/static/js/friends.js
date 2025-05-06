@@ -54,8 +54,10 @@ export function chatFriend() {
 
   closeChat.addEventListener("click", () => {
     chat.style.display = "none";
-    // isScroll = false
-    // msgID = -1
+    let span = chat.querySelector(".header span");
+    if (span && span.dataset.id) {
+       span.removeAttribute("data-id");
+    }
   });
 }
 

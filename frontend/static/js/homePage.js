@@ -126,12 +126,12 @@ export async function homePage(param) {
             }
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
-
+            console.log("chatj -----------",user);
+            
             
             const msg = JSON.parse(event.data);
 
             if (msg.type === "userStatus") {
-                // Find the friend <li> with matching data-id
                 const friendLi = document.querySelector(`.listFriends li[data-id="${msg.userID}"]`);
                 if (friendLi) {
                     const icon = friendLi.querySelector("i.fa-user");
@@ -145,11 +145,11 @@ export async function homePage(param) {
                         }
                     }
                 }
-                return; // Don't reload the whole friends list
+                return; 
             }
             
                 if (
-                    msg.type!="newMessage"      // you are the sender (echo)
+                    !openChatUserId   
                 ) {
                     updateUnreadBadges(msg.counts);
                     console.log("notif not new msg");
@@ -167,16 +167,8 @@ export async function homePage(param) {
 
             } else if (msg.type === "newMessage") {
                 const senderId = msg.data.senderID;
-                const recipientId = msg.data.recipientID;                
-                if (
-                    openChatUserId != senderId || // chat open with sender
-                    recipientId == logged.id         // you are the sender (echo)
-                ) {
-                    updateUnreadBadges(msg.counts);
-                    console.log("notif new msg");
-                    
-                } 
-                if (user.dataset.id == msg.data.recipientID || user.dataset.id == msg.data.senderID) {
+                const recipientId = msg.data.recipientID;
+                if (user.dataset.id == recipientId || user.dataset.id == senderId) {
                     displayMessage(msg.data, logged.username, msg.isSender, true);
                 }
             } else if (msg.type === "refreshFriends") {
