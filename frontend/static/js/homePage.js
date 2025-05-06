@@ -64,6 +64,12 @@ export async function homePage(param) {
                 </div>  
             </aside>
             <section>
+                <div class="profile">
+                <div>
+                    <p><i class="fa-solid fa-user"></i> ${logged.firstName} ${logged.lastName}</p>  
+                    </div>
+                    <span> ${logged.username}</span>
+                </div>
                 ${await PostForm()}
                 <div class="postContainer">
                     <div class="posts">
@@ -232,6 +238,7 @@ function asideNav() {
     let friends = document.querySelector('aside .friends')
 
     btn.addEventListener('click', () => {
+        friends.classList.remove('showFriends')
         category.classList.toggle('showFilter')
     })
 
@@ -240,6 +247,8 @@ function asideNav() {
     })
 
     chatMessages.addEventListener('click', () => {
+        category.classList.remove('showFilter')
+        friends.classList.toggle('showFriends')
         console.log(friends)
     })
 }
