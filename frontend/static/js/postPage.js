@@ -84,7 +84,8 @@ function getParamsFromLocation() {
 }
 
 async function loadPosts() {
-  if (loading || allPostsLoaded) return;
+  const logged= await isLogged()
+  if (loading || allPostsLoaded || !logged) return;
 
   loading = true;
 
@@ -101,9 +102,7 @@ async function loadPosts() {
       page += 1;
     }
   } catch (error) {
-    setTimeout(()=>{
       popup("No Post Available")
-    },5000)
   } finally {
     loading = false;
     document.querySelectorAll(".displayComment").forEach(button => {
@@ -120,14 +119,14 @@ window.addEventListener('scroll', () => {
   throttle = true;
   setTimeout(() => {
     const scrollPosition = window.innerHeight + window.scrollY;
-    const bottomOfPage = document.body.offsetHeight -500 ;
+    const bottomOfPage = document.body.offsetHeight  ;
 
     if (scrollPosition >= bottomOfPage) {
       loadPosts();
     }
 
     throttle = false;
-  }, 1000);
+  }, 500);
 });
 
 
@@ -252,7 +251,6 @@ export function AddPosts() {
     const formData = Object.fromEntries(formDataRaw.entries());
 
 
-    // ✅ Fix: ensure "categories" is always an array
     formData.categories = formDataRaw.getAll("categories");
     try {
       const response = await fetch("/api/addPost", {
