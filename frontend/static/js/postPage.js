@@ -10,17 +10,17 @@ let allPostsLoaded = false;
 let throttle = false;
 
 export async function PostsPage(params, page=1) {
-  let response;
+  let url;
   if (params == "") {
-    response = await fetch(`/api/getPosts?page=${page}`);
+    url =`/api/getPosts?page=${page}`
   } else if (params == "likedPosts") {
-    response = await fetch(`/api/getLikedPosts?page=${page}`);
+    url =`/api/getLikedPosts?page=${page}`
   } else if (params == "createdPosts") {
-    response = await fetch(`/api/getCreatedPosts?page=${page}`);
+    url =`/api/getCreatedPosts?page=${page}`
   } else if (params == "postsByCategory") {
-    response = await fetch(`/api/getPostsByCategory` + location.search + `&page=${page}`)
+    url = `/api/getPostsByCategory` + location.search + `&page=${page}`
   }
-
+  const response = await fetch(url)
   const data = await response.json()
   if (!data.data && page==1 ) {
     return errorPage("No Post Available")
