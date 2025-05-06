@@ -79,10 +79,10 @@ export function sendMessage() {
         type: "addMessage",
       })
     );
-    const ul = document.querySelector(".listFriends");
-    ul.innerHTML = `
-        ${await FriendsPage()}
-    `;
+    const ul=document.querySelector(".listFriends")
+    const friend = document.querySelector(`.listFriends li[data-id="${receiverID}"]`);
+    friend.remove()
+    ul.prepend(friend)    
     input.value = "";
   });
 }
@@ -118,9 +118,9 @@ function scrollEventLoadMessages() {
 
 }
 
-export async function updateUnreadBadges(counts, openedUserId = null) {
+export function updateUnreadBadges(counts, openedUserId = null) {
   const openedUserIdNum = openedUserId !== null ? Number(openedUserId) : null;
-  document.querySelectorAll(".listFriends li").forEach((li) => {
+  document.querySelectorAll(".listFriends li").forEach( (li) => {
     const friendID = Number(li.dataset.id);
     const badge = li.querySelector(".notification");
     if (openedUserIdNum !== null && friendID === openedUserIdNum) {
