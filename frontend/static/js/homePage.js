@@ -59,9 +59,7 @@ export async function homePage(param) {
                             ${categoriesInputs}
                         </ul>
                     </form>
-                    <div class="closeBtn">
-                        <button><i class="fa-solid fa-xmark"></i></button>
-                    </div>
+                    <button class="closeBtn"><i class="fa-solid fa-xmark"></i></button>
                 </div>  
             </aside>
             <section>
@@ -231,9 +229,13 @@ function activePage() {
 function categoryNav() {
     let btn = document.querySelector('header .postsByCategory')
     let category = document.querySelector('aside .filter')
+    let closeBtn = document.querySelector('.closeBtn')
 
     btn.addEventListener('click', () => {
         category.classList.toggle('showFilter')
-        console.log(category)
+    })
+
+    closeBtn.addEventListener('click', () => {
+        category.classList.remove('showFilter')
     })
 }
