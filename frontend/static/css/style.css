@@ -920,6 +920,7 @@ aside > .filter ul input:checked + label span::after{
 @media (max-width: 770px) {
     aside.asideFriendsProfile{
         /* background-color: red; */
+        position: static;
     }
 
     aside .profile{
@@ -928,12 +929,20 @@ aside > .filter ul input:checked + label span::after{
 
     aside .friends{
         display: none;
+        position: absolute;
+        left: 40%;
+        top: 90px;
+        z-index: 99;
+        border: 1px solid var(--accent);
+    }
+
+    aside .showFriends{
+        display: block;
     }
 
     header nav .chatMessages{
         display: block;
     }
-
 
     section{
         width: 100%;
@@ -965,7 +974,5 @@ aside > .filter ul input:checked + label span::after{
         font-size: 10px;
     }
 
-    aside .showFriends{
-        display: block;
-    }
+
 }
