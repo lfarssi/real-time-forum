@@ -119,17 +119,17 @@ export async function homePage(param) {
         };
 
         ws.onmessage = async function (event) {
-            if (!await isLogged()) {
+            const logged=await isLogged()
+            if (!logged) {
                 ws.close()
                 return
             }
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
 
-            console.log(user);
             
             const msg = JSON.parse(event.data);
-        
+
             if (msg.type === "userStatus") {
                 // Find the friend <li> with matching data-id
                 const friendLi = document.querySelector(`.listFriends li[data-id="${msg.userID}"]`);
@@ -147,6 +147,16 @@ export async function homePage(param) {
                 }
                 return; // Don't reload the whole friends list
             }
+            
+                if (
+                    msg.type!="newMessage"      // you are the sender (echo)
+                ) {
+                    updateUnreadBadges(msg.counts);
+                    console.log("notif not new msg");
+
+                    
+                } 
+            
         
             // Your existing handlers for other message types...
             if (msg.type === "allMessages") {
@@ -156,6 +166,16 @@ export async function homePage(param) {
                 updateUnreadBadges(msg.counts);
 
             } else if (msg.type === "newMessage") {
+                const senderId = msg.data.senderID;
+                const recipientId = msg.data.recipientID;                
+                if (
+                    openChatUserId != senderId || // chat open with sender
+                    recipientId == logged.id         // you are the sender (echo)
+                ) {
+                    updateUnreadBadges(msg.counts);
+                    console.log("notif new msg");
+                    
+                } 
                 if (user.dataset.id == msg.data.recipientID || user.dataset.id == msg.data.senderID) {
                     displayMessage(msg.data, logged.username, msg.isSender, true);
                 }
@@ -164,20 +184,8 @@ export async function homePage(param) {
                 ul.innerHTML = `${await FriendsPage()}`;
                 return;
             }
-            console.log(msg.data);
             
-            if (msg.data && Array.isArray(msg.data) && msg.data.length > 0) {
-                console.log("fff");
-
-                if (openChatUserId != msg.data[0].senderID) {
-                    updateUnreadBadges(msg.counts);
-                    console.log("dddddd");
-                    
-                } 
-            } else{
-                updateUnreadBadges(msg.counts);
-
-            }
+           
         };
         
             

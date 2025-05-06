@@ -143,8 +143,7 @@ export function updateUnreadBadges(counts) {
   document.querySelectorAll(".listFriends li").forEach((li) => {
     const friendID = parseInt(li.dataset.id);
     const badge = li.querySelector(".notification");
-    // console.log("counts[friendID]",counts[friendID]);
-    // console.log(counts[friendID], counts, friendID, "-----");
+    
     let count = 0;
     if (counts && counts.hasOwnProperty(friendID)) {
         count = counts[friendID];
