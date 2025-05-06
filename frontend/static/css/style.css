@@ -218,9 +218,26 @@ aside > .filter{
     height: 84.5vh;
     width: 300px;
     padding: 15px 30px;
+    position: relative;
 }
 
-aside > .filter .closeBtn{}
+aside > .filter .closeBtn{
+    position: absolute;
+    right: 15px;
+    top: 12px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 24px;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: .5s;
+}
+
+aside > .filter .closeBtn:hover{
+    transform: rotate(90deg);
+    color: var(--accent);
+}
 
 aside > .profile  p{
     color: var(--text-light);
