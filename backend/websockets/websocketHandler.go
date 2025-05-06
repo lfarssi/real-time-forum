@@ -36,6 +36,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	userConnections[userID] = append(userConnections[userID], conn)
 	broadcastStatus(userID, true)
+	
 
 	unreadCounts, err := models.GetUnreadCountsPerFriend(userID)
 	if err == nil {
