@@ -223,7 +223,7 @@ aside > .filter{
 
 aside > .filter .closeBtn{
     position: absolute;
-    right: 15px;
+    right: 20px;
     top: 12px;
     background-color: transparent;
     border: none;
@@ -232,6 +232,7 @@ aside > .filter .closeBtn{
     color: var(--text-light);
     cursor: pointer;
     transition: .5s;
+    display: none;
 }
 
 aside > .filter .closeBtn:hover{
@@ -891,6 +892,10 @@ aside > .filter ul input:checked + label span::after{
     }
     
     aside .showFilter{
+        display: block;
+    }
+
+    aside > .filter .closeBtn{
         display: block;
     }
 
