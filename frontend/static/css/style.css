@@ -192,6 +192,10 @@ section {
     padding: 100px 0px;
 }
 
+section .profile{
+    display: none;
+}
+
 aside{
     position: sticky;
     top: 100px;
@@ -209,7 +213,7 @@ aside > .profile{
     padding: 10px 20px;
 }
 
-aside > .profile > div {
+aside > .profile > div, section > .profile > div {
     display: flex;
     align-items: center;
 }
@@ -920,12 +924,29 @@ aside > .filter ul input:checked + label span::after{
 }
 
 @media (max-width: 770px) {
-    aside.asideFriendsProfile{
-        background-color: red;
+    nav>ul{
+        gap: 40px;
     }
 
-    aside .profile, aside .friends{
-        /* display: none; */
+    aside.asideFriendsProfile{
+        position: static;
+    }
+
+    aside .profile{
+        display: none;
+    }
+
+    aside .friends{
+        display: none;
+        position: absolute;
+        left: 40%;
+        top: 90px;
+        z-index: 99;
+        border: 1px solid var(--accent);
+    }
+
+    aside .showFriends{
+        display: block;
     }
 
     header nav .chatMessages{
@@ -933,11 +954,83 @@ aside > .filter ul input:checked + label span::after{
     }
 
     section{
-        width: 90%;
+        width: 100%;
+        margin-left: 50px;
         align-items: center;
     }
 
-    aside .showFriends{
+    section .profile{
+        width: 400px;
+        background-color: var(--card-dark);
+        padding: 10px 20px;
+        border-radius: var(--radius);
+        margin-bottom: 10px;
         display: block;
+    }
+
+    section > .profile  p{
+        color: var(--text-light);
+        font-weight: 600;
+        font-size: 1em;
+    }
+    
+    section > .profile p i{
+        margin-right: 10px;
+    }
+    
+    .profile span{
+        color: var(--text-muted );
+        margin-left: 30px;
+        font-size: 10px;
+    }
+
+
+    .friends .chat {
+        z-index: 999999;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    aside.asideFilter{
+        left: 20%;
+    }
+}
+
+@media (max-width: 537px) {
+    nav > ul {
+        gap: 20px;
+    }
+
+    section{
+        margin-left: 0;
+    }
+
+    aside .friends{
+        left: 20%;
+    }
+}
+
+@media (max-width: 450px){
+    header{
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+
+    aside.asideFilter{
+        left: 0;
+    }
+
+    aside > .filter{
+        width: 80vw;
+    }
+
+    aside > .friends{
+        left: 0;
+        width: 100vw;
+    }
+
+    section .post, section #postForm, section .profile{
+        width: 90vw;
     }
 }
