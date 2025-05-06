@@ -16,6 +16,7 @@ export function header() {
                     <li><a class="createdPosts" href="/createdPosts" data-link=""><i class="fa-solid fa-pen"></i></a></li>
                     <li><a class="likedPosts" href="/likedPosts" data-link="" ><i class="fa-solid fa-thumbs-up"></i></a></li>
                     <li><button class="postsByCategory"><i class="fa-solid fa-tag"></i></button></li>
+                    <li><button class="chatMessages"><i class="fa-solid fa-message"></i></button></li>
                 </ul>
                 <a class="logout" href="/logout" data-link><i class="fa-solid fa-right-from-bracket"></i></a>
             </nav>
@@ -71,7 +72,7 @@ export async function homePage(param) {
                 </div>
                 
             </section>
-            <aside>
+            <aside class="asideFriendsProfile">
                 <div class="profile">
                     <div>
                     <p><i class="fa-solid fa-user"></i> ${logged.firstName} ${logged.lastName}</p>  
@@ -111,9 +112,8 @@ export async function homePage(param) {
         filterByCategories()
         chatFriend()
         sendMessage()
-        categoryNav()
+        asideNav()
 
-        
         ws = new WebSocket(`/ws/messages`);
         ws.onclose = function (event) {
             navigateTo("/register")
@@ -226,10 +226,12 @@ function activePage() {
     })
 }
 
-function categoryNav() {
+function asideNav() {
     let btn = document.querySelector('header .postsByCategory')
     let category = document.querySelector('aside .filter')
     let closeBtn = document.querySelector('.closeBtn')
+    let chatMessages = document.querySelector('.chatMessages')
+    let friends = document.querySelector('aside .friends')
 
     btn.addEventListener('click', () => {
         category.classList.toggle('showFilter')
@@ -237,5 +239,9 @@ function categoryNav() {
 
     closeBtn.addEventListener('click', () => {
         category.classList.remove('showFilter')
+    })
+
+    chatMessages.addEventListener('click', () => {
+        console.log(friends)
     })
 }
