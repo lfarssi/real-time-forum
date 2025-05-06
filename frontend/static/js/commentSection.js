@@ -45,7 +45,6 @@ export async function CommentSection(event) {
     await AddComments(postId);
     attachCommentReactionListeners(); // Attach event listeners for reactions
   } catch (err) {
-    console.error("Error fetching comments:", err);
     popup("Something went wrong!", "failed");
   }
 }
@@ -72,7 +71,6 @@ export function attachCommentReactionListeners() {
 
         if (response.ok) {
           const result = await response.json();
-          console.log(result.data);
           
           const currentCount = parseInt(button.children[0].textContent);
           const newCount = status === "like" ? result.data.cnbLikes : result.data.cnbDislikes;
@@ -96,7 +94,6 @@ export function attachCommentReactionListeners() {
           popup("Failed to react to comment.", "error");
         }
       } catch (err) {
-        console.error("Error reacting to comment:", err);
         popup("Something went wrong!", "failed");
       }
     });
@@ -154,7 +151,6 @@ export async function AddComments(postId) {
         errorSpan.textContent = error.message || "Failed to add comment.";
       }
     } catch (err) {
-      console.error("Error adding comment:", err);
       document.body.innerHTML = popup("Something went wrong!","failed");
     }
   });

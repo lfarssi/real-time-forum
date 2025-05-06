@@ -151,7 +151,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		case "logout":
 			conn.WriteJSON(map[string]any{
 				"message": "user logged out",
-				"type":    "loggedOut",
+				"type":    "refreshFriends",
 				"status":  http.StatusOK,
 			})
 
