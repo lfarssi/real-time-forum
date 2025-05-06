@@ -209,7 +209,7 @@ aside > .profile{
     padding: 10px 20px;
 }
 
-aside > .profile > div {
+aside > .profile > div, section > .profile > div {
     display: flex;
     align-items: center;
 }
@@ -919,20 +919,50 @@ aside > .filter ul input:checked + label span::after{
 
 @media (max-width: 770px) {
     aside.asideFriendsProfile{
-        background-color: red;
+        /* background-color: red; */
     }
 
-    aside .profile, aside .friends{
-        /* display: none; */
+    aside .profile{
+        display: none;
+    }
+
+    aside .friends{
+        display: none;
     }
 
     header nav .chatMessages{
         display: block;
     }
 
+
     section{
-        width: 90%;
+        width: 100%;
+        margin-left: 50px;
         align-items: center;
+    }
+
+    section .profile{
+        width: 400px;
+        background-color: var(--card-dark);
+        padding: 10px 20px;
+        border-radius: var(--radius);
+        margin-bottom: 10px;
+    }
+
+    section > .profile  p{
+        color: var(--text-light);
+        font-weight: 600;
+        font-size: 1em;
+    }
+    
+    section > .profile p i{
+        margin-right: 10px;
+    }
+    
+    .profile span{
+        color: var(--text-muted );
+        margin-left: 30px;
+        font-size: 10px;
     }
 
     aside .showFriends{

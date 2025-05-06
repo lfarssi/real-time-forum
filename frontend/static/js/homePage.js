@@ -64,6 +64,12 @@ export async function homePage(param) {
                 </div>  
             </aside>
             <section>
+                <div class="profile">
+                <div>
+                    <p><i class="fa-solid fa-user"></i> ${logged.firstName} ${logged.lastName}</p>  
+                    </div>
+                    <span> ${logged.username}</span>
+                </div>
                 ${await PostForm()}
                 <div class="postContainer">
                     <div class="posts">
