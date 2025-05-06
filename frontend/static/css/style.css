@@ -140,6 +140,19 @@ nav>ul li .postsByCategory:hover::after {
     width: max-content;
 }
 
+nav>ul li .chatMessages:hover::after {
+    content: 'Messages';
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    background-color: var(--accent);
+    padding: 4px 8px;
+    font-size: 0.6em;
+    border-radius: var(--radius);
+    color: var(--bg-dark);
+    width: max-content;
+}
+
 
 nav>ul li button {
     background-color: transparent;
@@ -220,6 +233,26 @@ aside > .filter{
     height: 84.5vh;
     width: 300px;
     padding: 15px 30px;
+    position: relative;
+}
+
+aside > .filter .closeBtn{
+    position: absolute;
+    right: 20px;
+    top: 12px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    font-size: 24px;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: .5s;
+    display: none;
+}
+
+aside > .filter .closeBtn:hover{
+    transform: rotate(90deg);
+    color: var(--accent);
 }
 
 aside > .profile  p{
@@ -861,8 +894,24 @@ aside > .filter ul input:checked + label span::after{
         max-width: 400px;
     }
 
+    aside.asideFilter{
+        position: absolute;
+        left: 40%;
+        top: 100px;
+        z-index: 99;
+    }
+
     aside .filter {
-        display: none;
+        display: none; 
+        border: 1px solid var(--accent);
+    }
+    
+    aside .showFilter{
+        display: block;
+    }
+
+    aside > .filter .closeBtn{
+        display: block;
     }
 
     header .postsByCategory{
@@ -871,15 +920,24 @@ aside > .filter ul input:checked + label span::after{
 }
 
 @media (max-width: 770px) {
+    aside.asideFriendsProfile{
+        background-color: red;
+    }
+
     aside .profile, aside .friends{
-        display: none;
+        /* display: none; */
+    }
+
+    header nav .chatMessages{
+        display: block;
     }
 
     section{
-        /* background-color: red; */
         width: 90%;
         align-items: center;
     }
 
-    
+    aside .showFriends{
+        display: block;
+    }
 }
