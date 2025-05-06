@@ -133,16 +133,13 @@ export async function homePage(param) {
             }
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
-            
-            
             const msg = JSON.parse(event.data);
-            console.log(msg);
-            if (msg.type=="refreshFriends") {
-                const ul = document.querySelector(".listFriends");
-                ul.innerHTML = `${await FriendsPage()}`;
-            }
+            // if (msg.type=="refreshFriends"|| msg.type=="newMessage") {
+            //     const ul = document.querySelector(".listFriends");
+            //     ul.innerHTML = `${await FriendsPage()}`;
+            // }
             if (msg.type === "userStatus") {
-                const friendLi = document.querySelector(`.listFriends li[data-id="${msg.data.userID}"]`);
+                const friendLi = document.querySelector(`.listFriends li[data-id="${msg.userID}"]`);                
                 if (friendLi) {
                     const icon = friendLi.querySelector("i.fa-user");
                     if (icon) {
