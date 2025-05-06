@@ -51,7 +51,7 @@ export async function homePage(param) {
         document.body.innerHTML = /*html*/`   
         ${header()}
         <main class="container">
-            <aside>
+            <aside class="asideFilter">
                 <div class="filter">    
                     <h3>Categories</h3>
                     <form>
@@ -59,6 +59,9 @@ export async function homePage(param) {
                             ${categoriesInputs}
                         </ul>
                     </form>
+                    <div class="closeBtn">
+                        <button><i class="fa-solid fa-xmark"></i></button>
+                    </div>
                 </div>  
             </aside>
             <section>
@@ -230,6 +233,7 @@ function categoryNav() {
     let category = document.querySelector('aside .filter')
 
     btn.addEventListener('click', () => {
+        category.classList.toggle('showFilter')
         console.log(category)
     })
 }

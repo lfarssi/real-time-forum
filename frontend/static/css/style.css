@@ -220,6 +220,8 @@ aside > .filter{
     padding: 15px 30px;
 }
 
+aside > .filter .closeBtn{}
+
 aside > .profile  p{
     color: var(--text-light);
     font-weight: 600;
@@ -859,8 +861,20 @@ aside > .filter ul input:checked + label span::after{
         max-width: 400px;
     }
 
+    aside.asideFilter{
+        position: absolute;
+        left: 40%;
+        top: 100px;
+        z-index: 99;
+    }
+
     aside .filter {
-        display: none;
+        display: none; 
+        border: 1px solid var(--accent);
+    }
+    
+    aside .showFilter{
+        display: block;
     }
 
     header .postsByCategory{
