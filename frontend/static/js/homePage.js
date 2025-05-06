@@ -127,12 +127,11 @@ export async function homePage(param) {
             }
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
-
+            
             
             const msg = JSON.parse(event.data);
 
             if (msg.type === "userStatus") {
-                // Find the friend <li> with matching data-id
                 const friendLi = document.querySelector(`.listFriends li[data-id="${msg.userID}"]`);
                 if (friendLi) {
                     const icon = friendLi.querySelector("i.fa-user");
@@ -146,20 +145,12 @@ export async function homePage(param) {
                         }
                     }
                 }
-                return; // Don't reload the whole friends list
+                return; 
             }
             
-                if (
-                    msg.type!="newMessage"      // you are the sender (echo)
-                ) {
+                if (!openChatUserId) {
                     updateUnreadBadges(msg.counts);
-                    console.log("notif not new msg");
-
-                    
                 } 
-            
-        
-            // Your existing handlers for other message types...
             if (msg.type === "allMessages") {
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username));
@@ -168,18 +159,21 @@ export async function homePage(param) {
 
             } else if (msg.type === "newMessage") {
                 const senderId = msg.data.senderID;
-                const recipientId = msg.data.recipientID;                
-                if (
-                    openChatUserId != senderId || // chat open with sender
-                    recipientId == logged.id         // you are the sender (echo)
-                ) {
-                    updateUnreadBadges(msg.counts);
-                    console.log("notif new msg");
-                    
-                } 
-                if (user.dataset.id == msg.data.recipientID || user.dataset.id == msg.data.senderID) {
+                const recipientId = msg.data.recipientID;
+                if (user.dataset.id == recipientId || user.dataset.id == senderId) {
                     displayMessage(msg.data, logged.username, msg.isSender, true);
-                }
+                    if( user.dataset.id == senderId){
+                        ws.send(
+                            JSON.stringify({
+                                status : openChatUserId==senderId?"read":"unread",
+                                senderID: parseInt(senderId),
+                                recipientID: parseInt(recipientId) , 
+                                type: "updateMessage",
+                            })
+                        );
+                    }
+                } 
+                
             } else if (msg.type === "refreshFriends") {
                 const ul = document.querySelector(".listFriends");
                 ul.innerHTML = `${await FriendsPage()}`;
