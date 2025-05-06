@@ -63,7 +63,6 @@ export function chatFriend() {
 
 export function sendMessage() {
   let form = document.querySelector(".chatForm");
-
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     let input = document.querySelector(".chatForm input");
@@ -77,6 +76,7 @@ export function sendMessage() {
       JSON.stringify({
         content: input.value,
         recipientID: parseInt(receiverID),
+        senderID: logged.id,
         type: "addMessage",
       })
     );

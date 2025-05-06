@@ -126,7 +126,6 @@ export async function homePage(param) {
             }
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
-            console.log("chatj -----------",user);
             
             
             const msg = JSON.parse(event.data);
@@ -148,17 +147,9 @@ export async function homePage(param) {
                 return; 
             }
             
-                if (
-                    !openChatUserId   
-                ) {
+                if (!openChatUserId) {
                     updateUnreadBadges(msg.counts);
-                    console.log("notif not new msg");
-
-                    
                 } 
-            
-        
-            // Your existing handlers for other message types...
             if (msg.type === "allMessages") {
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m, logged.username));
@@ -170,7 +161,18 @@ export async function homePage(param) {
                 const recipientId = msg.data.recipientID;
                 if (user.dataset.id == recipientId || user.dataset.id == senderId) {
                     displayMessage(msg.data, logged.username, msg.isSender, true);
-                }
+                    if( user.dataset.id == senderId){
+                        ws.send(
+                            JSON.stringify({
+                                status : openChatUserId==senderId?"read":"unread",
+                                senderID: parseInt(senderId),
+                                recipientID: parseInt(recipientId) , 
+                                type: "updateMessage",
+                            })
+                        );
+                    }
+                } 
+                
             } else if (msg.type === "refreshFriends") {
                 const ul = document.querySelector(".listFriends");
                 ul.innerHTML = `${await FriendsPage()}`;

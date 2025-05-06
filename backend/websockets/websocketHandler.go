@@ -25,7 +25,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	
+
 	userID, ok := r.Context().Value("userId").(int)
 	if !ok {
 		conn.WriteJSON(map[string]any{
@@ -59,8 +59,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-
-
 		if message.LastID == -1 {
 			message.LastID, err = models.GetLastMessageID()
 			if err != nil {
@@ -72,7 +70,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		message.SenderID = userID
+		// message.SenderID = userID
 		message.Content = html.EscapeString(message.Content)
 
 		switch message.Type {
@@ -95,29 +93,27 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 						"type":     "newMessage",
 						"status":   http.StatusOK,
 						"data":     message,
-						"counts": unreadCounts,
+						"counts":   unreadCounts,
 						"isSender": false,
-
 					})
 				}
 			}
 			for _, c := range userConnections[message.SenderID] {
 				c.WriteJSON(map[string]any{
-					"message": "Message Sent",
-					"type":    "newMessage",
-					"status":  http.StatusOK,
-					"data":    message,
-					"counts": unreadCounts,
+					"message":  "Message Sent",
+					"type":     "newMessage",
+					"status":   http.StatusOK,
+					"data":     message,
+					"counts":   unreadCounts,
 					"isSender": true,
 				})
 			}
-			
 
 		case "loadMessage":
-
-			messages, err := models.GetMessage(message.SenderID, message.RecipientID, message.LastID)
+			
+			messages, err := models.GetMessage(userID, message.RecipientID, message.LastID)
 			if err != nil {
-				for _, c := range userConnections[message.SenderID] {
+				for _, c := range userConnections[userID] {
 					c.WriteJSON(map[string]any{
 						"message": "Error Getting Messages",
 						"status":  http.StatusInternalServerError,
@@ -125,6 +121,15 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				}
 				return
 			}
+			// err = models.UpdateMessage(message.RecipientID, message.SenderID, "read")
+			// for _, c := range userConnections[message.SenderID] {
+			// 	if err != nil {
+			// 		c.WriteJSON(map[string]any{
+			// 			"message": "Error Updating Messages",
+			// 			"status":  http.StatusInternalServerError,
+			// 		})
+			// 	}
+			// }
 
 			conn.WriteJSON(map[string]any{
 				"message": "Messages Loaded",
@@ -132,8 +137,16 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"status":  http.StatusOK,
 				"data":    messages,
 			})
-			
 
+		case "updateMessage":
+			err := models.UpdateMessage(message.SenderID, message.RecipientID, message.Status)
+			if err != nil {
+				conn.WriteJSON(map[string]any{
+					"message": "Messages Updated",
+					"type":    "messageUpdated",
+					"status":  http.StatusOK,
+				})
+			}
 		case "logout":
 			conn.WriteJSON(map[string]any{
 				"message": "user logged out",
@@ -161,24 +174,22 @@ func removeConnection(userID int, conn *websocket.Conn) {
 }
 
 func broadcastStatus(userID int, isOnline bool) {
-    statusMessage := map[string]any{
-        "type":     "userStatus",
-        "userID":   userID,
-        "isOnline": isOnline,
-    }
+	statusMessage := map[string]any{
+		"type":     "userStatus",
+		"userID":   userID,
+		"isOnline": isOnline,
+	}
 
-    friends, _ := models.Friends(userID)
-    for _, friend := range friends {
-        if conns, ok := userConnections[friend.ID]; ok {
-            for _, c := range conns {
-                c.WriteJSON(statusMessage)
-                // Remove "refreshFriends" here
-            }
-        }
-    }
+	friends, _ := models.Friends(userID)
+	for _, friend := range friends {
+		if conns, ok := userConnections[friend.ID]; ok {
+			for _, c := range conns {
+				c.WriteJSON(statusMessage)
+				// Remove "refreshFriends" here
+			}
+		}
+	}
 }
-
-
 
 func OnlineFriends(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
