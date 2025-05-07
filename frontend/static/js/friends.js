@@ -79,10 +79,6 @@ export function sendMessage() {
         type: "addMessage",
       })
     );
-    const ul=document.querySelector(".listFriends")
-    const friend = document.querySelector(`.listFriends li[data-id="${receiverID}"]`);
-    friend.remove()
-    ul.prepend(friend)    
     input.value = "";
   });
 }
