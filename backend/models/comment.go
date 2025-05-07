@@ -6,50 +6,55 @@ import (
 	"real_time_forum/backend/database"
 )
 
-func GetCommnets(postID string) ([]*Comment, error) {
+func GetCommnets(postID string, currentUserID int) ([]*Comment, error) {
 	query := `
-	SELECT u.username, c.id, c.content, c.dateCreation
-	FROM comment c
-	INNER JOIN users u ON c.userID = u.ID
-	WHERE c.postID = ?
-	ORDER BY c.dateCreation desc;
+    SELECT 
+        c.id,
+        u.username,
+        c.content,
+        c.dateCreation,
+        COALESCE(SUM(CASE WHEN cl.status = 'like' THEN 1 ELSE 0 END), 0) AS likes,
+        COALESCE(SUM(CASE WHEN cl.status = 'dislike' THEN 1 ELSE 0 END), 0) AS dislikes,
+        MAX(CASE WHEN cl.userID = ? AND cl.status = 'like' THEN 1 ELSE 0 END) = 1 AS isLiked,
+        MAX(CASE WHEN cl.userID = ? AND cl.status = 'dislike' THEN 1 ELSE 0 END) = 1 AS isDisliked
+    FROM comment c
+    INNER JOIN users u ON c.userID = u.id
+    LEFT JOIN commentLike cl ON c.id = cl.commentID
+    WHERE c.postID = ?
+    GROUP BY c.id, u.username, c.content, c.dateCreation
+    ORDER BY c.dateCreation DESC;
+    `
 
-	`
+    rows, err := database.DB.Query(query, currentUserID, currentUserID, postID)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
 
-	rows, err := database.DB.Query(query, postID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+    var comments []*Comment
+    for rows.Next() {
+        var c Comment
+        var createdAt time.Time
 
-	var comments []*Comment
-	for rows.Next() {
-		var comment Comment
-		var CreatedAt time.Time
-		err = rows.Scan(&comment.Username, &comment.ID, &comment.Content, &comment.DateCreation)
-		if err != nil {
-			return nil, err
-		}
-		
-
-		comment.DateCreation = CreatedAt.Format(time.DateTime)
-
-        // Get like and dislike counts
-        likes, err := GetReactionComment(comment.ID, "like")
+        err := rows.Scan(
+            &c.ID,
+            &c.Username,
+            &c.Content,
+            &createdAt,
+            &c.Likes,
+            &c.Dislikes,
+            &c.IsLiked,
+            &c.IsDisliked,
+        )
         if err != nil {
             return nil, err
         }
-        dislikes, err := GetReactionComment(comment.ID, "dislike")
-        if err != nil {
-            return nil, err
-        }
 
-        comment.Likes = len(likes)
-        comment.Dislikes = len(dislikes)
-		comments = append(comments, &comment)
-	}
+        c.DateCreation = createdAt.Format(time.RFC3339)
+        comments = append(comments, &c)
+    }
 
-	return comments, nil
+    return comments, nil
 }
 
 func AddComment(Comment *Comment) error {
