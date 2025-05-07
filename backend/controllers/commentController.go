@@ -20,8 +20,8 @@ func GetCommnetsController(w http.ResponseWriter, r *http.Request) {
 	}
 
 	postID := r.URL.Query().Get("postID")
-
-	comments, err := models.GetCommnets(postID)
+	userId := r.Context().Value("userId").(int)
+	comments, err := models.GetCommnets(postID, userId)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": "Error Getting Comments",
