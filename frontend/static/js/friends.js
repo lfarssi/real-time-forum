@@ -105,10 +105,11 @@ function scrollEventLoadMessages() {
         msgID = chatMessages.querySelector('p').dataset.id
         scrollValue = chatMessages.scrollHeight
         GetMessages(span.dataset.id)
-        isScroll = true
-    }
+      }
+    isScroll = true
 
     if (Math.ceil(chatMessages.scrollTop + chatMessages.clientHeight) >= chatMessages.scrollHeight - 50) {
+      console.log('first')
       isScroll = false
     }
 
@@ -180,6 +181,8 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
         } else {
           chatMessages.insertAdjacentHTML("afterbegin", html);
         }
+
+        console.log(isSender,isScroll)
         
         if (!isScroll || isSender) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
