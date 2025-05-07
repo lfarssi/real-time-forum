@@ -39,7 +39,6 @@ export function chatFriend() {
     if (li) {
       chatMessages = document.querySelector(".chat .messages");
       chatMessages.innerHTML = "";
-      // chatMessages.removeEventListener('scroll', scrollEventLoadMessages)
       msgID = -1;
       isScroll = false;
       chat.style.display = "flex";
@@ -93,10 +92,11 @@ function GetMessages(receiverID) {
   );
 }
 
+let debounceScrollEvent = scrollChatDebounce(scrollEventLoadMessages, 500)
 function loadMessages() {
   chatMessages = document.querySelector(".chat .messages");
-
-  chatMessages.addEventListener("scroll", scrollEventLoadMessages);
+  
+  chatMessages.addEventListener("scroll", debounceScrollEvent);
 }
 
 function scrollEventLoadMessages() {
@@ -113,6 +113,15 @@ function scrollEventLoadMessages() {
     }
 
 }
+
+function scrollChatDebounce(func, timeout = 300) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => func(...args), timeout);
+    };
+}
+
 
 export function updateUnreadBadges(counts, openedUserId = null) {
   const openedUserIdNum = openedUserId !== null ? Number(openedUserId) : null;
