@@ -134,27 +134,29 @@ export async function homePage(param) {
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
             const msg = JSON.parse(event.data);
-            // console.log();
-              
-            // if (msg.type=="refreshFriends") {
-            //     const ul = document.querySelector(".listFriends");
-            //     ul.innerHTML = `${await FriendsPage()}`;
-            // }
             if (msg.type === "userStatus") {
-                const friendLi = document.querySelector(`.listFriends li[data-id="${msg.userID}"]`);                
-                if (friendLi) {
+                let friendLi = document.querySelector(`.listFriends li[data-id="${msg.userID}"]`);
+                if (!friendLi) {
+                    if (!msg.userName) return; // Defensive: ignore if info missing
+            
+                    friendLi = document.createElement('li');
+                    friendLi.setAttribute('data-id', msg.userID);
+                    friendLi.innerHTML = /*html*/`
+            <i class="fas fa-user ${msg.isOnline ? 'online' : 'offline'}"></i>
+            <span>${msg.firstName} ${msg.lastName}</span>
+                        
+                    `;
+                    document.querySelector('.listFriends').appendChild(friendLi);
+                } else {
+                    // Already exists: update status icon
                     const icon = friendLi.querySelector("i.fa-user");
                     if (icon) {
-                        if (msg.isOnline) {
-                            icon.classList.remove("offline");
-                            icon.classList.add("online");
-                        } else {
-                            icon.classList.remove("online");
-                            icon.classList.add("offline");
-                        }
+                        icon.classList.toggle("online", msg.isOnline);
+                        icon.classList.toggle("offline", !msg.isOnline);
                     }
                 }
             }
+            
             
             
                 

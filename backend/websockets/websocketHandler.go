@@ -173,23 +173,32 @@ func removeConnection(userID int, conn *websocket.Conn) {
 		broadcastStatus(userID, false)
 	}
 }
-
 func broadcastStatus(userID int, isOnline bool) {
-	statusMessage := map[string]any{
-		"type":     "userStatus",
-		"userID":   userID,
-		"isOnline": isOnline,
-	}
+    // Get the user info for the user whose status changed
+    user, err := models.GetUserByID(userID)
+    if err != nil {
+        // handle error, maybe log and return
+        return
+    }
 
-	friends, _ := models.Friends(userID)
-	for _, friend := range friends {
-		if conns, ok := userConnections[friend.ID]; ok {
-			for _, c := range conns {
-				c.WriteJSON(statusMessage)
-				// Remove "refreshFriends" here
-			}
-		}
-	}
+    friends, _ := models.Friends(userID)
+
+    statusMessage := map[string]any{
+        "type":      "userStatus",
+        "userID":    userID,
+        "isOnline":  isOnline,
+        "firstName": user.FirstName,
+        "lastName":  user.LastName,
+        "userName":  user.UserName,
+    }
+
+    for _, friend := range friends {
+        if conns, ok := userConnections[friend.ID]; ok {
+            for _, c := range conns {
+                c.WriteJSON(statusMessage)
+            }
+        }
+    }
 }
 
 func OnlineFriends(w http.ResponseWriter, r *http.Request) {
