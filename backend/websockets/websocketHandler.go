@@ -83,6 +83,13 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
+			if len(strings.TrimSpace(message.Content))>1000 {
+				conn.WriteJSON(map[string]any{
+					"message": "Cannot Send Over 1000 Character",
+					"status":  http.StatusBadRequest,
+				})
+				return
+			}
 			err = models.AddMessage(&message)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
