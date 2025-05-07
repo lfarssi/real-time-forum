@@ -134,7 +134,9 @@ export async function homePage(param) {
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
             const msg = JSON.parse(event.data);
-            // if (msg.type=="refreshFriends"|| msg.type=="newMessage") {
+            // console.log();
+              
+            // if (msg.type=="refreshFriends") {
             //     const ul = document.querySelector(".listFriends");
             //     ul.innerHTML = `${await FriendsPage()}`;
             // }
@@ -166,6 +168,11 @@ export async function homePage(param) {
             } else if (msg.type === "newMessage") {
                 const senderId = msg.data.senderID;
                 const recipientId = msg.data.recipientID;
+                const ul=document.querySelector(".listFriends")
+                const friend = document.querySelector(`.listFriends li[data-id="${recipientId!=logged.id?recipientId:senderId}"]`);
+                
+                friend.remove()
+                ul.prepend(friend) 
                 if (openChatUserId !== senderId) {
                     updateUnreadBadges(msg.counts, openChatUserId);
                 }
