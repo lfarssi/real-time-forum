@@ -987,6 +987,7 @@ aside > .filter ul input:checked + label span::after{
 
     .friends .chat {
         z-index: 999999;
+        position: sticky;
         left: 0;
         top: 0;
         width: 100%;

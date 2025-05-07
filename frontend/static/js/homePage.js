@@ -1,5 +1,6 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
+import { popupThrottled as popup } from "./errorPage.js";
 import { chatFriend, displayMessage, FriendsPage, sendMessage, updateUnreadBadges } from "./friends.js"
 import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 
@@ -121,10 +122,17 @@ export async function homePage(param) {
         asideNav()
 
         ws = new WebSocket(`/ws/messages`);
-        ws.onclose = function (event) {
-            navigateTo("/register")
+        ws.onerror = function(event) {
+            popup(event.message, "failed");
         };
-
+        ws.onclose = function (event) {
+            if(!event.wasClean){
+                popup("Connection closed unexpectedly.", "warning")
+            } else{
+                navigateTo("/register")
+            }
+        };
+       
         ws.onmessage = async function (event) {
             const logged=await isLogged()
             if (!logged) {
