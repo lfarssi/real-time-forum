@@ -1,12 +1,13 @@
-import { errorPage,  popupThrottled as popup } from "./errorPage.js";
+import {errorPage, popupThrottled as popup } from "./errorPage.js";
 import { isLogged, navigateTo } from "./app.js";
 import { showInputError } from "./authPage.js";
 import { CommentSection } from "./commentSection.js";
 
-let page = 2;
-const params = getParamsFromLocation();
+let currentParams = getParamsFromLocation();
+let page = 1;
 let loading = false;
 let allPostsLoaded = false;
+
 let throttle = false;
 
 export async function PostsPage(params, page=1) {
@@ -23,7 +24,8 @@ export async function PostsPage(params, page=1) {
   const response = await fetch(url)
   const data = await response.json()
   if (!data.data && page==1 ) {
-    return errorPage("No Post Available")
+     
+     return errorPage("No Post Available")
   } 
 
   let posts = data.data.map(post => {
@@ -84,16 +86,14 @@ function getParamsFromLocation() {
 }
 
 async function loadPosts() {
-  const logged= await isLogged()
-  if (loading || allPostsLoaded || !logged) return;
+  if (loading || allPostsLoaded) return;
 
   loading = true;
 
   try {
     const postsContainer = document.querySelector('.posts');
+    const params = getParamsFromLocation();
     const postsHTML = await PostsPage(params, page);
-
-    
 
     if (!postsHTML || postsHTML.trim() === "") {
       allPostsLoaded = true;
@@ -237,7 +237,6 @@ export function AddPosts() {
   const ipt = document.querySelectorAll('#postForm input')
   form.addEventListener("submit", async e => {
     e.preventDefault()
-
     if (!await isLogged()) {
       return
     }
@@ -291,11 +290,26 @@ export function filterByCategories() {
     if (checkedInputs.length !== 0) {
       let checkedInputsValue = checkedInputs.map(cat => "categories=" + cat.value).join('&');
       if (location.pathname + location.search !== '/postsByCategory?' + checkedInputsValue) {
+        // Reset state
+        page = 1;
+        allPostsLoaded = false;
+        loading = false;
+        currentParams = 'postsByCategory';
+        document.querySelector('.posts').innerHTML = ""; // clear old posts
         navigateTo('/postsByCategory?' + checkedInputsValue);
+        // Optionally, load first page immediately
+        loadPosts();
       }
     } else {
       if (location.pathname !== "/") {
+        // Reset state
+        page = 1;
+        allPostsLoaded = false;
+        loading = false;
+        currentParams = '';
+        document.querySelector('.posts').innerHTML = "";
         navigateTo("/");
+        loadPosts();
       }
     }
   });

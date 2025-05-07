@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"html"
 	"net/http"
+	"strings"
 	"time"
 
 	"real_time_forum/backend/models"
@@ -36,7 +37,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	userConnections[userID] = append(userConnections[userID], conn)
 	broadcastStatus(userID, true)
-	
 
 	unreadCounts, err := models.GetUnreadCountsPerFriend(userID)
 	if err == nil {
@@ -76,6 +76,13 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 
 		switch message.Type {
 		case "addMessage":
+			if strings.TrimSpace(message.Content) == "" {
+				conn.WriteJSON(map[string]any{
+					"message": "Cannot Send Empty Message",
+					"status":  http.StatusBadRequest,
+				})
+				return
+			}
 			err = models.AddMessage(&message)
 			if err != nil {
 				conn.WriteJSON(map[string]any{
@@ -111,7 +118,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 		case "loadMessage":
-			
+
 			messages, err := models.GetMessage(userID, message.RecipientID, message.LastID)
 			if err != nil {
 				for _, c := range userConnections[userID] {
@@ -174,31 +181,31 @@ func removeConnection(userID int, conn *websocket.Conn) {
 	}
 }
 func broadcastStatus(userID int, isOnline bool) {
-    // Get the user info for the user whose status changed
-    user, err := models.GetUserByID(userID)
-    if err != nil {
-        // handle error, maybe log and return
-        return
-    }
+	// Get the user info for the user whose status changed
+	user, err := models.GetUserByID(userID)
+	if err != nil {
+		// handle error, maybe log and return
+		return
+	}
 
-    friends, _ := models.Friends(userID)
+	friends, _ := models.Friends(userID)
 
-    statusMessage := map[string]any{
-        "type":      "userStatus",
-        "userID":    userID,
-        "isOnline":  isOnline,
-        "firstName": user.FirstName,
-        "lastName":  user.LastName,
-        "userName":  user.UserName,
-    }
+	statusMessage := map[string]any{
+		"type":      "userStatus",
+		"userID":    userID,
+		"isOnline":  isOnline,
+		"firstName": user.FirstName,
+		"lastName":  user.LastName,
+		"userName":  user.UserName,
+	}
 
-    for _, friend := range friends {
-        if conns, ok := userConnections[friend.ID]; ok {
-            for _, c := range conns {
-                c.WriteJSON(statusMessage)
-            }
-        }
-    }
+	for _, friend := range friends {
+		if conns, ok := userConnections[friend.ID]; ok {
+			for _, c := range conns {
+				c.WriteJSON(statusMessage)
+			}
+		}
+	}
 }
 
 func OnlineFriends(w http.ResponseWriter, r *http.Request) {

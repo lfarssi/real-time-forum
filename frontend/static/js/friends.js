@@ -1,5 +1,5 @@
 import { isLogged } from "./app.js";
-import { errorPage } from "./errorPage.js";
+import { errorPage, popup } from "./errorPage.js";
 import { ws } from "./homePage.js";
 
 let isScroll = false;
@@ -69,6 +69,9 @@ export function sendMessage() {
     if (!logged) {
       ws.close();
       return;
+    }
+    if (input.value.trim()=="") {
+      popup("Cannot Send Empty Message","failed")
     }
     ws.send(
       JSON.stringify({

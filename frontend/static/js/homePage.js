@@ -2,7 +2,7 @@ import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
 import { popupThrottled as popup } from "./errorPage.js";
 import { chatFriend, displayMessage, FriendsPage, sendMessage, updateUnreadBadges } from "./friends.js"
-import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
+import { AddPosts, filterByCategories,  PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 
 export let ws;
