@@ -290,19 +290,16 @@ export function filterByCategories() {
     if (checkedInputs.length !== 0) {
       let checkedInputsValue = checkedInputs.map(cat => "categories=" + cat.value).join('&');
       if (location.pathname + location.search !== '/postsByCategory?' + checkedInputsValue) {
-        // Reset state
         page = 1;
         allPostsLoaded = false;
         loading = false;
         currentParams = 'postsByCategory';
         document.querySelector('.posts').innerHTML = ""; // clear old posts
         navigateTo('/postsByCategory?' + checkedInputsValue);
-        // Optionally, load first page immediately
         loadPosts();
       }
     } else {
       if (location.pathname !== "/") {
-        // Reset state
         page = 1;
         allPostsLoaded = false;
         loading = false;

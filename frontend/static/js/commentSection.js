@@ -1,157 +1,180 @@
+// comments.js
 import { isLogged } from "./app.js";
-import {   popupThrottled as popup } from "./errorPage.js";
-export async function CommentSection(event) {  
-  const postElement = event.target.closest(".post");
-  const postId = parseInt(postElement.dataset.id);
+import { popupThrottled as popup } from "./errorPage.js";
 
-  const commentsContainer = postElement.querySelector(".comments");
-
-  // Toggle visibility
-  const isHidden = commentsContainer.style.display === "none";
-  commentsContainer.style.display = isHidden ? "block" : "none";
-
-  try {
-    const response = await fetch(`/api/getComments?postID=${postId}`);
-    const data = await response.json();
-    
-    const commentsHtml = data.data && data.data.length > 0
-      ? data.data.map(comment => {
-        const reactLike = comment.IsLiked 
-          ? '<i class="fa-solid fa-thumbs-up"></i>'
-          : '<i class="fa-regular fa-thumbs-up"></i>';
-
-        const reactDislike = comment.IsDisliked 
-          ? '<i class="fa-solid fa-thumbs-down"></i>'
-          : '<i class="fa-regular fa-thumbs-down"></i>';
-
-        return /*html*/ `
-          <div class="comment" data-id="${comment.id}">
-            <div><strong>${comment.username}</strong></div>
-            <div>${comment.content}</div>
-            <div class="button-group">
-              <button class="likeComment" data-id="${comment.id}"><span>${comment.Likes}</span> ${reactLike}</button>
-              <button class="disLikeComment" data-id="${comment.id}"><span>${comment.Dislikes}</span> ${reactDislike}</button>
-            </div>
-          </div>
-        `;
-      }).join("")
-      : "<h4>No Comments available</h4>";
-
-    commentsContainer.innerHTML = `
-      ${commentsHtml}
-      ${CommentForm(postId)}
-    `;
-
-    await AddComments(postId);
-    attachCommentReactionListeners(); // Attach event listeners for reactions
-  } catch (err) {
-    popup("Something went wrong!", "failed");
-  }
-}
-
-export function attachCommentReactionListeners() {
-  document.querySelectorAll(".comments").forEach(commentsContainer => {
-    commentsContainer.addEventListener("click", async (e) => {
-      const button = e.target.closest("button.likeComment, button.disLikeComment");
-      if (!button) return;
-
-      if (!await isLogged()) {
-        return popup("You need to be logged in to react to comments.", "warning");
-      }
-
-      const commentId = parseInt(button.dataset.id);
-      const status = button.classList.contains("likeComment") ? "like" : "dislike";
-
-      try {
-        const response = await fetch(`/api/addLike`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ commentID: commentId, sender: "comment", status })
-        });
-
-        if (response.ok) {
-          const result = await response.json();
-          
-          const currentCount = parseInt(button.children[0].textContent);
-          const newCount = status === "like" ? result.data.cnbLikes : result.data.cnbDislikes;
-
-          button.innerHTML = /*html*/ `
-            <span>${newCount}</span>
-            <i class="fa-solid ${status === "like" ? "fa-thumbs-up" : "fa-thumbs-down"}"></i>
-          `;
-
-          // Update the opposite reaction button
-          const oppositeButton = button.parentElement.querySelector(
-            status === "like" ? ".disLikeComment" : ".likeComment"
-          );
-          const oppositeCount = status === "like" ? result.data.nbDislikes : result.data.nbLikes;
-
-          oppositeButton.innerHTML = /*html*/ `
-            <span>${oppositeCount}</span>
-            <i class="fa-regular ${status === "like" ? "fa-thumbs-down" : "fa-thumbs-up"}"></i>
-          `;
-        } else {
-          popup("Failed to react to comment.", "error");
-        }
-      } catch (err) {
-        popup("Something went wrong!", "failed");
-      }
-    });
-  });
-}
-
-                                                            
-export  function CommentForm(postId) {
+/**
+ * Returns the markup for the comment form under a post.
+ */
+export function CommentForm(postId) {
   return `
     <form id="commentForm-${postId}" class="commentForm">
       <input type="text" name="content" placeholder="Write your comment..." required />
       <span class="errComment" id="errComment-${postId}"></span>
       <button type="submit">Add Comment</button>
-    </form> 
+    </form>
   `;
 }
 
+/**
+ * Attaches submit handler to the Add Comment form under a post.
+ * On success: refreshes that post's comments.
+ */
+export function AddComments(postId) {
+  const form = document.querySelector(`#commentForm-${postId}`);
+  const errorSpan = document.querySelector(`#errComment-${postId}`);
+  if (!form) return;
 
+  // replace node to clear old listeners
+  const newForm = form.cloneNode(true);
+  form.parentNode.replaceChild(newForm, form);
 
- 
-export async function AddComments(postId) {
-  const form = document.querySelector(`#commentForm-${postId}`); // Target the specific form for this post
-  const errorSpan = document.querySelector(`#errComment-${postId}`); // Target the error span for this form
-
-  form.addEventListener("submit", async (e) => {
+  newForm.addEventListener("submit", async e => {
     e.preventDefault();
-      let logged = await isLogged()
-    const formData = Object.fromEntries(new FormData(form).entries());
-    formData.postID = postId; // Include the post ID in the payload
-    const username = logged.username || "You"; // Replace with actual logic to get the username
-    
+    if (!await isLogged()) {
+      return popup("You must be logged in.", "warning");
+    }
+
+    const payload = Object.fromEntries(new FormData(newForm).entries());
+    payload.postID = postId;
+
     try {
-      const response = await fetch("/api/addComment", {
+      const res = await fetch("/api/addComment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        popup("Comment added successfully","success")
-        // Create a new comment HTML element
-        const newCommentHtml = /*html*/`
-          <div class="comment">
-            <div><strong>${username}</strong></div>
-            <div>${formData.content}</div>
-            
-          </div>
-        `;
-          form.insertAdjacentHTML("beforebegin", newCommentHtml);     
-        form.reset(); // Clear the form
-        errorSpan.textContent = ""; // Clear any previous error message
-      } else {
-        const error = await response.json();
-        errorSpan.textContent = error.message || "Failed to add comment.";
+      if (!res.ok) {
+        const err = await res.json();
+        return errorSpan.textContent = err.message || "Failed to add comment.";
       }
-    } catch (err) {
-      document.body.innerHTML = popup("Something went wrong!","failed");
+
+      popup("Comment added successfully", "success");
+      // refresh
+      const postEl = newForm.closest(".post");
+      await fetchAndRenderComments(postEl);
+    }
+    catch {
+      popup("Something went wrong!", "failed");
     }
   });
 }
+
+/**
+ * Fetches comments for a given post element, then renders them plus the form.
+ */
+export async function fetchAndRenderComments(postEl) {
+  const postId = parseInt(postEl.dataset.id, 10);
+  const commentsContainer = postEl.querySelector(".comments");
+  if (!commentsContainer) return;
+
+  try {
+    const res = await fetch(`/api/getComments?postID=${postId}`);
+    const { data } = await res.json();
+
+    const html = (data && data.length)
+      ? data.map(c => {
+          const upClass   = c.IsLiked    ? "fa-solid" : "fa-regular";
+          const downClass = c.IsDisliked ? "fa-solid" : "fa-regular";
+          return `
+            <div class="comment" data-id="${c.id}">
+              <div><strong>${c.username}</strong></div>
+              <div>${c.content}</div>
+              <div class="button-group">
+                <button class="likeComment"    data-id="${c.id}">
+                  <span>${c.Likes}</span>
+                  <i class="${upClass} fa-thumbs-up"></i>
+                </button>
+                <button class="disLikeComment" data-id="${c.id}">
+                  <span>${c.Dislikes}</span>
+                  <i class="${downClass} fa-thumbs-down"></i>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join("")
+      : "<h4>No comments available</h4>";
+
+    commentsContainer.innerHTML = html + CommentForm(postId);
+    AddComments(postId);
+  }
+  catch {
+    popup("Failed to load comments.", "failed");
+  }
+}
+
+/**
+ * Click handler for the "Show Comments" button on each post.
+ * Toggles visibility and fetches on open.
+ */
+export async function CommentSection(e) {
+  const postEl = e.target.closest(".post");
+  if (!postEl) return;
+  const commentsContainer = postEl.querySelector(".comments");
+  if (!commentsContainer) return;
+
+  const hidden = commentsContainer.style.display === "none";
+  commentsContainer.style.display = hidden ? "block" : "none";
+  if (hidden) {
+    await fetchAndRenderComments(postEl);
+  }
+}
+
+/**
+ * Delegated click handler for like/dislike on comments.
+ * On success: re-fetches that post’s comments.
+ */
+export function setupCommentReactions() {
+  const postsEl = document.querySelector(".posts");
+  if (!postsEl) {
+    console.error("⚠️ .posts container not found for comment reactions");
+    return;
+  }
+
+  postsEl.addEventListener("click", async e => {
+    const btn = e.target.closest(".likeComment, .disLikeComment");
+    if (!btn) return;
+
+    const commentDiv = btn.closest(".comment");
+    if (!commentDiv) return;
+
+    if (!await isLogged()) {
+      return popup("You need to be logged in to react to comments.", "warning");
+    }
+
+    const commentID = parseInt(btn.dataset.id, 10);
+    const status    = btn.classList.contains("likeComment") ? "like" : "dislike";
+
+    try {
+      const res = await fetch("/api/addLike", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ commentID, sender: "comment", status }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        return popup(err.message || "Failed to react to comment.", "error");
+      }
+
+      // on success, re-render this post’s comments
+      const postEl = commentDiv.closest(".post");
+      await fetchAndRenderComments(postEl);
+    }
+    catch {
+      popup("Something went wrong!", "failed");
+    }
+  });
+}
+
+
+// === Auto-wire after DOM is ready ===
+document.addEventListener("DOMContentLoaded", () => {
+  // Attach "Show comments" on each .displayComment button
+  document.querySelectorAll(".displayComment").forEach(btn => {
+    btn.addEventListener("click", CommentSection);
+  });
+
+  // Set up like/dislike delegation
+  setupCommentReactions();
+});
