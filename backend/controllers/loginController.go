@@ -40,7 +40,7 @@ func LoginController(w http.ResponseWriter, r *http.Request) {
 
 	if ID == 0 {
 		utils.ResponseJSON(w, http.StatusUnprocessableEntity, map[string]any{
-			"message": "Incorrect email or password",
+			"message": "Incorrect loggin or password",
 			"status":  http.StatusUnprocessableEntity,
 		})
 		return
@@ -58,7 +58,7 @@ func LoginController(w http.ResponseWriter, r *http.Request) {
 	err = bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password))
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusUnprocessableEntity, map[string]any{
-			"message": "Incorrect email or password",
+			"message": "Incorrect loggin or password",
 			"status":  http.StatusUnprocessableEntity,
 		})
 		return
