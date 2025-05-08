@@ -151,7 +151,7 @@ export async function homePage(param) {
                     friendLi.setAttribute('data-id', msg.userID);
                     friendLi.innerHTML = /*html*/`
             <i class="fas fa-user ${msg.isOnline ? 'online' : 'offline'}"></i>
-            <span>${msg.firstName} ${msg.lastName}</span>
+            <span>${msg.userName}</span>
                         
                     `;
                     document.querySelector('.listFriends').appendChild(friendLi);
@@ -166,7 +166,7 @@ export async function homePage(param) {
                 sortFriendsList()
             }
             
-            sortFriendsList()
+            // sortFriendsList()
 
             
                 
@@ -186,6 +186,9 @@ export async function homePage(param) {
                 
                 friend.remove()
                 ul.prepend(friend) 
+                if(!friend.hasAttribute("class")){
+                    friend.classList.add('has-messages')
+                }
                 if (openChatUserId !== senderId) {
                     updateUnreadBadges(msg.counts, openChatUserId);
                 }
