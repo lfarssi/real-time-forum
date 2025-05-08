@@ -33,7 +33,7 @@ func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
 		if err := rows.Scan(&msg.ID, &msg.SenderID, &msg.RecipientID, &msg.Username, &msg.Content, &t, &msg.Status); err != nil {
 			return nil, err
 		}
-		msg.SentAt = t.Format(time.TimeOnly)
+		msg.SentAt = t.Format(time.DateOnly)
 		messages = append(messages, &msg)
 		ids = append(ids, msg.ID)
 	}
