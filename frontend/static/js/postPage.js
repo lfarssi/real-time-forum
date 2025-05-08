@@ -1,7 +1,7 @@
 import {errorPage, popupThrottled as popup } from "./errorPage.js";
 import { isLogged, navigateTo } from "./app.js";
 import { showInputError } from "./authPage.js";
-import { CommentSection } from "./commentSection.js";
+import { CommentForm, CommentSection } from "./commentSection.js";
 
 let currentParams = getParamsFromLocation();
 let page = 1;
@@ -59,7 +59,9 @@ export async function PostsPage(params, page=1) {
             </div>
             
             <div class="comments" style="display:none;">
-
+                <div class="comts">
+                   
+                </div>
             </div>
         </div>
     `
