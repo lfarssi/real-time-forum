@@ -12,15 +12,16 @@
 :root {
     --bg-dark: #1E1E2F;
     --card-dark: #2D2E3E;
-    --accent: #8CBA51;
-    --accent-dark: #6E9946;
+    --accent: #8C51BA; /* Updated to purple */
+    --accent-dark: #6E4699; /* Updated to darker purple */
     --text-light: #F2F2F2;
     --text-muted: #AAAAAA;
-    --online: #4CAF50;
+    --online: #7E4CAF; /* Updated to purple */
     --offline: #777777;
     --error: #FF6B6B;
     --radius: 8px;
 }
+
 
 .container {
     width: 100%;
