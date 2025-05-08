@@ -1,15 +1,18 @@
 package models
 
+import "database/sql"
+
 type UserAuth struct {
-	ID        int    `json:"id"`
-	UserName  string `json:"username"`
-	Email     string `json:"email"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Age       int    `json:"age"`
-	Gender    string `json:"gender"`
-	Password  string `json:"password"`
-	IsOnline  bool   `json:"isOnline"`
+	ID        int            `json:"id"`
+	UserName  string         `json:"username"`
+	Email     string         `json:"email"`
+	FirstName string         `json:"firstName"`
+	LastName  string         `json:"lastName"`
+	Age       int            `json:"age"`
+	Gender    string         `json:"gender"`
+	Password  string         `json:"password"`
+	LastAt    sql.NullString `json:"lastAt"`
+	IsOnline  bool           `json:"isOnline"`
 }
 
 type ValidationMessagesRegister struct {
