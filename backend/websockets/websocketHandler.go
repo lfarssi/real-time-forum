@@ -38,7 +38,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	userConnections[userID] = append(userConnections[userID], conn)
 	broadcastStatus(userID, true)
 
-	unreadCounts, err := models.GetUnreadCountsPerFriend(userID)
+	unreadCounts, err := models.GetUnreadCountsPerFriend2(userID)
 	if err == nil {
 		for _, conn := range userConnections[userID] {
 			conn.WriteJSON(map[string]any{
@@ -99,7 +99,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			message.SentAt = time.Now().Format(time.TimeOnly)
-			unreadCounts, _ := models.GetUnreadCountsPerFriend(message.RecipientID)
+			unreadCounts, _ := models.GetUnreadCountsPerFriend(message.RecipientID, userID)
 
 			if conns, ok := userConnections[message.RecipientID]; ok {
 				for _, c := range conns {
