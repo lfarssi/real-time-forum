@@ -165,7 +165,7 @@ export function displayMessage(msg, sender,receiver, isSender, isLastMsg = false
                     <span style="color:green;">${sender}</span>
                         <p data-id=${msg.id}>${
         msg.content
-      } <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>
+      } <span class="msgTime">${msg.sentAT}</span></p>
                     </div>
                 </div>
             `;
@@ -175,7 +175,7 @@ export function displayMessage(msg, sender,receiver, isSender, isLastMsg = false
                 <span style="color:blue;">${receiver}</span>
                     <p data-id=${msg.id}>${
         msg.content
-      } <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>
+      } <span class="msgTime">${msg.sentAT}</span></p>
                 </div>
             `;
         }
