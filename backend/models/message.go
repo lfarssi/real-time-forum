@@ -106,11 +106,34 @@ func GetLastMessageID() (int, error) {
 	return id + 1, nil
 }
 
-func GetUnreadCountsPerFriend(userID int) (map[int]int, error) {
+func GetUnreadCountsPerFriend(userID, senderId int) (map[int]int, error) {
 	query := `
         SELECT senderID, COUNT(*) 
         FROM messages 
-        WHERE receiverID = ? AND status = 'unread'
+        WHERE receiverID = ? AND senderID= ? AND status = 'unread'
+        GROUP BY senderID
+    `
+	rows, err := database.DB.Query(query, userID, senderId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	counts := make(map[int]int)
+	for rows.Next() {
+		var friendID, count int
+		if err := rows.Scan(&friendID, &count); err != nil {
+			return nil, err
+		}
+		counts[friendID] = count
+	}
+	return counts, nil
+}
+func GetUnreadCountsPerFriend2(userID int) (map[int]int, error) {
+	query := `
+        SELECT senderID, COUNT(*) 
+        FROM messages 
+        WHERE receiverID = ?  AND status = 'unread'
         GROUP BY senderID
     `
 	rows, err := database.DB.Query(query, userID)
@@ -129,3 +152,4 @@ func GetUnreadCountsPerFriend(userID int) (map[int]int, error) {
 	}
 	return counts, nil
 }
+
