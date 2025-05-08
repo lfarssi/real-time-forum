@@ -29,7 +29,7 @@ func LoginController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ID, _, err := models.VerifyEmail(user.Email)
+	ID, err := models.VerifyEmail(user.Email)
 	if err != nil {
 		utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
 			"message": err.Error(),
@@ -38,7 +38,7 @@ func LoginController(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if ID == -1 {
+	if ID == 0 {
 		utils.ResponseJSON(w, http.StatusUnprocessableEntity, map[string]any{
 			"message": "Incorrect email or password",
 			"status":  http.StatusUnprocessableEntity,

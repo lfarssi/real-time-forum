@@ -12,7 +12,7 @@ var DB *sql.DB
 // OpenDB connects to the SQLite database, runs migrations, and returns the database connection or an error.
 func OpenDB() error {
 	var err error
-	DB, err = sql.Open("sqlite", "backend/database/forum.db")
+	DB, err = sql.Open("sqlite3", "backend/database/forum.db")
 	if err != nil {
 		log.Printf("Error opening database: %v", err)
 		return err

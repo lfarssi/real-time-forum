@@ -11,7 +11,7 @@ import (
 	"real_time_forum/backend/database"
 	"real_time_forum/backend/router"
 
-	_ "modernc.org/sqlite"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {

@@ -181,6 +181,8 @@ export async function homePage(param) {
             } else if (msg.type === "newMessage") {
                 const senderId = msg.data.senderID;
                 const recipientId = msg.data.recipientID;
+                console.log(msg.data);
+                
                 const ul=document.querySelector(".listFriends")
                 const friend = document.querySelector(`.listFriends li[data-id="${recipientId!=logged.id?recipientId:senderId}"]`);
                 
@@ -190,7 +192,9 @@ export async function homePage(param) {
                     updateUnreadBadges(msg.counts, openChatUserId);
                 }
                 if (user.dataset.id == recipientId || user.dataset.id == senderId) {
-                    displayMessage(msg.data, logged.username, msg.username, msg.isSender, true);
+                    let receiverChat = document.querySelector('.chat .header p span')
+                    console.log(receiverChat)
+                    displayMessage(msg.data, logged.username, receiverChat.textContent, msg.isSender, true);
                     if( user.dataset.id == senderId){
                         ws.send(
                             JSON.stringify({

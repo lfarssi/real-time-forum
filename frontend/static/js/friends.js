@@ -31,7 +31,6 @@ export async function FriendsPage() {
         ${friends.join("")}
     `;
 }
-
 export function chatFriend() {
   let friends = document.querySelector(".friends");
   let closeChat = document.querySelector(".chat .closeChat");
@@ -52,7 +51,6 @@ export function chatFriend() {
       loadMessages();
     }
   });
-
   closeChat.addEventListener("click", () => {
     chat.style.display = "none";
     let span = chat.querySelector(".header span");
