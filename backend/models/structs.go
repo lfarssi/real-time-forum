@@ -1,6 +1,9 @@
 package models
 
-import "database/sql"
+import (
+	"database/sql"
+	"time"
+)
 
 type UserAuth struct {
 	ID        int            `json:"id"`
@@ -77,7 +80,7 @@ type Message struct {
 	RecipientID int    `json:"recipientID"`
 	Username    string `json:"username"`
 	Content     string `json:"content"`
-	SentAt      string `json:"sentAT"`
+	SentAt      time.Time   `json:"sentAT"`
 	Status      string `json:"status"`
 	Type        string `json:"type"`
 	LastID      int    `json:"lastID"`

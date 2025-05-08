@@ -5,7 +5,7 @@ import (
 )
 
 func Friends(userID int) ([]*UserAuth, error) {
-	query := `SELECT u.id, u.firstName, u.lastName,    (
+	query := `SELECT u.id,u.username, u.firstName, u.lastName,    (
     SELECT MAX(m.sentAt)
     FROM messages m
     WHERE (m.senderID   = ? AND m.receiverID = u.id)
@@ -25,7 +25,7 @@ func Friends(userID int) ([]*UserAuth, error) {
 	var users []*UserAuth
 	for rows.Next() {
 		var user UserAuth
-		err := rows.Scan(&user.ID, &user.FirstName, &user.LastName, &user.LastAt)
+		err := rows.Scan(&user.ID,&user.UserName, &user.FirstName, &user.LastName, &user.LastAt)
 		if err != nil {
 			return nil, err
 		}

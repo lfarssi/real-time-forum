@@ -29,11 +29,9 @@ func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
 	)
 	for rows.Next() {
 		var msg Message
-		var t time.Time
-		if err := rows.Scan(&msg.ID, &msg.SenderID, &msg.RecipientID, &msg.Username, &msg.Content, &t, &msg.Status); err != nil {
+		if err := rows.Scan(&msg.ID, &msg.SenderID, &msg.RecipientID, &msg.Username, &msg.Content, &msg.SentAt, &msg.Status); err != nil {
 			return nil, err
 		}
-		msg.SentAt = t.Format(time.DateOnly)
 		messages = append(messages, &msg)
 		ids = append(ids, msg.ID)
 	}
