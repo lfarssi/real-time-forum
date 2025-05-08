@@ -6,7 +6,7 @@ import { popupThrottled as popup } from "./errorPage.js";
  * Returns the markup for the comment form under a post.
  */
 export function CommentForm(postId) {
-  return `
+  return /*html*/`
     <form id="commentForm-${postId}" class="commentForm">
       <input type="text" name="content" placeholder="Write your comment..." required />
       <span class="errComment" id="errComment-${postId}"></span>
@@ -68,7 +68,9 @@ export function AddComments(postId) {
  */
 export async function fetchAndRenderComments(postEl) {
   const postId = parseInt(postEl.dataset.id, 10);
-  const commentsContainer = postEl.querySelector(".comments");
+  const commentsContainer = postEl.querySelector(".comments .comts");
+  const commentsContainerForm = postEl.querySelector(".comments")
+  const commentForm = document.querySelector('.commentForm')
   if (!commentsContainer) return;
 
   try {
@@ -79,7 +81,6 @@ export async function fetchAndRenderComments(postEl) {
 
     const html = (data && data.length)
       ? data.map(c => {
-        console.log(c);
         
           const upClass = c.IsLiked ? "fa-solid" : "fa-regular";
           const downClass = c.IsDisliked ? "fa-solid" : "fa-regular";
@@ -102,7 +103,11 @@ export async function fetchAndRenderComments(postEl) {
         }).join("")
       : "<h4>No comments available</h4>";
 
-    commentsContainer.innerHTML = html + CommentForm(postId);
+    commentsContainer.innerHTML = html
+    if (!commentForm) {
+      commentsContainerForm.innerHTML += CommentForm(postId);
+    }
+
     AddComments(postId);
   }
   catch (err) {

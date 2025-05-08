@@ -762,9 +762,16 @@ aside > .filter ul input:checked + label span::after{
     color: var(--text-muted);
     font-size: 0.9rem;
     display: none;
-    /* default hidden */
     border-left: 3px solid var(--accent);
+    margin: 10px 0;
 }
+
+.post .comments .comts{
+    max-height: 500px;
+    width: 100%;
+    overflow: auto;
+}
+
 .noPost{
     color: var(--text-light);
     display: flex;
