@@ -15,10 +15,13 @@ export async function FriendsPage() {
     return errorPage("You Don't Have Friends");
   }
   let friends = data.data.map((friend) => {
+    console.log(friend);
+    
     let onlineClass = friend.isOnline ? "online" : "offline";
     let status = `<i class="fa-solid fa-user ${onlineClass}"></i>`;
+    let msgClass = friend.lastAt ? "has-messages" : "";
     return /*html*/ `
-  <li data-id="${friend.id}" id="friend${friend.id}">
+  <li data-id="${friend.id}" id="friend${friend.id}"  class="${msgClass}">
     <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.firstName} ${friend.lastName}</span>
   </li>
 `;
@@ -193,4 +196,34 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
 
     }
   }
-
+  export function sortFriendsList() {
+    const list = document.querySelector('.listFriends');
+    if (!list) return;
+  
+    const allFriends = Array.from(list.children);
+  
+    // Use .has-messages class for "messaged" friends
+    const messaged = [];
+    const nonMessaged = [];
+    allFriends.forEach(li => {
+      if (li.classList.contains('has-messages')) {
+        messaged.push(li); // Keep their order
+      } else {
+        nonMessaged.push(li);
+      }
+    });
+  
+    // Sort non-messaged friends by first name (case-insensitive)
+    nonMessaged.sort((a, b) => {
+      const aName = a.querySelector('span').textContent.trim().toLowerCase();
+      const bName = b.querySelector('span').textContent.trim().toLowerCase();
+      const aFirstName = aName.split(' ')[0];
+      const bFirstName = bName.split(' ')[0];
+      return aFirstName.localeCompare(bFirstName);
+    });
+  
+    // Clear and re-append in order
+    list.innerHTML = '';
+    messaged.concat(nonMessaged).forEach(li => list.appendChild(li));
+  }
+  

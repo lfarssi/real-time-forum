@@ -1,7 +1,7 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
 import { popupThrottled as popup } from "./errorPage.js";
-import { chatFriend, displayMessage, FriendsPage, sendMessage, updateUnreadBadges } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage, sendMessage, sortFriendsList, updateUnreadBadges } from "./friends.js"
 import { AddPosts, filterByCategories,  PostForm, PostsPage, ReactPost } from "./postPage.js"
 
 
@@ -163,6 +163,7 @@ export async function homePage(param) {
                         icon.classList.toggle("offline", !msg.isOnline);
                     }
                 }
+                sortFriendsList()
             }
             
             
