@@ -77,9 +77,9 @@ func Authorization(next http.Handler) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("Token")
 		if err != nil {
-			utils.ResponseJSON(w, http.StatusForbidden, map[string]any{
+			utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
 				"message": "Missing authentication token",
-				"status":  http.StatusForbidden,
+				"status":  http.StatusUnauthorized,
 			})
 			return
 		}
@@ -114,9 +114,9 @@ func Authorization(next http.Handler) http.HandlerFunc {
 func IsLogged(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("Token")
 	if err != nil {
-		utils.ResponseJSON(w, http.StatusForbidden, map[string]any{
+		utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
 			"message": "Missing authentication token",
-			"status":  http.StatusForbidden,
+			"status":  http.StatusUnauthorized,
 		})
 		return
 	}
@@ -150,6 +150,6 @@ func IsLogged(w http.ResponseWriter, r *http.Request) {
 		"username":  userName,
 		"firstName": firstName,
 		"lastName":  lastName,
-		"id":  userId,
+		"id":        userId,
 	})
 }
