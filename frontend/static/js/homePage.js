@@ -171,7 +171,6 @@ export async function homePage(param) {
             
                 
             if (msg.type === "allMessages") {
-                console.log(msg.data);
                 
                 if (msg.data) {
                     msg.data.map(m => displayMessage(m,   logged.username, m.username));
@@ -181,7 +180,6 @@ export async function homePage(param) {
             } else if (msg.type === "newMessage") {
                 const senderId = msg.data.senderID;
                 const recipientId = msg.data.recipientID;
-                console.log(msg.data);
                 
                 const ul=document.querySelector(".listFriends")
                 const friend = document.querySelector(`.listFriends li[data-id="${recipientId!=logged.id?recipientId:senderId}"]`);
@@ -193,7 +191,6 @@ export async function homePage(param) {
                 }
                 if (user.dataset.id == recipientId || user.dataset.id == senderId) {
                     let receiverChat = document.querySelector('.chat .header p span')
-                    console.log(receiverChat)
                     displayMessage(msg.data, logged.username, receiverChat.textContent, msg.isSender, true);
                     if( user.dataset.id == senderId){
                         ws.send(
@@ -271,6 +268,5 @@ function asideNav() {
     chatMessages.addEventListener('click', () => {
         category.classList.remove('showFilter')
         friends.classList.toggle('showFriends')
-        console.log(friends)
     })
 }

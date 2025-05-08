@@ -57,7 +57,6 @@ export function AddComments(postId) {
       await fetchAndRenderComments(postEl);
     }
     catch (err) {
-      console.error("Add comment error:", err);
       popup("Something went wrong!", "failed");
     }
   });
@@ -79,7 +78,6 @@ export async function fetchAndRenderComments(postEl) {
 
     const html = (data && data.length)
       ? data.map(c => {
-        console.log(c);
         
           const upClass = c.IsLiked ? "fa-solid" : "fa-regular";
           const downClass = c.IsDisliked ? "fa-solid" : "fa-regular";
@@ -106,7 +104,6 @@ export async function fetchAndRenderComments(postEl) {
     AddComments(postId);
   }
   catch (err) {
-    console.error("Fetch comments error:", err);
     popup("Failed to load comments.", "failed");
   }
 }
@@ -165,7 +162,6 @@ export function setupCommentReactions() {
       await fetchAndRenderComments(postEl);
     }
     catch (err) {
-      console.error("Reaction error:", err);
       popup("Something went wrong!", "failed");
     }
   });

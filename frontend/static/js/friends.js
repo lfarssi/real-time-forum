@@ -15,14 +15,13 @@ export async function FriendsPage() {
     return errorPage("You Don't Have Friends");
   }
   let friends = data.data.map((friend) => {
-    console.log(friend.lastAt.Valid);
     
     let onlineClass = friend.isOnline ? "online" : "offline";
     let status = `<i class="fa-solid fa-user ${onlineClass}"></i>`;
     let msgClass = friend.lastAt.Valid ? "has-messages" : "";
     return /*html*/ `
   <li data-id="${friend.id}" id="friend${friend.id}"  class="${msgClass}">
-    <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.firstName} ${friend.lastName}</span>
+    <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.username}</span>
   </li>
 `;
 
@@ -154,9 +153,12 @@ export function updateUnreadBadges(counts, openedUserId = null) {
 
 
 export function displayMessage(msg, sender,receiver, isSender, isLastMsg = false) {
+  
   const chatMessages = document.querySelector(".chat .messages");
 
   if (chatMessages) {
+    const newdate = new Date(msg.sentAT)
+    
     let html = "";
     if (msg.username === sender || isSender) {
       html = /*html*/ `
@@ -165,7 +167,7 @@ export function displayMessage(msg, sender,receiver, isSender, isLastMsg = false
                     <span style="color:green;">${sender}</span>
                         <p data-id=${msg.id}>${
         msg.content
-      } <span class="msgTime">${msg.sentAT}</span></p>
+      } <span class="msgTime">${newdate.toLocaleString("en-GB")}</span></p>
                     </div>
                 </div>
             `;
@@ -175,7 +177,7 @@ export function displayMessage(msg, sender,receiver, isSender, isLastMsg = false
                 <span style="color:blue;">${receiver}</span>
                     <p data-id=${msg.id}>${
         msg.content
-      } <span class="msgTime">${msg.sentAT}</span></p>
+      } <span class="msgTime">${newdate.toLocaleString("en-GB")}</span></p>
                 </div>
             `;
         }

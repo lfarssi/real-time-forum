@@ -98,7 +98,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				})
 				return
 			}
-			message.SentAt = time.Now().Format(time.TimeOnly)
+			message.SentAt = time.Now()
 			unreadCounts, _ := models.GetUnreadCountsPerFriend(message.RecipientID, userID)
 
 			if conns, ok := userConnections[message.RecipientID]; ok {
