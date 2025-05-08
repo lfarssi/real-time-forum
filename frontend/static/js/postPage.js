@@ -4,7 +4,7 @@ import { showInputError } from "./authPage.js";
 import { CommentForm, CommentSection } from "./commentSection.js";
 
 let currentParams = getParamsFromLocation();
-let page = 1;
+let page = 2;
 let loading = false;
 let allPostsLoaded = false;
 

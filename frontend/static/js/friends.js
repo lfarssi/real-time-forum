@@ -155,7 +155,7 @@ export function updateUnreadBadges(counts, openedUserId = null) {
 }
 
 
-export function displayMessage(msg, sender, isSender, isLastMsg = false) {
+export function displayMessage(msg, sender,receiver, isSender, isLastMsg = false) {
   const chatMessages = document.querySelector(".chat .messages");
 
   if (chatMessages) {
@@ -164,6 +164,7 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
       html = /*html*/ `
                 <div class="messagesSender">
                     <div>
+                    <span style="color:green;">${sender}</span>
                         <p data-id=${msg.id}>${
         msg.content
       } <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>
@@ -173,6 +174,7 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
     } else {
       html = /*html*/ `
                 <div class="messagesReceiver">
+                <span style="color:blue;">${receiver}</span>
                     <p data-id=${msg.id}>${
         msg.content
       } <span class="msgTime">${msg.sentAT.slice(0, 5)}</span></p>

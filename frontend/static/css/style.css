@@ -764,12 +764,15 @@ aside > .filter ul input:checked + label span::after{
     display: none;
     border-left: 3px solid var(--accent);
     margin: 10px 0;
+    overflow: auto;
+
+    max-height: 400px;
+
 }
 
 .post .comments .comts{
     max-height: 500px;
     width: 100%;
-    overflow: auto;
 }
 
 .noPost{
