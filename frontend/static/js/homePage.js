@@ -205,6 +205,8 @@ export async function homePage(param) {
             if ( !openChatUserId) {
                 updateUnreadBadges(msg.counts, openChatUserId);
             } 
+            sortFriendsList()
+
            
         };
         

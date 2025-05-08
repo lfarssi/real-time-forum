@@ -15,11 +15,11 @@ export async function FriendsPage() {
     return errorPage("You Don't Have Friends");
   }
   let friends = data.data.map((friend) => {
-    console.log(friend);
+    console.log(friend.lastAt.Valid);
     
     let onlineClass = friend.isOnline ? "online" : "offline";
     let status = `<i class="fa-solid fa-user ${onlineClass}"></i>`;
-    let msgClass = friend.lastAt ? "has-messages" : "";
+    let msgClass = friend.lastAt.Valid ? "has-messages" : "";
     return /*html*/ `
   <li data-id="${friend.id}" id="friend${friend.id}"  class="${msgClass}">
     <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.firstName} ${friend.lastName}</span>
@@ -202,7 +202,7 @@ export function displayMessage(msg, sender, isSender, isLastMsg = false) {
   
     const allFriends = Array.from(list.children);
   
-    // Use .has-messages class for "messaged" friends
+    // Split into "messaged" and "never messaged"
     const messaged = [];
     const nonMessaged = [];
     allFriends.forEach(li => {
