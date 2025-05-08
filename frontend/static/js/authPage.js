@@ -9,7 +9,7 @@ export function loginPage() {
       <h2>Login</h2>
       <div class="errLogin"></div>
 
-      <input required name="email" type="email" placeholder="Enter your email" />
+      <input required name="email" type="text" placeholder="Enter your loggin" />
       <span class="errLoginField" id="email"></span>
 
       <input required name="password" type="password" placeholder="Enter your password" />
