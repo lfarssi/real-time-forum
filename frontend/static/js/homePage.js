@@ -207,7 +207,10 @@ export async function homePage(param) {
                     }
                 } 
                 
-            } 
+            } else if(msg.type=="isTyping"){
+                console.log("typing...");
+                
+            }
             if ( !openChatUserId) {
                 updateUnreadBadges(msg.counts, openChatUserId);
             } 
