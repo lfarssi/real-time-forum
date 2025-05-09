@@ -4,6 +4,7 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"sync"
 	"time"
 
 	"real_time_forum/backend/database"
@@ -14,6 +15,7 @@ import (
 var (
 	requestCounts = make(map[string]int)
 	lastSeenTimes = make(map[string]time.Time)
+	mu sync.Mutex
 )
 
 // Middleware to limit requests based on IP
@@ -26,6 +28,7 @@ func RateLimit(next http.Handler) http.HandlerFunc {
 			return
 		}
 
+		mu.Lock()
 		// Initialize request count for new IPs
 		if _, exists := requestCounts[ip]; !exists {
 			requestCounts[ip] = 0
@@ -37,7 +40,7 @@ func RateLimit(next http.Handler) http.HandlerFunc {
 			// Reset the count and update the last seen time
 			requestCounts[ip] = 0
 			lastSeenTimes[ip] = time.Now()
-		}
+			}
 
 		// Increment the request count
 		requestCounts[ip]++
@@ -52,6 +55,7 @@ func RateLimit(next http.Handler) http.HandlerFunc {
 		// Update the last seen time for the IP
 		lastSeenTimes[ip] = time.Now()
 
+		mu.Unlock()
 		// Proceed to the next handler
 		next.ServeHTTP(w, r)
 	}
