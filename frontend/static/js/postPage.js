@@ -275,7 +275,7 @@ export function AddPosts() {
         navigateTo(location.pathname)
       }
     } catch (err) {
-      document.body.innerHTML = popup("Something went wrong!", "failed")
+     popup("Something went wrong!", "failed")
 
     }
   })
