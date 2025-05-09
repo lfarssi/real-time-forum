@@ -149,7 +149,15 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"status":  http.StatusOK,
 				"data":    messages,
 			})
-
+		case "Typing":
+			for _, c := range userConnections[message.RecipientID] {
+				c.WriteJSON(map[string]any{
+					"message": "is Typing",
+					"status":  http.StatusOK,
+					"type": "isTyping",
+				})
+			}
+			return
 		case "updateMessage":
 			err := models.UpdateMessage(message.SenderID, message.RecipientID, message.Status)
 			if err != nil {

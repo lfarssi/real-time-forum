@@ -59,6 +59,25 @@ export function chatFriend() {
   });
 }
 
+function Typing(){
+  let input = document.querySelector(".chatForm input");
+  input.addEventListener("change", async(e)=>{
+    let receiverID = document.querySelector(".header span").dataset.id;
+    let logged = await isLogged();
+    if (!logged) {
+      ws.close();
+      return;
+    }
+    ws.send(
+      JSON.stringify({
+        recipientID: parseInt(receiverID),
+        senderID: logged.id,
+        type: "Typing",
+      })
+    )
+  })
+}
+
 export function sendMessage() {
   let form = document.querySelector(".chatForm");
   form.addEventListener("submit", async (e) => {
