@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"context"
+	"log"
 	"net"
 	"net/http"
 	"sync"
@@ -11,17 +12,15 @@ import (
 	"real_time_forum/backend/utils"
 )
 
-// Store to track request counts per IP (in-memory map)
 var (
 	requestCounts = make(map[string]int)
 	lastSeenTimes = make(map[string]time.Time)
-	mu sync.Mutex
+	mu            sync.Mutex
 )
 
-// Middleware to limit requests based on IP
+// RateLimit limits requests per IP (10 per minute)
 func RateLimit(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// Get the client IP address
 		ip := getClientIP(r)
 		if ip == "" {
 			http.Error(w, "Unable to determine client IP", http.StatusInternalServerError)
@@ -29,45 +28,36 @@ func RateLimit(next http.Handler) http.HandlerFunc {
 		}
 
 		mu.Lock()
-		// Initialize request count for new IPs
+
 		if _, exists := requestCounts[ip]; !exists {
 			requestCounts[ip] = 0
 			lastSeenTimes[ip] = time.Now()
 		}
 
-		// Check if the time window has expired (1 minute in this example)
 		if time.Since(lastSeenTimes[ip]) > time.Minute {
-			// Reset the count and update the last seen time
 			requestCounts[ip] = 0
 			lastSeenTimes[ip] = time.Now()
-			}
+		}
 
-		// Increment the request count
 		requestCounts[ip]++
-
-		// Set the rate limit (e.g., 10 requests per minute)
 		if requestCounts[ip] > 10 {
-			// Deny the request if the limit is exceeded
+			mu.Unlock()
 			http.Error(w, "Too many requests. Slow down!", http.StatusTooManyRequests)
 			return
 		}
 
-		// Update the last seen time for the IP
 		lastSeenTimes[ip] = time.Now()
-
 		mu.Unlock()
-		// Proceed to the next handler
+
 		next.ServeHTTP(w, r)
 	}
 }
 
-// Helper function to get the client IP address
+// Get client IP from request
 func getClientIP(r *http.Request) string {
-	// Use the X-Forwarded-For header if it's set
 	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
 		return xff
 	}
-	// Fall back to the remote address
 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		return ""
@@ -75,10 +65,9 @@ func getClientIP(r *http.Request) string {
 	return ip
 }
 
-// Authorization checks if the user is logged in by verifying the session token and expiration time
-// from the database. If valid, it attaches user details to the request context and proceeds to the next handler.
+// Authorization middleware: checks valid session and adds user info to context
 func Authorization(next http.Handler) http.HandlerFunc {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("Token")
 		if err != nil {
 			utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
@@ -91,8 +80,11 @@ func Authorization(next http.Handler) http.HandlerFunc {
 		var userId int
 		var userName string
 		var expired time.Time
-		err = database.DB.QueryRow("SELECT id, username, expiredAt FROM users WHERE session=?", cookie.Value).Scan(&userId, &userName, &expired)
+		err = database.DB.QueryRow(`SELECT id, username, expiredAt FROM users WHERE session=?`, cookie.Value).
+			Scan(&userId, &userName, &expired)
+
 		if err != nil || userId == 0 {
+			log.Println("Authorization error:", err)
 			utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
 				"message": "You are not authorized to do this",
 				"status":  http.StatusUnauthorized,
@@ -100,8 +92,8 @@ func Authorization(next http.Handler) http.HandlerFunc {
 			return
 		}
 
-		if time.Now().UTC().After(expired) {
-			database.DB.Exec("UPDATE users SET session=? WHERE id=?", "", userId)
+		if expired.IsZero() || time.Now().UTC().After(expired) {
+			_, _ = database.DB.Exec(`UPDATE users SET session=? WHERE id=?`, "", userId)
 			utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
 				"message": "Session expired",
 				"status":  http.StatusUnauthorized,
@@ -112,9 +104,10 @@ func Authorization(next http.Handler) http.HandlerFunc {
 		ctx := context.WithValue(r.Context(), "userId", userId)
 		ctx = context.WithValue(ctx, "userName", userName)
 		next.ServeHTTP(w, r.WithContext(ctx))
-	})
+	}
 }
 
+// IsLogged is an endpoint to verify user session
 func IsLogged(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("Token")
 	if err != nil {
@@ -126,12 +119,16 @@ func IsLogged(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var userId int
-	var userName string
-	var firstName string
-	var lastName string
+	var userName, firstName, lastName string
 	var expired time.Time
-	err = database.DB.QueryRow("SELECT id, username, firstName, lastName, expiredAt FROM users WHERE session=?", cookie.Value).Scan(&userId, &userName, &firstName, &lastName, &expired)
+	err = database.DB.QueryRow(`
+		SELECT id, username, firstName, lastName, expiredAt 
+		FROM users 
+		WHERE session=?`, cookie.Value).
+		Scan(&userId, &userName, &firstName, &lastName, &expired)
+
 	if err != nil || userId == 0 {
+		log.Println("IsLogged error:", err)
 		utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
 			"message": "You are not authorized to do this",
 			"status":  http.StatusUnauthorized,
@@ -139,8 +136,8 @@ func IsLogged(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if time.Now().UTC().After(expired) {
-		database.DB.Exec("UPDATE users SET session=? WHERE id=?", "", userId)
+	if expired.IsZero() || time.Now().UTC().After(expired) {
+		_, _ = database.DB.Exec(`UPDATE users SET session=? WHERE id=?`, "", userId)
 		utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
 			"message": "Session expired",
 			"status":  http.StatusUnauthorized,
