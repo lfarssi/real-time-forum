@@ -5,6 +5,7 @@ import (
 	"html"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"real_time_forum/backend/models"
@@ -15,6 +16,7 @@ import (
 var (
 	upgrade         = websocket.Upgrader{}
 	userConnections = make(map[int][]*websocket.Conn)
+	mu sync.Mutex
 )
 
 func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
@@ -35,7 +37,11 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	mu.Lock()
 	userConnections[userID] = append(userConnections[userID], conn)
+	mu.Unlock()
+	
 	broadcastStatus(userID, true)
 
 	unreadCounts, err := models.GetUnreadCountsPerFriend2(userID)
@@ -136,15 +142,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				}
 				return
 			}
-			// err = models.UpdateMessage(message.RecipientID, message.SenderID, "read")
-			// for _, c := range userConnections[message.SenderID] {
-			// 	if err != nil {
-			// 		c.WriteJSON(map[string]any{
-			// 			"message": "Error Updating Messages",
-			// 			"status":  http.StatusInternalServerError,
-			// 		})
-			// 	}
-			// }
 
 			conn.WriteJSON(map[string]any{
 				"message": "Messages Loaded",
@@ -175,6 +172,8 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func removeConnection(userID int, conn *websocket.Conn) {
+	mu.Lock()
+	defer mu.Unlock()
 	conns := userConnections[userID]
 	for i, c := range conns {
 		if c == conn {
