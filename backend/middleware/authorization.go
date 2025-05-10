@@ -128,7 +128,6 @@ func IsLogged(w http.ResponseWriter, r *http.Request) {
 		Scan(&userId, &userName, &firstName, &lastName, &expired)
 
 	if err != nil || userId == 0 {
-		log.Println("IsLogged error:", err)
 		utils.ResponseJSON(w, http.StatusUnauthorized, map[string]any{
 			"message": "You are not authorized to do this",
 			"status":  http.StatusUnauthorized,

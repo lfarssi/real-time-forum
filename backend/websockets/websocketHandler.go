@@ -16,7 +16,7 @@ import (
 var (
 	upgrade         = websocket.Upgrader{}
 	userConnections = make(map[int][]*websocket.Conn)
-	mu sync.Mutex
+	mu              sync.Mutex
 )
 
 func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +41,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 	mu.Lock()
 	userConnections[userID] = append(userConnections[userID], conn)
 	mu.Unlock()
-	
+
 	broadcastStatus(userID, true)
 
 	unreadCounts, err := models.GetUnreadCountsPerFriend2(userID)
@@ -87,47 +87,45 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"message": "Cannot Send Empty Message",
 					"status":  http.StatusBadRequest,
 				})
-				return
-			}
-			if len(strings.TrimSpace(message.Content))>1000 {
+			} else if len(strings.TrimSpace(message.Content)) > 1000 {
 				conn.WriteJSON(map[string]any{
 					"message": "Cannot Send Over 1000 Character",
 					"status":  http.StatusBadRequest,
 				})
-				return
-			}
-			err = models.AddMessage(&message)
-			if err != nil {
-				conn.WriteJSON(map[string]any{
-					"message": "Cannot Send Message",
-					"status":  http.StatusInternalServerError,
-				})
-				return
-			}
-			message.SentAt = time.Now()
-			unreadCounts, _ := models.GetUnreadCountsPerFriend(message.RecipientID, userID)
+			} else {
+				err = models.AddMessage(&message)
+				if err != nil {
+					conn.WriteJSON(map[string]any{
+						"message": "Cannot Send Message",
+						"status":  http.StatusInternalServerError,
+					})
+					return
+				}
+				message.SentAt = time.Now()
+				unreadCounts, _ := models.GetUnreadCountsPerFriend(message.RecipientID, userID)
 
-			if conns, ok := userConnections[message.RecipientID]; ok {
-				for _, c := range conns {
+				if conns, ok := userConnections[message.RecipientID]; ok {
+					for _, c := range conns {
+						c.WriteJSON(map[string]any{
+							"message":  "Messages Loaded",
+							"type":     "newMessage",
+							"status":   http.StatusOK,
+							"data":     message,
+							"counts":   unreadCounts,
+							"isSender": false,
+						})
+					}
+				}
+				for _, c := range userConnections[message.SenderID] {
 					c.WriteJSON(map[string]any{
-						"message":  "Messages Loaded",
+						"message":  "Message Sent",
 						"type":     "newMessage",
 						"status":   http.StatusOK,
 						"data":     message,
 						"counts":   unreadCounts,
-						"isSender": false,
+						"isSender": true,
 					})
 				}
-			}
-			for _, c := range userConnections[message.SenderID] {
-				c.WriteJSON(map[string]any{
-					"message":  "Message Sent",
-					"type":     "newMessage",
-					"status":   http.StatusOK,
-					"data":     message,
-					"counts":   unreadCounts,
-					"isSender": true,
-				})
 			}
 
 		case "loadMessage":
@@ -154,7 +152,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				c.WriteJSON(map[string]any{
 					"message": "is Typing",
 					"status":  http.StatusOK,
-					"type": "isTyping",
+					"type":    "isTyping",
 				})
 			}
 			return
@@ -194,6 +192,7 @@ func removeConnection(userID int, conn *websocket.Conn) {
 		broadcastStatus(userID, false)
 	}
 }
+
 func broadcastStatus(userID int, isOnline bool) {
 	// Get the user info for the user whose status changed
 	user, err := models.GetUserByID(userID)

@@ -8,10 +8,9 @@ import (
 func VerifyEmail(Email string) (int, error) {
 	var id int
 	err := database.DB.QueryRow("SELECT id FROM users WHERE email = ? OR username=?", Email, Email).Scan(&id)
-	if err != nil {
+	if err != nil && err.Error() != "sql: no rows in result set" {
 		return -1, err
 	}
-	
 
 	return id, nil
 }
