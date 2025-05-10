@@ -17,12 +17,11 @@ export async function FriendsPage() {
   let friends = data.data.map((friend) => {
     
     let onlineClass = friend.isOnline ? "online" : "offline";
-    let status = `<i class="fa-solid fa-user ${onlineClass}"></i>`;
     let msgClass = friend.lastAt.Valid ? "has-messages" : "";
     return /*html*/ `
-  <li data-id="${friend.id}" id="friend${friend.id}"  class="${msgClass}">
-    <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.username}</span>
-  </li>
+        <li data-id="${friend.id}" id="friend${friend.id}"  class="${msgClass}">
+          <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.username}</span>
+        </li>
 `;
 
   });
@@ -219,6 +218,7 @@ export function displayMessage(msg, sender,receiver, isSender, isLastMsg = false
   }
   export function sortFriendsList() {
     const list = document.querySelector('.listFriends');
+
     if (!list) return;
   
     const allFriends = Array.from(list.children);

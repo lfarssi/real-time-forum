@@ -125,6 +125,7 @@ export async function homePage(param) {
         ws.onerror = function(event) {
             popup(event.message, "failed");
         };
+
         ws.onclose = function (event) {
             if(!event.wasClean){
                 popup("Connection closed unexpectedly.", "warning")
@@ -139,20 +140,24 @@ export async function homePage(param) {
                 ws.close()
                 return
             }
+
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
+
             const msg = JSON.parse(event.data);
+
             if (msg.type === "userStatus") {
+
                 let friendLi = document.querySelector(`.listFriends li[data-id="${msg.userID}"]`);
+
                 if (!friendLi) {
                     if (!msg.userName) return; // Defensive: ignore if info missing
             
                     friendLi = document.createElement('li');
                     friendLi.setAttribute('data-id', msg.userID);
                     friendLi.innerHTML = /*html*/`
-            <i class="fas fa-user ${msg.isOnline ? 'online' : 'offline'}"></i>
-            <span>${msg.userName}</span>
-                        
+                            <i class="fas fa-user ${msg.isOnline ? 'online' : 'offline'}"></i>
+                            <span>${msg.userName}</span>    
                     `;
                     document.querySelector('.listFriends').appendChild(friendLi);
                 } else {
@@ -163,13 +168,23 @@ export async function homePage(param) {
                         icon.classList.toggle("offline", !msg.isOnline);
                     }
                 }
+
+                
+                let isFriendListNotEmpty = document.querySelector('.listFriends li')
+                if (isFriendListNotEmpty) {
+                    let noFriends = document.querySelector('.listFriends .noPost')
+                    if (noFriends) {
+                        noFriends.remove()
+                    }
+                }
+
                 sortFriendsList()
             }
             
-            // sortFriendsList()
-
+            if (msg.type === "unreadCounts") {
+                sortFriendsList()
+            }
             
-                
             if (msg.type === "allMessages") {
                 
                 if (msg.data) {
@@ -184,7 +199,6 @@ export async function homePage(param) {
                 const ul=document.querySelector(".listFriends")
                 const friend = document.querySelector(`.listFriends li[data-id="${recipientId!=logged.id?recipientId:senderId}"]`);
                 
-                friend.remove()
                 ul.prepend(friend) 
                 if(!friend.hasAttribute("class")){
                     friend.classList.add('has-messages')

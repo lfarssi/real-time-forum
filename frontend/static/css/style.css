@@ -780,6 +780,7 @@ aside > .filter ul input:checked + label span::after{
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 10px;
 }
 .popup {
     position: fixed;
