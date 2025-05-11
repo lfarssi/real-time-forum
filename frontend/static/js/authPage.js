@@ -24,6 +24,8 @@ export function loginPage() {
     </form>
     </div>
   `
+
+  createSquare()
 }
 
 export function registerPage() {
