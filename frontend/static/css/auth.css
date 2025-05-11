@@ -81,6 +81,7 @@ form.authForm button {
     font-weight: 600;
     cursor: pointer;
     transition:  0.5s ease-in-out;
+    z-index: 99;
 }
 
 form.authForm button:hover {
@@ -142,3 +143,16 @@ input[type="number"]::-webkit-inner-spin-button {
 .form-switch a:hover {
     text-decoration: underline;
 }
+
+.square {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: var(--accent);
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    z-index: -1;
+  }
+  
