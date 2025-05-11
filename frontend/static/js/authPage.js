@@ -1,6 +1,7 @@
 import { navigateTo } from "./app.js";
 import {   popupThrottled as popup } from "./errorPage.js";
 import { ws } from "./homePage.js";
+import { createSquare } from "./squares.js";
 
 export function loginPage() {
   document.body.innerHTML = /*html*/`
@@ -64,6 +65,8 @@ export function registerPage() {
     </form>
     </div>
   `
+
+  createSquare()
 }
 
 export function register() {
