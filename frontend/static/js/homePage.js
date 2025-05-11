@@ -3,6 +3,7 @@ import { CommentSection } from "./commentSection.js"
 import { popupThrottled as popup } from "./errorPage.js";
 import { chatFriend, displayMessage, FriendsPage, sendMessage, sortFriendsList, updateUnreadBadges } from "./friends.js"
 import { AddPosts, filterByCategories,  PostForm, PostsPage, ReactPost } from "./postPage.js"
+import { squareMouseHandler } from "./squares.js";
 
 
 export let ws;
@@ -114,6 +115,7 @@ export async function homePage(param) {
 
     `
 
+        document.body.removeEventListener('mousemove', squareMouseHandler);
         AddPosts()
         ReactPost()
         filterByCategories()

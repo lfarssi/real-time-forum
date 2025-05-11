@@ -3,7 +3,7 @@ export function createSquare() {
     document.body.addEventListener('mousemove', squareMouseHandler);
 }
 
-function squareMouseHandler(e) {
+export function squareMouseHandler(e) {
     if (e.clientX + 20 < innerWidth && e.clientY + 20 < innerHeight) {
         const div = document.createElement('div');
         div.classList.add('square');
