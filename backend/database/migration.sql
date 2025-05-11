@@ -123,7 +123,7 @@ END;
 INSERT OR IGNORE INTO category (name) VALUES ('Coding');
 INSERT OR IGNORE INTO category (name) VALUES ('Innovation');
 INSERT OR IGNORE INTO category (name) VALUES ('Bitcoin');
-INSERT OR IGNORE INTO category (name) VALUES ('kids');
+INSERT OR IGNORE INTO category (name) VALUES ('education');
 INSERT OR IGNORE INTO category (name) VALUES ('movie');
 INSERT OR IGNORE INTO category (name) VALUES ('sport');
 INSERT OR IGNORE INTO category (name) VALUES ('food');
