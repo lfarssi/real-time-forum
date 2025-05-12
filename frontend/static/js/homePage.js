@@ -223,8 +223,9 @@ export async function homePage(param) {
                     }
                 } 
                 
-            } else if(msg.type=="isTyping"){
-                console.log("typing...");
+            } else if(msg.type=="errMessage"){
+                // console.log("typing...");
+                popup(msg.message, "failed")
                 
             }
             if ( !openChatUserId) {
