@@ -439,6 +439,8 @@ aside > .filter ul input:checked + label span::after{
     overflow-y: auto;
     scrollbar-color: rgb(162, 250, 162) transparent;
     scrollbar-width: thin;
+    word-wrap: break-word;
+    overflow-wrap: anywhere; 
 }
 
 .cbody .messages::-webkit-scrollbar {
