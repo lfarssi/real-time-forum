@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 
@@ -22,8 +23,12 @@ var (
 func RateLimit(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ip := getClientIP(r)
+
 		if ip == "" {
-			http.Error(w, "Unable to determine client IP", http.StatusInternalServerError)
+			utils.ResponseJSON(w, http.StatusInternalServerError, map[string]any{
+				"message": "Unable to determine client IP",
+				"status":  http.StatusInternalServerError,
+			})
 			return
 		}
 
@@ -42,7 +47,11 @@ func RateLimit(next http.Handler) http.HandlerFunc {
 		requestCounts[ip]++
 		if requestCounts[ip] > 10 {
 			mu.Unlock()
-			http.Error(w, "Too many requests. Slow down!", http.StatusTooManyRequests)
+			utils.ResponseJSON(w, http.StatusTooManyRequests, map[string]any{
+				"message": "Too many requests. Slow down!",
+				"status":  http.StatusTooManyRequests,
+			})
+
 			return
 		}
 
@@ -53,14 +62,31 @@ func RateLimit(next http.Handler) http.HandlerFunc {
 	}
 }
 
-// Get client IP from request
 func getClientIP(r *http.Request) string {
-	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
-		return xff
+	// Check X-Forwarded-For header, which can contain multiple IPs
+	xff := r.Header.Get("X-Forwarded-For")
+	if xff != "" {
+		// X-Forwarded-For can be a comma-separated list of IPs; take the first one
+		ips := strings.Split(xff, ",")
+		ip := strings.TrimSpace(ips[0])
+		if net.ParseIP(ip) != nil {
+			return ip
+		}
 	}
+
+	// Fallback to X-Real-IP header
+	xri := r.Header.Get("X-Real-IP")
+	if xri != "" && net.ParseIP(xri) != nil {
+		return xri
+	}
+
+	// Fallback to RemoteAddr
 	ip, _, err := net.SplitHostPort(r.RemoteAddr)
 	if err != nil {
 		return ""
+	}
+	if ip == "::1" {
+		return "127.0.0.1"
 	}
 	return ip
 }

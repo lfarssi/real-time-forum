@@ -25,6 +25,10 @@ func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
         ORDER BY m.id DESC
         LIMIT 10
     `
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
 
 	rows, err := database.DB.Query(query, sender, receiver, receiver, sender, lastID)
 	if err != nil {
@@ -71,10 +75,7 @@ func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
 		if _, err := database.DB.Exec(upd, args...); err != nil {
 			return nil, err
 		}
-		err = tx.Commit()
-		if err != nil {
-			return nil, err
-		}
+		
 	}
 
 	return messages, nil

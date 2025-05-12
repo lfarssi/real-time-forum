@@ -33,6 +33,10 @@ func GetCommnets(postID string, currentUserID int) ([]*Comment, error) {
     GROUP BY c.id, u.username, c.content, c.dateCreation
     ORDER BY c.dateCreation DESC;
     `
+     err = tx.Commit()
+     if err != nil {
+         return nil, err
+     }
 
     rows, err := database.DB.Query(query, currentUserID, currentUserID, postID)
     if err != nil {
@@ -58,10 +62,7 @@ func GetCommnets(postID string, currentUserID int) ([]*Comment, error) {
         if err != nil {
             return nil, err
         }
-        err = tx.Commit()
-		if err != nil {
-			return nil, err
-		}
+       
         c.DateCreation = createdAt.Format(time.RFC3339)
         comments = append(comments, &c)
     }
@@ -76,7 +77,7 @@ func AddComment(Comment *Comment) error {
 		VALUES (?,?,?,?);
 	
 	`
-	_, err := database.DB.Exec(query, Comment.Content, Comment.UserID, time.Now().UTC(), Comment.PostID)
+	_, err := database.DB.Exec(query, Comment.Content, Comment.UserID, time.Now(), Comment.PostID)
 	if err != nil {
 		return err
 	}

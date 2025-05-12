@@ -35,6 +35,10 @@ func GetPosts(userID int, page int) ([]*Post, error) {
 	if err != nil {
 		return nil, err
 	}
+	err = tx.Commit()
+	if err != nil {
+		return nil, err
+	}
 	defer rows.Close()
 
 	var posts []*Post
@@ -72,11 +76,7 @@ func GetPosts(userID int, page int) ([]*Post, error) {
 				return nil, err
 			}
 		}
-		err = tx.Commit()
-		if err != nil {
-			return nil, err
-		}
-		// Split categories and assign them to the post
+		
 		categories := strings.Split(category, ",")
 		post.Categories = append(post.Categories, categories...)
 		post.DateCreation = CreatedAt.Format(time.DateTime)
@@ -89,7 +89,7 @@ func GetPosts(userID int, page int) ([]*Post, error) {
 
 func AddPost(post *Post) error {
 	var postID int
-	err := database.DB.QueryRow("INSERT INTO posts (title, content, dateCreation, userID) VALUES ($1, $2, $3, $4) RETURNING id", post.Title, post.Content, time.Now().UTC(), post.UserID).Scan(&postID)
+	err := database.DB.QueryRow("INSERT INTO posts (title, content, dateCreation, userID) VALUES ($1, $2, $3, $4) RETURNING id", post.Title, post.Content, time.Now(), post.UserID).Scan(&postID)
 	if err != nil {
 		return err
 	}
