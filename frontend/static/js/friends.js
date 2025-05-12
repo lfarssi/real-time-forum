@@ -133,6 +133,8 @@ function scrollEventLoadMessages() {
       isScroll = false
     }
 
+    // const observer = new IntersectionObserver()
+
 }
 
 function scrollChatDebounce(func, timeout = 300) {
