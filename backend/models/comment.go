@@ -7,15 +7,15 @@ import (
 )
 
 func GetCommnets(postID string, currentUserID int) ([]*Comment, error) {
-    tx, err := database.DB.Begin()
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
-	}()
+    // tx, err := database.DB.Begin()
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer func() {
+	// 	if err != nil {
+	// 		tx.Rollback()
+	// 	}
+	// }()
 	query := `
     SELECT 
         c.id,
@@ -33,10 +33,10 @@ func GetCommnets(postID string, currentUserID int) ([]*Comment, error) {
     GROUP BY c.id, u.username, c.content, c.dateCreation
     ORDER BY c.dateCreation DESC;
     `
-     err = tx.Commit()
-     if err != nil {
-         return nil, err
-     }
+    //  err = tx.Commit()
+    //  if err != nil {
+    //      return nil, err
+    //  }
 
     rows, err := database.DB.Query(query, currentUserID, currentUserID, postID)
     if err != nil {
