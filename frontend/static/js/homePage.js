@@ -202,7 +202,7 @@ export async function homePage(param) {
                 const friend = document.querySelector(`.listFriends li[data-id="${recipientId!=logged.id?recipientId:senderId}"]`);
                 
                 ul.prepend(friend) 
-                if(!friend.hasAttribute("class")){
+                if(!friend.classList.contains("has-messages")){
                     friend.classList.add('has-messages')
                 }
                 if (openChatUserId !== senderId) {
