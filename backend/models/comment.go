@@ -7,6 +7,15 @@ import (
 )
 
 func GetCommnets(postID string, currentUserID int) ([]*Comment, error) {
+    tx, err := database.DB.Begin()
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		}
+	}()
 	query := `
     SELECT 
         c.id,
@@ -49,7 +58,10 @@ func GetCommnets(postID string, currentUserID int) ([]*Comment, error) {
         if err != nil {
             return nil, err
         }
-
+        err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
         c.DateCreation = createdAt.Format(time.RFC3339)
         comments = append(comments, &c)
     }

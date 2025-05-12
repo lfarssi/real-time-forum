@@ -8,6 +8,15 @@ import (
 )
 
 func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		}
+	}()
 	query := `
         SELECT m.id, m.senderID, m.receiverID, u.username, m.content, m.sentAt, m.status
         FROM messages m
@@ -60,6 +69,10 @@ func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
 
 		// Execute the update query with arguments
 		if _, err := database.DB.Exec(upd, args...); err != nil {
+			return nil, err
+		}
+		err = tx.Commit()
+		if err != nil {
 			return nil, err
 		}
 	}

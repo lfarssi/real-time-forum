@@ -9,6 +9,15 @@ import (
 )
 
 func GetPosts(userID int, page int) ([]*Post, error) {
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		}
+	}()
 	query := `
     SELECT   p.id, p.userID, p.title, p.content, GROUP_CONCAT(DISTINCT c.name) AS categories, 
 	 p.dateCreation, u.username
@@ -63,7 +72,10 @@ func GetPosts(userID int, page int) ([]*Post, error) {
 				return nil, err
 			}
 		}
-
+		err = tx.Commit()
+		if err != nil {
+			return nil, err
+		}
 		// Split categories and assign them to the post
 		categories := strings.Split(category, ",")
 		post.Categories = append(post.Categories, categories...)
