@@ -57,7 +57,7 @@ export function AddComments(postId) {
       await fetchAndRenderComments(postEl);
     }
     catch (err) {
-      popup("Something went wrong!", "failed");
+      popup("You Can't Comment Right Now!! ", "failed");
     }
   });
 }
