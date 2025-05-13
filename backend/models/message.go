@@ -8,15 +8,15 @@ import (
 )
 
 func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
-	tx, err := database.DB.Begin()
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
-	}()
+	// tx, err := database.DB.Begin()
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer func() {
+	// 	if err != nil {
+	// 		tx.Rollback()
+	// 	}
+	// }()
 	query := `
         SELECT m.id, m.senderID, m.receiverID, u.username, m.content, m.sentAt, m.status
         FROM messages m
@@ -25,10 +25,10 @@ func GetMessage(sender, receiver, lastID int) ([]*Message, error) {
         ORDER BY m.id DESC
         LIMIT 10
     `
-	err = tx.Commit()
-	if err != nil {
-		return nil, err
-	}
+	// err = tx.Commit()
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	rows, err := database.DB.Query(query, sender, receiver, receiver, sender, lastID)
 	if err != nil {
