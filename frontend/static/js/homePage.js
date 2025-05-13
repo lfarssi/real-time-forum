@@ -93,7 +93,7 @@ export async function homePage(param) {
                 </ul>
                 <div class="chat">
                     <div class="header">
-                        <p><i class="fa-solid fa-user"></i> <span></span></p>
+                        <p><i class="fa-solid fa-user"></i> <span></span> <div class="loader"></div></p>
                         <button class="closeChat"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     <div class="cbody">
@@ -120,7 +120,6 @@ export async function homePage(param) {
         ReactPost()
         filterByCategories()
         chatFriend()
-        Typing()
         sendMessage()
         asideNav()
 
@@ -143,6 +142,8 @@ export async function homePage(param) {
                 ws.close()
                 return
             }
+            Typing()
+
 
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
@@ -229,7 +230,8 @@ export async function homePage(param) {
                 popup(msg.message, "failed")
                 
             } else if (msg.type=="isTyping"){
-                console.log("typing...");
+                let receiverChat = document.querySelector('.chat .header p span')
+                console.log(receiverChat)
                 
             }
             if ( !openChatUserId) {
