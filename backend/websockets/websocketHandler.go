@@ -86,14 +86,13 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				conn.WriteJSON(map[string]any{
 					"message": "Cannot Send Empty Message",
 					"status":  http.StatusBadRequest,
-					"type": "errMessage",
-
+					"type":    "errMessage",
 				})
 			} else if len(strings.TrimSpace(message.Content)) > 1000 {
 				conn.WriteJSON(map[string]any{
 					"message": "Cannot Send Over 1000 Character",
 					"status":  http.StatusBadRequest,
-					"type": "errMessage",
+					"type":    "errMessage",
 				})
 			} else {
 				err = models.AddMessage(&message)
@@ -101,8 +100,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					conn.WriteJSON(map[string]any{
 						"message": "Cannot Send Message",
 						"status":  http.StatusInternalServerError,
-						"type": "errMessage",
-
+						"type":    "errMessage",
 					})
 					return
 				}
@@ -141,8 +139,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					c.WriteJSON(map[string]any{
 						"message": "Error Getting Messages",
 						"status":  http.StatusInternalServerError,
-						"type": "errMessage",
-
+						"type":    "errMessage",
 					})
 				}
 				return
@@ -162,7 +159,6 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"type":    "isTyping",
 				})
 			}
-			return
 		case "updateMessage":
 			err := models.UpdateMessage(message.SenderID, message.RecipientID, message.Status)
 			if err != nil {

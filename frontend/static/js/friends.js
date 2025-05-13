@@ -58,25 +58,35 @@ export function chatFriend() {
   });
 }
 
- export function Typing(){
+export function Typing() {
   let input = document.querySelector(".chatForm input");
-  input.addEventListener("input", async()=>{
+  let typingTimeout;
+
+  input.addEventListener("input", async () => {
     let receiverID = document.querySelector(".header span").dataset.id;
     let logged = await isLogged();
     if (!logged) {
-      // ws.close();
+      // If not logged in, don't do anything
       return;
     }
-    console.log(input.value)
-    ws.send(
-      JSON.stringify({
-        recipientID: parseInt(receiverID),
-        senderID: logged.id,
-        type: "Typing",
-      })
-    )
-  })
+
+    // Clear previous timeout to debounce the typing indication
+    clearTimeout(typingTimeout);
+
+    // Set a new timeout to send typing event after user stops typing
+    typingTimeout = setTimeout(() => {
+      console.log(input.value)
+      ws.send(
+        JSON.stringify({
+          recipientID: parseInt(receiverID),
+          senderID: logged.id,
+          type: "Typing",
+        })
+      );
+    }, 500); // Sends a typing message after 500ms of inactivity
+  });
 }
+
 
 export function sendMessage() {
   let form = document.querySelector(".chatForm");

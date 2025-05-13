@@ -7,7 +7,7 @@
     font-family: "Poppins", sans-serif;
     scrollbar-color: var(--text-muted) transparent;
     scrollbar-width: thin;
-} 
+}
 
 :root {
     --bg-dark: #1E1E2F;
@@ -178,7 +178,7 @@ nav>.logout:hover {
     background-color: var(--accent-dark);
 }
 
-main{
+main {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -192,55 +192,58 @@ section {
     padding: 100px 0px;
 }
 
-section .profile{
+section .profile {
     display: none;
 }
 
-aside{
+aside {
     position: sticky;
     top: 100px;
     height: fit-content;
     padding: 0 20px;
 }
 
-aside > div{
+aside>div {
     background-color: var(--card-dark);
     border-radius: var(--radius);
 }
 
-aside > .profile{
+aside>.profile {
     width: 300px;
     padding: 10px 20px;
 }
 
-aside > .profile > div, section > .profile > div {
+aside>.profile>div,
+section>.profile>div {
     display: flex;
     align-items: center;
 }
 
-.profile span{
-    color: var(--text-muted );
+.profile span {
+    color: var(--text-muted);
     margin-left: 34px;
     font-size: 14px;
 }
 
-aside > .friends{
+aside>.friends {
     height: 65vh;
     overflow: auto;
     margin-top: 20px;
     width: 300px;
 }
-aside > .friends::-webkit-scrollbar{
+
+aside>.friends::-webkit-scrollbar {
     display: none;
 }
-aside > .filter{
+
+aside>.filter {
     height: 84.5vh;
     width: 300px;
     padding: 15px 30px;
     position: relative;
 }
 
-aside > .filter .closeBtn{
+aside>.filter .closeBtn {
     position: absolute;
     right: 20px;
     top: 12px;
@@ -254,26 +257,26 @@ aside > .filter .closeBtn{
     display: none;
 }
 
-aside > .filter .closeBtn:hover{
+aside>.filter .closeBtn:hover {
     transform: rotate(90deg);
     color: var(--accent);
 }
 
-aside > .profile  p{
+aside>.profile p {
     color: var(--text-light);
     font-weight: 600;
     font-size: 1.2em;
 }
 
-aside > .profile p i{
+aside>.profile p i {
     margin-right: 10px;
 }
 
-aside > .filter h3{
+aside>.filter h3 {
     color: var(--accent);
 }
 
-aside > .filter ul{
+aside>.filter ul {
     display: flex;
     flex-direction: column;
     list-style: none;
@@ -281,7 +284,7 @@ aside > .filter ul{
     margin-top: 30px;
 }
 
-aside > .filter ul i{
+aside>.filter ul i {
     background-color: var(--bg-dark);
     padding: 10px;
     border-radius: 50%;
@@ -289,20 +292,20 @@ aside > .filter ul i{
     font-size: 0.8em;
 }
 
-aside > .filter ul label{
+aside>.filter ul label {
     text-decoration: none;
     color: var(--text-light);
     font-size: 1.1em;
     cursor: pointer;
 }
 
-aside > .filter ul label span{
+aside>.filter ul label span {
     position: relative;
     width: max-content;
     transition: .3s;
 }
 
-aside > .filter ul label span::after{
+aside>.filter ul label span::after {
     content: '';
     position: absolute;
     left: 50%;
@@ -315,49 +318,49 @@ aside > .filter ul label span::after{
 
 }
 
-aside > .filter ul label span:hover::after{
+aside>.filter ul label span:hover::after {
     width: 100%;
     transition: .3s;
 }
 
-aside > .filter ul input:checked + label span::after{
+aside>.filter ul input:checked+label span::after {
     width: 100%;
 }
 
-.friends ul{
+.friends ul {
     list-style: none;
     display: flex;
     flex-direction: column;
 }
 
-.friends ul i{
+.friends ul i {
     padding: 5px;
     border-radius: 50%;
     color: var(--bg-dark);
     margin-right: 10px;
 }
 
-.friends ul i.online{
+.friends ul i.online {
     color: var(--online);
 }
 
-.friends ul i.offline{
+.friends ul i.offline {
     color: var(--offline);
 }
 
-.friends ul li span{
+.friends ul li span {
     color: var(--text-light);
     position: relative;
 
 }
 
-.friends ul li{
+.friends ul li {
     padding: 10px 20px;
     cursor: pointer;
     border-radius: var(--radius);
 }
 
-.friends ul li span::after{
+.friends ul li span::after {
     content: '';
     position: absolute;
     left: 50%;
@@ -368,12 +371,12 @@ aside > .filter ul input:checked + label span::after{
     transition: .3s;
 }
 
-.friends ul li:hover i.online + span::after{ 
+.friends ul li:hover i.online+span::after {
     background-color: var(--accent-dark);
     width: 100%;
 }
-    
-.friends ul li:hover i.offline + span::after{ 
+
+.friends ul li:hover i.offline+span::after {
     background-color: var(--offline);
     width: 100%;
 }
@@ -434,13 +437,13 @@ aside > .filter ul input:checked + label span::after{
 }
 
 
-.cbody  .messages{
+.cbody .messages {
     height: 88%;
     overflow-y: auto;
     scrollbar-color: rgb(162, 250, 162) transparent;
     scrollbar-width: thin;
     word-wrap: break-word;
-    overflow-wrap: anywhere; 
+    overflow-wrap: anywhere;
 }
 
 .cbody .messages::-webkit-scrollbar {
@@ -456,11 +459,12 @@ aside > .filter ul input:checked + label span::after{
     border-radius: 4px;
 }
 
- .cbody  .chatForm{
+.cbody .chatForm {
     position: sticky;
     bottom: 0;
 }
-.chatForm input{
+
+.chatForm input {
     width: 100%;
     padding: 8px 16px;
     border: none;
@@ -472,10 +476,11 @@ aside > .filter ul input:checked + label span::after{
 }
 
 .chatForm input:focus,
-.chatForm input:valid{
+.chatForm input:valid {
     border-bottom: 1px solid var(--accent-dark);
 }
-.chatForm button{
+
+.chatForm button {
     position: absolute;
     right: 0;
     padding: 0.50rem;
@@ -488,29 +493,30 @@ aside > .filter ul input:checked + label span::after{
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
 }
-.input-container{
+
+.input-container {
     position: relative;
     display: flex;
     align-items: center;
-    
+
 }
 
-.messagesSender{
+.messagesSender {
     margin: 5px;
     display: flex;
     justify-content: end;
     word-break: break-all;
 }
 
-.messagesSender div{
+.messagesSender div {
     width: max-content;
-    background-color:rgb(162, 250, 162);
+    background-color: rgb(162, 250, 162);
     padding: 5px 10px;
     border-radius: var(--radius);
 
 }
 
-.messagesReceiver{
+.messagesReceiver {
     margin: 5px;
     width: fit-content;
     background-color: var(--text-light);
@@ -518,6 +524,7 @@ aside > .filter ul input:checked + label span::after{
     border-radius: var(--radius);
     word-break: break-all;
 }
+
 .notification {
     background-color: var(--accent-dark);
     border-radius: 50%;
@@ -527,12 +534,13 @@ aside > .filter ul input:checked + label span::after{
 }
 
 
-.msgTime{
+.msgTime {
     font-size: 10px;
     position: relative;
     top: 7px;
     left: 3px;
 }
+
 #postForm {
     background-color: var(--card-dark);
     color: var(--text-light);
@@ -564,7 +572,7 @@ aside > .filter ul input:checked + label span::after{
 }
 
 #postForm input[type="text"]:focus,
-#postForm input[type="text"]:valid{
+#postForm input[type="text"]:valid {
     border-bottom: 1px solid var(--accent-dark);
 }
 
@@ -607,7 +615,8 @@ aside > .filter ul input:checked + label span::after{
     cursor: pointer;
     position: relative;
 }
-.category-section label::after{
+
+.category-section label::after {
     content: '';
     position: absolute;
     left: 50%;
@@ -619,7 +628,8 @@ aside > .filter ul input:checked + label span::after{
     transition: .5s;
     width: 0;
 }
-.category-section input[type="checkbox"]:checked + label::after {
+
+.category-section input[type="checkbox"]:checked+label::after {
     color: var(--text-light);
     /* font-weight: 500; */
     width: 80%;
@@ -628,7 +638,7 @@ aside > .filter ul input:checked + label span::after{
 
 
 
-.category-section label:hover::after{
+.category-section label:hover::after {
     width: 80%;
 }
 
@@ -649,7 +659,8 @@ aside > .filter ul input:checked + label span::after{
     color: var(--card-dark);
     background-color: var(--accent);
 }
-.commentForm input{
+
+.commentForm input {
     width: 100%;
     padding: 8px 16px;
     border: none;
@@ -661,10 +672,11 @@ aside > .filter ul input:checked + label span::after{
 }
 
 .commentForm input:focus,
-.commentForm input:valid{
+.commentForm input:valid {
     border-bottom: 1px solid var(--accent-dark);
 }
-.commentForm button{
+
+.commentForm button {
     padding: 0.50rem;
     margin: 0.50rem;
     font-size: 0.8rem;
@@ -675,9 +687,11 @@ aside > .filter ul input:checked + label span::after{
     cursor: pointer;
     transition: background-color 0.2s ease-in-out;
 }
-.postContainer{
-    overflow-y: auto;    
+
+.postContainer {
+    overflow-y: auto;
 }
+
 /* .posts {
     display: flex;
     flex-direction: column;
@@ -698,7 +712,7 @@ aside > .filter ul input:checked + label span::after{
 
 }
 
-.post .dateCreation{
+.post .dateCreation {
     font-size: 12px;
     opacity: .6;
     margin-top: 5px;
@@ -710,18 +724,18 @@ aside > .filter ul input:checked + label span::after{
     max-width: 100%;
 }
 
-.post .title{
+.post .title {
     border-radius: var(--radius);
     margin: 6px 0;
     position: relative;
     width: max-content;
 }
 
-.post .username{
+.post .username {
     width: max-content;
 }
 
-.post .content{
+.post .content {
     margin: 15px 0;
     background-color: var(--bg-dark);
     padding: 10px 20px;
@@ -735,7 +749,7 @@ aside > .filter ul input:checked + label span::after{
     letter-spacing: 0.5px;
 }
 
-.post .allCategories{
+.post .allCategories {
     color: var(--text-muted);
 }
 
@@ -772,18 +786,19 @@ aside > .filter ul input:checked + label span::after{
 
 }
 
-.post .comments .comts{
+.post .comments .comts {
     max-height: 500px;
     width: 100%;
 }
 
-.noPost{
+.noPost {
     color: var(--text-light);
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
 }
+
 .popup {
     position: fixed;
     top: 20px;
@@ -796,35 +811,37 @@ aside > .filter ul input:checked + label span::after{
     font-size: 16px;
     z-index: 9999;
     animation: slide-in 0.3s ease;
-  }
-  
-  .popup-message {
+}
+
+.popup-message {
     margin-right: 10px;
-  }
-  
-  .popup-close-failed {
+}
+
+.popup-close-failed {
     background: none;
     border: none;
     color: var(--text-light);
     font-size: 18px;
     cursor: pointer;
-  }
-  
-  .popup-close-failed:hover {
+}
+
+.popup-close-failed:hover {
     color: #ff5c5c;
-  }
-  .popup-close-success {
+}
+
+.popup-close-success {
     background: none;
     border: none;
     color: var(--text-light);
     font-size: 18px;
     cursor: pointer;
-  }
-  
-  .popup-close-success:hover {
+}
+
+.popup-close-success:hover {
     color: var(--accent);
-  }
-  .popup-timer-failed {
+}
+
+.popup-timer-failed {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -833,6 +850,7 @@ aside > .filter ul input:checked + label span::after{
     animation: timer-line 3s linear forwards;
     border-radius: 0 0 8px 8px;
 }
+
 .popup-timer-success {
     position: absolute;
     bottom: 0;
@@ -843,41 +861,73 @@ aside > .filter ul input:checked + label span::after{
     border-radius: 0 0 8px 8px;
 }
 
+.loader {
+    width: 10px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    animation: l5 1s infinite linear alternate;
+}
+
+@keyframes l5 {
+    0% {
+        box-shadow: 20px 0 #fff, -20px 0 #fff2;
+        background: #fff;
+    }
+
+    33% {
+        box-shadow: 20px 0 #fff, -20px 0 #fff2;
+        background: #fff2;
+    }
+
+    66% {
+        box-shadow: 20px 0 #fff2, -20px 0 #fff;
+        background: #fff2;
+    }
+
+    100% {
+        box-shadow: 20px 0 #fff2, -20px 0 #fff;
+        background: #fff;
+    }
+}
+
+
 @keyframes timer-line {
     from {
         width: 100%;
     }
+
     to {
         width: 0%;
     }
 }
 
-  
-  @keyframes slide-in {
+
+@keyframes slide-in {
     from {
-      transform: translateY(100%);
-      opacity: 0;
+        transform: translateY(100%);
+        opacity: 0;
     }
+
     to {
-      transform: translateY(0);
-      opacity: 1;
+        transform: translateY(0);
+        opacity: 1;
     }
-  }
-  
+}
+
 /* Responsive container */
 @media (min-width: 576px) {
     .container {
         width: 100%;
     }
-   
+
 }
 
 @media (min-width: 768px) {
     .container {
         width: 100%;
     }
-  
-    
+
+
 }
 
 @media (min-width: 992px) {
@@ -890,7 +940,7 @@ aside > .filter ul input:checked + label span::after{
     .container {
         width: 100%;
     }
-   
+
 }
 
 @media (min-width: 1900px) {
@@ -900,18 +950,22 @@ aside > .filter ul input:checked + label span::after{
 }
 
 @media (max-width: 1300px) {
-    .post, #postForm{
+
+    .post,
+    #postForm {
         max-width: 500px;
     }
 }
 
 
 @media (max-width: 1100px) {
-    .post, #postForm{
+
+    .post,
+    #postForm {
         max-width: 400px;
     }
 
-    aside.asideFilter{
+    aside.asideFilter {
         position: absolute;
         left: 40%;
         top: 100px;
@@ -919,37 +973,37 @@ aside > .filter ul input:checked + label span::after{
     }
 
     aside .filter {
-        display: none; 
+        display: none;
         border: 1px solid var(--accent);
     }
-    
-    aside .showFilter{
+
+    aside .showFilter {
         display: block;
     }
 
-    aside > .filter .closeBtn{
+    aside>.filter .closeBtn {
         display: block;
     }
 
-    header .postsByCategory{
+    header .postsByCategory {
         display: block;
     }
 }
 
 @media (max-width: 770px) {
-    nav>ul{
+    nav>ul {
         gap: 40px;
     }
 
-    aside.asideFriendsProfile{
+    aside.asideFriendsProfile {
         position: static;
     }
 
-    aside .profile{
+    aside .profile {
         display: none;
     }
 
-    aside .friends{
+    aside .friends {
         display: none;
         position: absolute;
         left: 40%;
@@ -958,21 +1012,21 @@ aside > .filter ul input:checked + label span::after{
         border: 1px solid var(--accent);
     }
 
-    aside .showFriends{
+    aside .showFriends {
         display: block;
     }
 
-    header nav .chatMessages{
+    header nav .chatMessages {
         display: block;
     }
 
-    section{
+    section {
         width: 100%;
         margin-left: 50px;
         align-items: center;
     }
 
-    section .profile{
+    section .profile {
         width: 400px;
         background-color: var(--card-dark);
         padding: 10px 20px;
@@ -981,18 +1035,18 @@ aside > .filter ul input:checked + label span::after{
         display: block;
     }
 
-    section > .profile  p{
+    section>.profile p {
         color: var(--text-light);
         font-weight: 600;
         font-size: 1em;
     }
-    
-    section > .profile p i{
+
+    section>.profile p i {
         margin-right: 10px;
     }
-    
-    .profile span{
-        color: var(--text-muted );
+
+    .profile span {
+        color: var(--text-muted);
         margin-left: 30px;
         font-size: 10px;
     }
@@ -1006,45 +1060,47 @@ aside > .filter ul input:checked + label span::after{
         width: 100%;
     }
 
-    aside.asideFilter{
+    aside.asideFilter {
         left: 20%;
     }
 }
 
 @media (max-width: 537px) {
-    nav > ul {
+    nav>ul {
         gap: 20px;
     }
 
-    section{
+    section {
         margin-left: 0;
     }
 
-    aside .friends{
+    aside .friends {
         left: 20%;
     }
 }
 
-@media (max-width: 450px){
-    header{
+@media (max-width: 450px) {
+    header {
         font-size: 10px;
         padding: 5px 10px;
     }
 
-    aside.asideFilter{
+    aside.asideFilter {
         left: 0;
     }
 
-    aside > .filter{
+    aside>.filter {
         width: 80vw;
     }
 
-    aside > .friends{
+    aside>.friends {
         left: 0;
         width: 100vw;
     }
 
-    section .post, section #postForm, section .profile{
+    section .post,
+    section #postForm,
+    section .profile {
         width: 90vw;
     }
 }
