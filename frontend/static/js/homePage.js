@@ -1,7 +1,7 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
 import { popupThrottled as popup } from "./errorPage.js";
-import { chatFriend, displayMessage, FriendsPage, sendMessage, sortFriendsList, updateUnreadBadges } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage, sendMessage, sortFriendsList, Typing, updateUnreadBadges } from "./friends.js"
 import { AddPosts, filterByCategories,  PostForm, PostsPage, ReactPost } from "./postPage.js"
 import { squareMouseHandler } from "./squares.js";
 
@@ -120,6 +120,7 @@ export async function homePage(param) {
         ReactPost()
         filterByCategories()
         chatFriend()
+        Typing()
         sendMessage()
         asideNav()
 
@@ -226,6 +227,9 @@ export async function homePage(param) {
             } else if(msg.type=="errMessage"){
                 // console.log("typing...");
                 popup(msg.message, "failed")
+                
+            } else if (msg.type=="isTyping"){
+                console.log("typing...");
                 
             }
             if ( !openChatUserId) {
