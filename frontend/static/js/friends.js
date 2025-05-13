@@ -58,15 +58,16 @@ export function chatFriend() {
   });
 }
 
-function Typing(){
+ export function Typing(){
   let input = document.querySelector(".chatForm input");
-  input.addEventListener("change", async(e)=>{
+  input.addEventListener("input", async()=>{
     let receiverID = document.querySelector(".header span").dataset.id;
     let logged = await isLogged();
     if (!logged) {
-      ws.close();
+      // ws.close();
       return;
     }
+    console.log(input.value)
     ws.send(
       JSON.stringify({
         recipientID: parseInt(receiverID),
@@ -85,11 +86,11 @@ export function sendMessage() {
     let receiverID = document.querySelector(".header span").dataset.id;
     let logged = await isLogged();
     if (!logged) {
-      ws.close();
       return;
     }
     if (input.value.trim()=="") {
       popup("Cannot Send Empty Message","failed")
+      return
     }
     ws.send(
       JSON.stringify({
