@@ -57,6 +57,13 @@ export function chatFriend() {
     chat.style.display = "none";
     let span = chat.querySelector(".header span");
     if (span && span.dataset.id) {
+      let typingElement = chat.querySelector('.header p .loader')
+      if (typingElement) {
+        let sender = document.querySelector(`.listFriends li[data-id="${span.dataset.id}"]`)
+        sender.innerHTML += /*html*/`
+          <div class="loader"></div>
+        `
+      }
       span.removeAttribute("data-id");
     }
     let input = document.querySelector(".chatForm input");
