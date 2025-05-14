@@ -6,6 +6,7 @@ let isScroll = false;
 let scrollValue;
 let msgID = -1;
 let chatMessages;
+let typingTimeout;
 
 export async function FriendsPage() {
   const response = await fetch("/api/getFriends");
@@ -15,7 +16,7 @@ export async function FriendsPage() {
     return errorPage("You Don't Have Friends");
   }
   let friends = data.data.map((friend) => {
-    
+
     let onlineClass = friend.isOnline ? "online" : "offline";
     let msgClass = friend.lastAt.Valid ? "has-messages" : "";
     return /*html*/ `
@@ -38,6 +39,7 @@ export function chatFriend() {
     let li = e.target.closest("li");
     if (li) {
       chatMessages = document.querySelector(".chat .messages");
+      let input = document.querySelector(".chatForm input");
       chatMessages.innerHTML = "";
       msgID = -1;
       isScroll = false;
@@ -45,6 +47,8 @@ export function chatFriend() {
       let span = chat.querySelector(".header span");
       span.textContent = li.children[1].textContent;
       span.dataset.id = li.dataset.id;
+      input.removeEventListener('input', onTyping)
+      Typing()
       GetMessages(span.dataset.id);
       loadMessages();
     }
@@ -53,40 +57,57 @@ export function chatFriend() {
     chat.style.display = "none";
     let span = chat.querySelector(".header span");
     if (span && span.dataset.id) {
-       span.removeAttribute("data-id");
+      span.removeAttribute("data-id");
     }
+    let input = document.querySelector(".chatForm input");
+    input.removeEventListener('input', onTyping)
+
   });
 }
 
 export function Typing() {
   let input = document.querySelector(".chatForm input");
-  let typingTimeout;
 
-  input.addEventListener("input", async () => {
-    let receiverID = document.querySelector(".header span").dataset.id;
-    let logged = await isLogged();
-    if (!logged) {
-      // If not logged in, don't do anything
-      return;
+  let debounceTyping = leadingDebounceTyping(onTyping, 1000)
+
+  input.addEventListener("input", debounceTyping);
+}
+
+async function onTyping() {
+  let receiverID = document.querySelector(".header span").dataset.id;
+  let logged = await isLogged();
+  if (!logged) {
+    return;
+  }
+
+  ws.send(
+    JSON.stringify({
+      recipientID: parseInt(receiverID),
+      senderID: logged.id,
+      type: "Typing",
+    })
+  );
+}
+
+function leadingDebounceTyping(func, timeout) {
+  let timer;
+  return (...args) => {
+    if (!timer) {
+      func(...args)
     }
-
-    // Clear previous timeout to debounce the typing indication
-    clearTimeout(typingTimeout);
-
-    // Set a new timeout to send typing event after user stops typing
-    typingTimeout = setTimeout(() => {
-      console.log(input.value)
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = undefined;
+      let receiverID = document.querySelector(".header span").dataset.id;
       ws.send(
         JSON.stringify({
           recipientID: parseInt(receiverID),
-          senderID: logged.id,
-          type: "Typing",
+          type: "pauseTyping",
         })
       );
-    }, 500); // Sends a typing message after 500ms of inactivity
-  });
+    }, timeout);
+  };
 }
-
 
 export function sendMessage() {
   let form = document.querySelector(".chatForm");
@@ -98,8 +119,8 @@ export function sendMessage() {
     if (!logged) {
       return;
     }
-    if (input.value.trim()=="") {
-      popup("Cannot Send Empty Message","failed")
+    if (input.value.trim() == "") {
+      popup("Cannot Send Empty Message", "failed")
       return
     }
     ws.send(
@@ -127,44 +148,44 @@ function GetMessages(receiverID) {
 let debounceScrollEvent = scrollChatDebounce(scrollEventLoadMessages, 500)
 function loadMessages() {
   chatMessages = document.querySelector(".chat .messages");
-  
+
   chatMessages.addEventListener("scroll", debounceScrollEvent);
 }
 
 function scrollEventLoadMessages() {
-    if (chatMessages.scrollTop === 0 && chatMessages.querySelector('p')) {
-        let span = document.querySelector('.chat .header span')
-        msgID = chatMessages.querySelector('p').dataset.id
-        scrollValue = chatMessages.scrollHeight
-        GetMessages(span.dataset.id)
-      }
-    isScroll = true
+  if (chatMessages.scrollTop === 0 && chatMessages.querySelector('p')) {
+    let span = document.querySelector('.chat .header span')
+    msgID = chatMessages.querySelector('p').dataset.id
+    scrollValue = chatMessages.scrollHeight
+    GetMessages(span.dataset.id)
+  }
+  isScroll = true
 
-    if (Math.ceil(chatMessages.scrollTop + chatMessages.clientHeight) >= chatMessages.scrollHeight - 50) {
-      isScroll = false
-    }
+  if (Math.ceil(chatMessages.scrollTop + chatMessages.clientHeight) >= chatMessages.scrollHeight - 50) {
+    isScroll = false
+  }
 
-    // const observer = new IntersectionObserver()
+  // const observer = new IntersectionObserver()
 
 }
 
 function scrollChatDebounce(func, timeout = 300) {
-    let timer;
-    return (...args) => {
-        clearTimeout(timer);
-        timer = setTimeout(() => func(...args), timeout);
-    };
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => func(...args), timeout);
+  };
 }
 
 
 export function updateUnreadBadges(counts, openedUserId = null) {
   const openedUserIdNum = openedUserId !== null ? Number(openedUserId) : null;
-  document.querySelectorAll(".listFriends li").forEach( (li) => {
+  document.querySelectorAll(".listFriends li").forEach((li) => {
     const friendID = Number(li.dataset.id);
     const badge = li.querySelector(".notification");
     if (openedUserIdNum !== null && friendID === openedUserIdNum) {
       if (badge) badge.remove();
-      return; 
+      return;
     }
 
     const count = counts && counts[friendID] ? counts[friendID] : 0;
@@ -178,27 +199,26 @@ export function updateUnreadBadges(counts, openedUserId = null) {
       } else {
         badge.textContent = count;
       }
-    } 
+    }
   });
 }
 
 
-export function displayMessage(msg, sender,receiver, isSender, isLastMsg = false) {
-  
+export function displayMessage(msg, sender, receiver, isSender, isLastMsg = false) {
+
   const chatMessages = document.querySelector(".chat .messages");
 
   if (chatMessages) {
     const newdate = new Date(msg.sentAT)
-    
+
     let html = "";
     if (msg.username === sender || isSender) {
       html = /*html*/ `
                 <div class="messagesSender">
                     <div>
                     <span style="color:green;">${sender}</span>
-                        <p data-id=${msg.id}>${
-        msg.content
-      } <span class="msgTime">${newdate.toLocaleString("en-GB")}</span></p>
+                        <p data-id=${msg.id}>${msg.content
+        } <span class="msgTime">${newdate.toLocaleString("en-GB")}</span></p>
                     </div>
                 </div>
             `;
@@ -206,58 +226,56 @@ export function displayMessage(msg, sender,receiver, isSender, isLastMsg = false
       html = /*html*/ `
                 <div class="messagesReceiver">
                 <span style="color:blue;">${receiver}</span>
-                    <p data-id=${msg.id}>${
-        msg.content
-      } <span class="msgTime">${newdate.toLocaleString("en-GB")}</span></p>
+                    <p data-id=${msg.id}>${msg.content
+        } <span class="msgTime">${newdate.toLocaleString("en-GB")}</span></p>
                 </div>
             `;
-        }
+    }
 
 
-        if (isLastMsg) {
-          chatMessages.innerHTML += html
-        } else {
-          chatMessages.insertAdjacentHTML("afterbegin", html);
-        }
-        
-        if (!isScroll || isSender) {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        } else if (isScroll && !isLastMsg) {
-            chatMessages.scrollTop = chatMessages.scrollHeight - scrollValue
+    if (isLastMsg) {
+      chatMessages.innerHTML += html
+    } else {
+      chatMessages.insertAdjacentHTML("afterbegin", html);
+    }
 
-        }
+    if (!isScroll || isSender) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    } else if (isScroll && !isLastMsg) {
+      chatMessages.scrollTop = chatMessages.scrollHeight - scrollValue
 
     }
-  }
-  export function sortFriendsList() {
-    const list = document.querySelector('.listFriends');
 
-    if (!list) return;
-  
-    const allFriends = Array.from(list.children);
-  
-    // Split into "messaged" and "never messaged"
-    const messaged = [];
-    const nonMessaged = [];
-    allFriends.forEach(li => {
-      if (li.classList.contains('has-messages')) {
-        messaged.push(li); // Keep their order
-      } else {
-        nonMessaged.push(li);
-      }
-    });
-  
-    // Sort non-messaged friends by first name (case-insensitive)
-    nonMessaged.sort((a, b) => {
-      const aName = a.querySelector('span').textContent.trim().toLowerCase();
-      const bName = b.querySelector('span').textContent.trim().toLowerCase();
-      const aFirstName = aName.split(' ')[0];
-      const bFirstName = bName.split(' ')[0];
-      return aFirstName.localeCompare(bFirstName);
-    });
-  
-    // Clear and re-append in order
-    list.innerHTML = '';
-    messaged.concat(nonMessaged).forEach(li => list.appendChild(li));
   }
-  
+}
+export function sortFriendsList() {
+  const list = document.querySelector('.listFriends');
+
+  if (!list) return;
+
+  const allFriends = Array.from(list.children);
+
+  // Split into "messaged" and "never messaged"
+  const messaged = [];
+  const nonMessaged = [];
+  allFriends.forEach(li => {
+    if (li.classList.contains('has-messages')) {
+      messaged.push(li); // Keep their order
+    } else {
+      nonMessaged.push(li);
+    }
+  });
+
+  // Sort non-messaged friends by first name (case-insensitive)
+  nonMessaged.sort((a, b) => {
+    const aName = a.querySelector('span').textContent.trim().toLowerCase();
+    const bName = b.querySelector('span').textContent.trim().toLowerCase();
+    const aFirstName = aName.split(' ')[0];
+    const bFirstName = bName.split(' ')[0];
+    return aFirstName.localeCompare(bFirstName);
+  });
+
+  // Clear and re-append in order
+  list.innerHTML = '';
+  messaged.concat(nonMessaged).forEach(li => list.appendChild(li));
+}
