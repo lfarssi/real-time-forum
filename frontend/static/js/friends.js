@@ -59,6 +59,7 @@ export function chatFriend() {
     }
   });
 }
+
 export function Typing() {
     const input = document.querySelector(".chatForm input");
     let stopTypingTimeout;
@@ -93,7 +94,7 @@ export function Typing() {
 
         setTimeout(() => {
             stopTypingSent = false;
-        }, 1000);
+        }, 300);
     }
 
     input.addEventListener("input", () => {
@@ -102,13 +103,13 @@ export function Typing() {
             canSendTyping = false;
             setTimeout(() => {
                 canSendTyping = true;
-            }, 1000);  
+            }, 300);  
         }
 
         clearTimeout(stopTypingTimeout);
         stopTypingTimeout = setTimeout(() => {
             sendStopTyping();
-        }, 1000); 
+        }, 300); 
     });
 
     input.addEventListener("blur", async () => {
