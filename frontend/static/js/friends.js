@@ -65,7 +65,7 @@ export function chatFriend() {
   });
 }
 
-let debounceTyping = leadingDebounceTyping(onTyping, 5000)
+let debounceTyping = leadingDebounceTyping(onTyping, 10000)
 export function Typing() {
   let input = document.querySelector(".chatForm input");
 
