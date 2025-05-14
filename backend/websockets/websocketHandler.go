@@ -157,6 +157,8 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"message": "is Typing",
 					"status":  http.StatusOK,
 					"type":    "isTyping",
+					"recipientID": message.RecipientID,
+					"senderID": message.SenderID,
 				})
 			}
 		case "pauseTyping":
@@ -165,6 +167,8 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"message": "pause Typing",
 					"status":  http.StatusOK,
 					"type":    "pauseTyping",
+					"recipientID": message.SenderID,
+					"senderID": message.SenderID,
 				})
 			}
 		case "updateMessage":
