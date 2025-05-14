@@ -132,7 +132,7 @@ export async function homePage(param) {
             if(!event.wasClean){
                 popup("Connection closed unexpectedly.", "warning")
             } else{
-                navigateTo("/register")
+                navigateTo("/login")
             }
         };
         Typing()

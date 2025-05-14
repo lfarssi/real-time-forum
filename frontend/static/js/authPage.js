@@ -151,7 +151,8 @@ export async function logout() {
     ws.close();
 
     await fetch("/api/logout")
-    navigateTo("/register")
+    popup("Good By","success")
+    // navigateTo("/login")
     } catch (err) {
     document.body.innerHTML = popup("Something went wrong!", "failed")
   }
