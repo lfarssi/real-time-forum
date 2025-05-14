@@ -1,7 +1,7 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
 import { popupThrottled as popup } from "./errorPage.js";
-import { chatFriend, displayMessage, FriendsPage, sendMessage, sortFriendsList, Typing, updateUnreadBadges } from "./friends.js"
+import { chatFriend, displayMessage, FriendsPage, sendMessage, sortFriendsList, updateUnreadBadges } from "./friends.js"
 import { AddPosts, filterByCategories,  PostForm, PostsPage, ReactPost } from "./postPage.js"
 import { squareMouseHandler } from "./squares.js";
 
@@ -93,7 +93,7 @@ export async function homePage(param) {
                 </ul>
                 <div class="chat">
                     <div class="header">
-                        <p><i class="fa-solid fa-user"></i> <span></span> <div class="loader"></div></p>
+                        <p><i class="fa-solid fa-user"></i> <span></span></p>
                         <button class="closeChat"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     <div class="cbody">
@@ -142,8 +142,6 @@ export async function homePage(param) {
                 ws.close()
                 return
             }
-            Typing()
-
 
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
@@ -230,10 +228,20 @@ export async function homePage(param) {
                 popup(msg.message, "failed")
                 
             } else if (msg.type=="isTyping"){
-                let receiverChat = document.querySelector('.chat .header p span')
-                console.log(receiverChat)
+                let receiverChat = document.querySelector('.chat .header p')
+                if (receiverChat.children[1].dataset.id) {
+                    receiverChat.innerHTML += /*html*/`
+                        <div class="loader"></div>
+                    `
+                }
                 
+            } else if (msg.type=="pauseTyping") {
+                let typingElement = document.querySelector('.chat .header p .loader'); 
+                if (typingElement) {
+                    typingElement.remove()
+                }
             }
+
             if ( !openChatUserId) {
                 updateUnreadBadges(msg.counts, openChatUserId);
             } 
