@@ -6,6 +6,7 @@ let isScroll = false;
 let scrollValue;
 let msgID = -1;
 let chatMessages;
+let timeTyping;
 
 export async function FriendsPage() {
   const response = await fetch("/api/getFriends");
@@ -46,7 +47,7 @@ export function chatFriend() {
       let span = chat.querySelector(".header span");
       span.textContent = li.children[1].textContent;
       span.dataset.id = li.dataset.id;
-      input.removeEventListener('input', onTyping)
+      input.removeEventListener('input', debounceTyping)
       Typing()
       GetMessages(span.dataset.id);
       loadMessages();
@@ -59,15 +60,15 @@ export function chatFriend() {
       span.removeAttribute("data-id");
     }
     let input = document.querySelector(".chatForm input");
-    input.removeEventListener('input', onTyping)
+    input.removeEventListener('input', debounceTyping)
 
   });
 }
 
+let debounceTyping = leadingDebounceTyping(onTyping, 5000)
 export function Typing() {
   let input = document.querySelector(".chatForm input");
 
-  let debounceTyping = leadingDebounceTyping(onTyping, 1000)
 
   input.addEventListener("input", debounceTyping);
 }
@@ -89,14 +90,14 @@ async function onTyping() {
 }
 
 function leadingDebounceTyping(func, timeout) {
-  let timer;
+  timeTyping;
   return (...args) => {
-    if (!timer) {
+    if (!timeTyping) {
       func(...args)
     }
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      timer = undefined;
+    clearTimeout(timeTyping);
+    timeTyping = setTimeout(() => {
+      timeTyping = undefined;
       let receiverID = document.querySelector(".header span").dataset.id;
       ws.send(
         JSON.stringify({
@@ -130,6 +131,14 @@ export function sendMessage() {
         type: "addMessage",
       })
     );
+    ws.send(
+      JSON.stringify({
+        recipientID: parseInt(receiverID),
+        type: "pauseTyping",
+      })
+    );
+    clearTimeout(timeTyping)
+    timeTyping = undefined
     input.value = "";
   });
 }
