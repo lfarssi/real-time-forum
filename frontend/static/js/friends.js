@@ -66,9 +66,14 @@ export function Typing() {
     let canSendTyping = true;
     let stopTypingSent = false;
 
-    async function sendTyping() {
+    // Cache logged user on load
+    isLogged().then(logged => {
+        window.cachedLoggedUser = logged;
+    });
+
+    function sendTyping() {
         const receiverID = document.querySelector(".header span").dataset.id;
-        const logged = await isLogged();
+        const logged = window.cachedLoggedUser;
         if (!logged) return;
 
         ws.send(JSON.stringify({
@@ -78,12 +83,12 @@ export function Typing() {
         }));
     }
 
-    async function sendStopTyping() {
+    function sendStopTyping() {
         if (stopTypingSent) return;
         stopTypingSent = true;
 
         const receiverID = document.querySelector(".header span").dataset.id;
-        const logged = await isLogged();
+        const logged = window.cachedLoggedUser;
         if (!logged) return;
 
         ws.send(JSON.stringify({
@@ -94,8 +99,23 @@ export function Typing() {
 
         setTimeout(() => {
             stopTypingSent = false;
-        }, 300);
+        }, 1000);
     }
+
+    window.addEventListener("beforeunload", () => {
+        if (!stopTypingSent && ws.readyState === WebSocket.OPEN) {
+            const receiverID = document.querySelector(".header span").dataset.id;
+            const logged = window.cachedLoggedUser;
+            if (logged) {
+                ws.send(JSON.stringify({
+                    recipientID: parseInt(receiverID),
+                    senderID: logged.id,
+                    type: "StopTyping",
+                }));
+            }
+            stopTypingSent = true;
+        }
+    });
 
     input.addEventListener("input", () => {
         if (canSendTyping) {
@@ -103,20 +123,21 @@ export function Typing() {
             canSendTyping = false;
             setTimeout(() => {
                 canSendTyping = true;
-            }, 300);  
+            }, 1000);  
         }
 
         clearTimeout(stopTypingTimeout);
         stopTypingTimeout = setTimeout(() => {
             sendStopTyping();
-        }, 300); 
+        }, 1000); 
     });
 
-    input.addEventListener("blur", async () => {
+    input.addEventListener("blur", () => {
         clearTimeout(stopTypingTimeout);
-        await sendStopTyping();
+        sendStopTyping();
     });
 }
+
 
 
 export function sendMessage() {
