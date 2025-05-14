@@ -230,14 +230,20 @@ export async function homePage(param) {
             } else if (msg.type == "isTyping") {
                 let receiverChat = document.querySelector('.chat .header p')
                 if (receiverChat.children[1].dataset.id == msg.senderID) {
-                    receiverChat.innerHTML += /*html*/`
+                    let loaderElement = receiverChat.querySelector('.loader')
+                    if (!loaderElement) {
+                        receiverChat.innerHTML += /*html*/`
                         <div class="loader"></div>
                     `
+                    }
                 } else {
                     let sender = document.querySelector(`.listFriends li[data-id="${msg.senderID}"]`)
-                    sender.innerHTML += /*html*/`
-                    <div class="loader"></div>
-                `
+                    let loaderElement = sender.querySelector('.loader')
+                    if (!loaderElement) {
+                        sender.innerHTML += /*html*/`
+                        <div class="loader"></div>
+                        `
+                    }
                 }
 
             } else if (msg.type == "pauseTyping") {
