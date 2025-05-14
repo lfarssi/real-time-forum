@@ -6,7 +6,6 @@ let isScroll = false;
 let scrollValue;
 let msgID = -1;
 let chatMessages;
-let typingTimeout;
 
 export async function FriendsPage() {
   const response = await fetch("/api/getFriends");
