@@ -156,6 +156,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				c.WriteJSON(map[string]any{
 					"message": "is Typing",
 					"status":  http.StatusOK,
+					"userId":  message.SenderID,
 					"type":    "isTyping",
 				})
 			}
@@ -164,6 +165,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				c.WriteJSON(map[string]any{
 					"message": "is Not Typing",
 					"status":  http.StatusOK,
+					"userId":  message.SenderID,
 					"type":    "isNotTyping",
 				})
 			}

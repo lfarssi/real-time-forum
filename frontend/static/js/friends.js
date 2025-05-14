@@ -20,7 +20,7 @@ export async function FriendsPage() {
     let msgClass = friend.lastAt.Valid ? "has-messages" : "";
     return /*html*/ `
         <li data-id="${friend.id}" id="friend${friend.id}"  class="${msgClass}">
-          <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.username}</span> <div class="loader"></div>
+          <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.username}</span> <div class="loader loader-${friend.id}"></div>
         </li>
 `;
 

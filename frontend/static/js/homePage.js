@@ -135,14 +135,14 @@ export async function homePage(param) {
                 navigateTo("/register")
             }
         };
-       
+        Typing()
+
         ws.onmessage = async function (event) {
             const logged=await isLogged()
             if (!logged) {
                 ws.close()
                 return
             }
-            Typing()
 
 
             let user = document.querySelector('.chat .header span');
@@ -162,6 +162,7 @@ export async function homePage(param) {
                     friendLi.innerHTML = /*html*/`
                             <i class="fas fa-user ${msg.isOnline ? 'online' : 'offline'}"></i>
                             <span>${msg.userName}</span>    
+                            <div class="loader loader-${msg.userID}"></div>
                     `;
                     document.querySelector('.listFriends').appendChild(friendLi);
                 } else {
@@ -231,7 +232,7 @@ export async function homePage(param) {
                 
             } else if (msg.type=="isTyping"){
                 let receiverChat = document.querySelector('.chat .header div ')
-                let receiverChat2 = document.querySelector('.loader')
+                let receiverChat2 = document.querySelector(`.loader-${msg.userId}`)
                 receiverChat.style.display="block"
                 receiverChat2.style.display="inline-block"
                 receiverChat2.style.marginLeft="20px"
@@ -240,7 +241,7 @@ export async function homePage(param) {
             }else if (msg.type=="isNotTyping"){
                 let receiverChat = document.querySelector('.chat .header div ')
 
-                let receiverChat2 = document.querySelector('.loader')
+                let receiverChat2 = document.querySelector(`.loader-${msg.userId}`)
                 receiverChat.style.display="none"
                 receiverChat2.style.display="none"
             }
