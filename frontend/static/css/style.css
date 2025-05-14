@@ -862,6 +862,7 @@ aside>.filter ul input:checked+label span::after {
 }
 
 .loader {
+    display: none;
     width: 10px;
     aspect-ratio: 1;
     border-radius: 50%;

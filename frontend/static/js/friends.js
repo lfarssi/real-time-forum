@@ -20,7 +20,7 @@ export async function FriendsPage() {
     let msgClass = friend.lastAt.Valid ? "has-messages" : "";
     return /*html*/ `
         <li data-id="${friend.id}" id="friend${friend.id}"  class="${msgClass}">
-          <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.username}</span>
+          <i class="fa-solid fa-user ${onlineClass}"></i> <span>${friend.username}</span> <div class="loader"></div>
         </li>
 `;
 
@@ -57,33 +57,51 @@ export function chatFriend() {
     }
   });
 }
-
 export function Typing() {
-  let input = document.querySelector(".chatForm input");
-  let typingTimeout;
+  const input = document.querySelector(".chatForm input");
+  let stopTypingTimeout;
+  let canSendTyping = true;
 
-  input.addEventListener("input", async () => {
-    let receiverID = document.querySelector(".header span").dataset.id;
-    let logged = await isLogged();
-    if (!logged) {
-      // If not logged in, don't do anything
-      return;
+  async function sendTyping() {
+    const receiverID = document.querySelector(".header span").dataset.id;
+    const logged = await isLogged();
+    if (!logged) return;
+    ws.send(JSON.stringify({
+      recipientID: parseInt(receiverID),
+      senderID: logged.id,
+      type: "Typing",
+    }));
+  }
+
+  async function sendStopTyping() {
+    const receiverID = document.querySelector(".header span").dataset.id;
+    const logged = await isLogged();
+    if (!logged) return;
+    ws.send(JSON.stringify({
+      recipientID: parseInt(receiverID),
+      senderID: logged.id,
+      type: "StopTyping",
+    }));
+  }
+
+  input.addEventListener("input", () => {
+    if (canSendTyping) {
+      sendTyping();
+      canSendTyping = false;
+      setTimeout(() => {
+        canSendTyping = true;
+      }, 1000);  
     }
 
-    // Clear previous timeout to debounce the typing indication
-    clearTimeout(typingTimeout);
+    clearTimeout(stopTypingTimeout);
+    stopTypingTimeout = setTimeout(() => {
+      sendStopTyping();
+    }, 1000); 
+  });
 
-    // Set a new timeout to send typing event after user stops typing
-    typingTimeout = setTimeout(() => {
-      console.log(input.value)
-      ws.send(
-        JSON.stringify({
-          recipientID: parseInt(receiverID),
-          senderID: logged.id,
-          type: "Typing",
-        })
-      );
-    }, 500); // Sends a typing message after 500ms of inactivity
+  input.addEventListener("blur", () => {
+    clearTimeout(stopTypingTimeout);
+    sendStopTyping();
   });
 }
 

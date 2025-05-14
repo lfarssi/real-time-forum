@@ -159,6 +159,14 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"type":    "isTyping",
 				})
 			}
+		case "StopTyping":
+			for _, c := range userConnections[message.RecipientID] {
+				c.WriteJSON(map[string]any{
+					"message": "is Not Typing",
+					"status":  http.StatusOK,
+					"type":    "isNotTyping",
+				})
+			}
 		case "updateMessage":
 			err := models.UpdateMessage(message.SenderID, message.RecipientID, message.Status)
 			if err != nil {

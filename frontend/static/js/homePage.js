@@ -230,9 +230,19 @@ export async function homePage(param) {
                 popup(msg.message, "failed")
                 
             } else if (msg.type=="isTyping"){
-                let receiverChat = document.querySelector('.chat .header p span')
+                let receiverChat = document.querySelector('.chat .header div ')
+                let receiverChat2 = document.querySelector('.loader')
+                receiverChat.style.display="block"
+                receiverChat2.style.display="inline-block"
+                receiverChat2.style.marginLeft="20px"
                 console.log(receiverChat)
                 
+            }else if (msg.type=="isNotTyping"){
+                let receiverChat = document.querySelector('.chat .header div ')
+
+                let receiverChat2 = document.querySelector('.loader')
+                receiverChat.style.display="none"
+                receiverChat2.style.display="none"
             }
             if ( !openChatUserId) {
                 updateUnreadBadges(msg.counts, openChatUserId);
