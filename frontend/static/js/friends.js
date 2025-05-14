@@ -60,9 +60,12 @@ export function chatFriend() {
       let typingElement = chat.querySelector('.header p .loader')
       if (typingElement) {
         let sender = document.querySelector(`.listFriends li[data-id="${span.dataset.id}"]`)
+        let loaderElement = sender.querySelector('.loader')
+        if (!loaderElement) {
         sender.innerHTML += /*html*/`
           <div class="loader"></div>
         `
+        }
       }
       span.removeAttribute("data-id");
     }
