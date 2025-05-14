@@ -241,10 +241,16 @@ export async function homePage(param) {
                 }
 
             } else if (msg.type == "pauseTyping") {
-                let typingElement = document.querySelector('.loader');
-                if (typingElement) {
-                    typingElement.remove()
+                let chattypingElement = document.querySelector('.chat .header p .loader');
+                if (chattypingElement) {
+                    chattypingElement.remove()
                 }
+
+                let listFriendstypingElement = document.querySelector(`.listFriends li[data-id="${msg.senderID}"] .loader`)
+                if (listFriendstypingElement) {
+                    listFriendstypingElement.remove()
+                }
+
             }
 
             if (!openChatUserId) {

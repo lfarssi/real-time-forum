@@ -64,7 +64,7 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"status":      http.StatusOK,
 				"type":        "pauseTyping",
 				"recipientID": lastRecipientID,
-				// "senderID": message.SenderID,
+				"senderID": userID,
 			})
 		}
 	}()
@@ -182,8 +182,8 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					"message":     "pause Typing",
 					"status":      http.StatusOK,
 					"type":        "pauseTyping",
-					"recipientID": message.SenderID,
-					"senderID":    message.SenderID,
+					"recipientID": message.RecipientID,
+					"senderID":    userID,
 				})
 			}
 		case "updateMessage":
