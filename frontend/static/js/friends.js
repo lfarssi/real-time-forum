@@ -58,51 +58,61 @@ export function chatFriend() {
   });
 }
 export function Typing() {
-  const input = document.querySelector(".chatForm input");
-  let stopTypingTimeout;
-  let canSendTyping = true;
+    const input = document.querySelector(".chatForm input");
+    let stopTypingTimeout;
+    let canSendTyping = true;
+    let stopTypingSent = false;
 
-  async function sendTyping() {
-    const receiverID = document.querySelector(".header span").dataset.id;
-    const logged = await isLogged();
-    if (!logged) return;
-    ws.send(JSON.stringify({
-      recipientID: parseInt(receiverID),
-      senderID: logged.id,
-      type: "Typing",
-    }));
-  }
+    async function sendTyping() {
+        const receiverID = document.querySelector(".header span").dataset.id;
+        const logged = await isLogged();
+        if (!logged) return;
 
-  async function sendStopTyping() {
-    const receiverID = document.querySelector(".header span").dataset.id;
-    const logged = await isLogged();
-    if (!logged) return;
-    ws.send(JSON.stringify({
-      recipientID: parseInt(receiverID),
-      senderID: logged.id,
-      type: "StopTyping",
-    }));
-  }
-
-  input.addEventListener("input", () => {
-    if (canSendTyping) {
-      sendTyping();
-      canSendTyping = false;
-      setTimeout(() => {
-        canSendTyping = true;
-      }, 1000);  
+        ws.send(JSON.stringify({
+            recipientID: parseInt(receiverID),
+            senderID: logged.id,
+            type: "Typing",
+        }));
     }
 
-    clearTimeout(stopTypingTimeout);
-    stopTypingTimeout = setTimeout(() => {
-      sendStopTyping();
-    }, 1000); 
-  });
+    async function sendStopTyping() {
+        if (stopTypingSent) return;
+        stopTypingSent = true;
 
-  input.addEventListener("blur", () => {
-    clearTimeout(stopTypingTimeout);
-    sendStopTyping();
-  });
+        const receiverID = document.querySelector(".header span").dataset.id;
+        const logged = await isLogged();
+        if (!logged) return;
+
+        ws.send(JSON.stringify({
+            recipientID: parseInt(receiverID),
+            senderID: logged.id,
+            type: "StopTyping",
+        }));
+
+        setTimeout(() => {
+            stopTypingSent = false;
+        }, 1000);
+    }
+
+    input.addEventListener("input", () => {
+        if (canSendTyping) {
+            sendTyping();
+            canSendTyping = false;
+            setTimeout(() => {
+                canSendTyping = true;
+            }, 1000);  
+        }
+
+        clearTimeout(stopTypingTimeout);
+        stopTypingTimeout = setTimeout(() => {
+            sendStopTyping();
+        }, 1000); 
+    });
+
+    input.addEventListener("blur", async () => {
+        clearTimeout(stopTypingTimeout);
+        await sendStopTyping();
+    });
 }
 
 
