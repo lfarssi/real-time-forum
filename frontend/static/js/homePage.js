@@ -2,7 +2,7 @@ import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
 import { popupThrottled as popup } from "./errorPage.js";
 import { chatFriend, displayMessage, FriendsPage, sendMessage, sortFriendsList, updateUnreadBadges } from "./friends.js"
-import { AddPosts, filterByCategories,  PostForm, PostsPage, ReactPost } from "./postPage.js"
+import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 import { squareMouseHandler } from "./squares.js";
 
 
@@ -124,20 +124,20 @@ export async function homePage(param) {
         asideNav()
 
         ws = new WebSocket(`/ws/messages`);
-        ws.onerror = function(event) {
+        ws.onerror = function (event) {
             popup(event.message, "failed");
         };
 
         ws.onclose = function (event) {
-            if(!event.wasClean){
+            if (!event.wasClean) {
                 popup("Connection closed unexpectedly.", "warning")
-            } else{
+            } else {
                 navigateTo("/register")
             }
         };
-       
+
         ws.onmessage = async function (event) {
-            const logged=await isLogged()
+            const logged = await isLogged()
             if (!logged) {
                 ws.close()
                 return
@@ -154,7 +154,7 @@ export async function homePage(param) {
 
                 if (!friendLi) {
                     if (!msg.userName) return; // Defensive: ignore if info missing
-            
+
                     friendLi = document.createElement('li');
                     friendLi.setAttribute('data-id', msg.userID);
                     friendLi.innerHTML = /*html*/`
@@ -171,7 +171,7 @@ export async function homePage(param) {
                     }
                 }
 
-                
+
                 let isFriendListNotEmpty = document.querySelector('.listFriends li')
                 if (isFriendListNotEmpty) {
                     let noFriends = document.querySelector('.listFriends .noPost')
@@ -182,27 +182,27 @@ export async function homePage(param) {
 
                 sortFriendsList()
             }
-            
+
             if (msg.type === "unreadCounts") {
                 sortFriendsList()
             }
-            
+
             if (msg.type === "allMessages") {
-                
+
                 if (msg.data) {
-                    msg.data.map(m => displayMessage(m,   logged.username, m.username));
-             }
+                    msg.data.map(m => displayMessage(m, logged.username, m.username));
+                }
                 updateUnreadBadges(msg.counts, openChatUserId);
 
             } else if (msg.type === "newMessage") {
                 const senderId = msg.data.senderID;
                 const recipientId = msg.data.recipientID;
-                
-                const ul=document.querySelector(".listFriends")
-                const friend = document.querySelector(`.listFriends li[data-id="${recipientId!=logged.id?recipientId:senderId}"]`);
-                
-                ul.prepend(friend) 
-                if(!friend.classList.contains("has-messages")){
+
+                const ul = document.querySelector(".listFriends")
+                const friend = document.querySelector(`.listFriends li[data-id="${recipientId != logged.id ? recipientId : senderId}"]`);
+
+                ul.prepend(friend)
+                if (!friend.classList.contains("has-messages")) {
                     friend.classList.add('has-messages')
                 }
                 if (openChatUserId !== senderId) {
@@ -211,23 +211,23 @@ export async function homePage(param) {
                 if (user.dataset.id == recipientId || user.dataset.id == senderId) {
                     let receiverChat = document.querySelector('.chat .header p span')
                     displayMessage(msg.data, logged.username, receiverChat.textContent, msg.isSender, true);
-                    if( user.dataset.id == senderId){
+                    if (user.dataset.id == senderId) {
                         ws.send(
                             JSON.stringify({
-                                status : openChatUserId==senderId?"read":"unread",
+                                status: openChatUserId == senderId ? "read" : "unread",
                                 senderID: parseInt(senderId),
-                                recipientID: parseInt(recipientId) , 
+                                recipientID: parseInt(recipientId),
                                 type: "updateMessage",
                             })
                         );
                     }
-                } 
-                
-            } else if(msg.type=="errMessage"){
+                }
+
+            } else if (msg.type == "errMessage") {
                 // console.log("typing...");
                 popup(msg.message, "failed")
-                
-            } else if (msg.type=="isTyping"){
+
+            } else if (msg.type == "isTyping") {
                 let receiverChat = document.querySelector('.chat .header p')
                 if (receiverChat.children[1].dataset.id == msg.senderID) {
                     receiverChat.innerHTML += /*html*/`
@@ -239,24 +239,24 @@ export async function homePage(param) {
                     <div class="loader"></div>
                 `
                 }
-                
-            } else if (msg.type=="pauseTyping") {
-                let typingElement = document.querySelector('.loader'); 
+
+            } else if (msg.type == "pauseTyping") {
+                let typingElement = document.querySelector('.loader');
                 if (typingElement) {
                     typingElement.remove()
                 }
             }
 
-            if ( !openChatUserId) {
+            if (!openChatUserId) {
                 updateUnreadBadges(msg.counts, openChatUserId);
-            } 
+            }
 
-           
+
         };
-        
-            
 
-        
+
+
+
     } else {
         let posts = document.querySelector('.posts')
         posts.innerHTML = `${await PostsPage(param)}`
