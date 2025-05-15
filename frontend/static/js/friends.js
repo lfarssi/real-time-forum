@@ -77,7 +77,7 @@ export function chatFriend() {
   });
 }
 
-let debounceTyping = leadingDebounceTyping(onTyping, 7000)
+let debounceTyping = leadingDebounceTyping(onTyping, 1000)
 export function Typing() {
   let input = document.querySelector(".chatForm input");
 
@@ -109,12 +109,7 @@ function leadingDebounceTyping(func, timeout) {
     clearTimeout(timeTyping);
     timeTyping = setTimeout(() => {
       let receiverID = document.querySelector(".header span").dataset.id;
-      ws.send(
-        JSON.stringify({
-          recipientID: parseInt(receiverID),
-          type: "pauseTyping",
-        })
-      );
+      stopTyping(receiverID)
     }, timeout);
   };
 }
