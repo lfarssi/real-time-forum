@@ -149,9 +149,8 @@ export async function logout() {
   try {
     ws.send(JSON.stringify({ type: "logout" }));
     ws.close();
-
+    
     await fetch("/api/logout")
-    // popup("Good By!!!", "success")
     navigateTo("/login")
     } catch (err) {
     document.body.innerHTML = popup("Something went wrong!", "failed")

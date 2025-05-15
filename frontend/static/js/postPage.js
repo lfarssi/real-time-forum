@@ -105,6 +105,7 @@ async function loadPosts() {
     }
   } catch (error) {
       popup("No Post Available")
+    
   } finally {
     loading = false;
     document.querySelectorAll(".displayComment").forEach(button => {
@@ -115,9 +116,8 @@ async function loadPosts() {
   
 }
 
-window.addEventListener('scroll', () => {
-  if (throttle || loading || allPostsLoaded) return;
-
+window.addEventListener('scroll',async () => {
+  if (throttle || loading || allPostsLoaded ) return;
   throttle = true;
   setTimeout(() => {
     const scrollPosition = window.innerHeight + window.scrollY;
@@ -268,6 +268,7 @@ export function AddPosts() {
           if (data.hasOwnProperty(span.id))
             showInputError(data[span.id], span)
         }
+        popup(data.message, "failed")
       } else {
         ipt[0].value = ""
         ipt[1].value = ""
