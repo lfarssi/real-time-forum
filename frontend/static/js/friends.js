@@ -45,6 +45,14 @@ export function chatFriend() {
       isScroll = false;
       chat.style.display = "flex";
       let span = chat.querySelector(".header span");
+      ws.send(
+        JSON.stringify({
+          recipientID: parseInt(span.dataset.id),
+          type: "pauseTyping",
+        })
+      );
+      clearTimeout(timeTyping)
+      timeTyping = undefined
       span.textContent = li.children[1].textContent;
       span.dataset.id = li.dataset.id;
       input.removeEventListener('input', debounceTyping)
@@ -57,12 +65,20 @@ export function chatFriend() {
     chat.style.display = "none";
     let span = chat.querySelector(".header span");
     if (span && span.dataset.id) {
+      ws.send(
+        JSON.stringify({
+          recipientID: parseInt(span.dataset.id),
+          type: "pauseTyping",
+        })
+      );
+      clearTimeout(timeTyping)
+      timeTyping = undefined
       let typingElement = chat.querySelector('.header p .loader')
       if (typingElement) {
         let sender = document.querySelector(`.listFriends li[data-id="${span.dataset.id}"]`)
         let loaderElement = sender.querySelector('.loader')
         if (!loaderElement) {
-        sender.innerHTML += /*html*/`
+          sender.innerHTML += /*html*/`
           <div class="loader"></div>
         `
         }
@@ -75,10 +91,9 @@ export function chatFriend() {
   });
 }
 
-let debounceTyping = leadingDebounceTyping(onTyping, 10000)
+let debounceTyping = leadingDebounceTyping(onTyping, 7000)
 export function Typing() {
   let input = document.querySelector(".chatForm input");
-
 
   input.addEventListener("input", debounceTyping);
 }
@@ -107,7 +122,6 @@ function leadingDebounceTyping(func, timeout) {
     }
     clearTimeout(timeTyping);
     timeTyping = setTimeout(() => {
-      timeTyping = undefined;
       let receiverID = document.querySelector(".header span").dataset.id;
       ws.send(
         JSON.stringify({
@@ -117,6 +131,21 @@ function leadingDebounceTyping(func, timeout) {
       );
     }, timeout);
   };
+}
+
+function stopTyping() {
+  let receiverID = document.querySelector('.chat .header span');
+  clearTimeout(timeTyping);
+  timeTyping = undefined;
+  if (span && span.dataset.id) {
+    ws.send(
+      JSON.stringify({
+        recipientID: parseInt(receiverID),
+        type: "pauseTyping",
+      })
+    );
+
+  }
 }
 
 export function sendMessage() {
