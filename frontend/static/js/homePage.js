@@ -125,7 +125,8 @@ export async function homePage(param) {
 
         ws = new WebSocket(`/ws/messages`);
         ws.onerror = function (event) {
-            popup(event.message, "failed");
+             popup(event.message, "failed");
+            
         };
 
         ws.onclose = function (event) {
