@@ -115,6 +115,7 @@ function leadingDebounceTyping(func, timeout) {
 }
 
 function stopTyping(receiverID) {
+  console.log(receiverID)
   clearTimeout(timeTyping);
   timeTyping = undefined;
     ws.send(
