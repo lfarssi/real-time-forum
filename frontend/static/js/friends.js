@@ -45,14 +45,7 @@ export function chatFriend() {
       isScroll = false;
       chat.style.display = "flex";
       let span = chat.querySelector(".header span");
-      ws.send(
-        JSON.stringify({
-          recipientID: parseInt(span.dataset.id),
-          type: "pauseTyping",
-        })
-      );
-      clearTimeout(timeTyping)
-      timeTyping = undefined
+      stopTyping(span.dataset.id)
       span.textContent = li.children[1].textContent;
       span.dataset.id = li.dataset.id;
       input.removeEventListener('input', debounceTyping)
@@ -65,14 +58,7 @@ export function chatFriend() {
     chat.style.display = "none";
     let span = chat.querySelector(".header span");
     if (span && span.dataset.id) {
-      ws.send(
-        JSON.stringify({
-          recipientID: parseInt(span.dataset.id),
-          type: "pauseTyping",
-        })
-      );
-      clearTimeout(timeTyping)
-      timeTyping = undefined
+      stopTyping(span.dataset.id)
       let typingElement = chat.querySelector('.header p .loader')
       if (typingElement) {
         let sender = document.querySelector(`.listFriends li[data-id="${span.dataset.id}"]`)
@@ -133,19 +119,15 @@ function leadingDebounceTyping(func, timeout) {
   };
 }
 
-function stopTyping() {
-  let receiverID = document.querySelector('.chat .header span');
+function stopTyping(receiverID) {
   clearTimeout(timeTyping);
   timeTyping = undefined;
-  if (span && span.dataset.id) {
     ws.send(
       JSON.stringify({
         recipientID: parseInt(receiverID),
         type: "pauseTyping",
       })
     );
-
-  }
 }
 
 export function sendMessage() {
