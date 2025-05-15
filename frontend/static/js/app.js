@@ -10,7 +10,7 @@ let loggedUser = false
 const router = async () => {
     const response = await fetch("/api/isLogged")
     if (!response.ok && location.pathname !== "/login" && location.pathname !== "/register") {
-        navigateTo("/register")
+        navigateTo("/login")
         return
     } else if (response.ok && (location.pathname === "/login" || location.pathname === "/register")) {
         loggedUser = true
@@ -67,7 +67,7 @@ export async function isLogged() {
     const response = await fetch("/api/isLogged")
 
     if (!response.ok) {
-        navigateTo("/register")
+        navigateTo("/login")
         return false
     }
 

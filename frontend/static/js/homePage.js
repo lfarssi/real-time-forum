@@ -129,11 +129,7 @@ export async function homePage(param) {
         };
 
         ws.onclose = function (event) {
-            if (!event.wasClean) {
-                popup("Connection closed unexpectedly.", "warning")
-            } else {
-                navigateTo("/register")
-            }
+            popup("Connection closed unexpectedly.", "warning")
         };
 
         ws.onmessage = async function (event) {
