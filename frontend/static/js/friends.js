@@ -46,8 +46,20 @@ export function chatFriend() {
       chat.style.display = "flex";
       let span = chat.querySelector(".header span");
       stopTyping(span.dataset.id)
+      let typingElement = chat.querySelector('.header p .loader')
+      if (typingElement && span.dataset.id != li.dataset.id) {
+        let sender = document.querySelector(`.listFriends li[data-id="${span.dataset.id}"]`)
+        let loaderElement = sender.querySelector('.loader')
+        if (!loaderElement) {
+          sender.innerHTML += /*html*/`
+          <div class="loader"></div>
+        `
+        }
+        typingElement.remove()
+      }
       span.textContent = li.children[1].textContent;
       span.dataset.id = li.dataset.id;
+      input.value=""
       input.removeEventListener('input', debounceTyping)
       Typing()
       GetMessages(span.dataset.id);
@@ -115,7 +127,6 @@ function leadingDebounceTyping(func, timeout) {
 }
 
 function stopTyping(receiverID) {
-  console.log(receiverID)
   clearTimeout(timeTyping);
   timeTyping = undefined;
     ws.send(
