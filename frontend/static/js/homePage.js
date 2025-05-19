@@ -1,8 +1,8 @@
 import { isLogged, navigateTo } from "./app.js"
 import { CommentSection } from "./commentSection.js"
 import { popupThrottled as popup } from "./errorPage.js";
-import { chatFriend, displayMessage, FriendsPage, sendMessage, sortFriendsList, Typing, updateUnreadBadges } from "./friends.js"
-import { AddPosts, filterByCategories,  PostForm, PostsPage, ReactPost } from "./postPage.js"
+import { chatFriend, displayMessage, FriendsPage, sendMessage, sortFriendsList, updateUnreadBadges } from "./friends.js"
+import { AddPosts, filterByCategories, PostForm, PostsPage, ReactPost } from "./postPage.js"
 import { squareMouseHandler } from "./squares.js";
 
 
@@ -93,7 +93,7 @@ export async function homePage(param) {
                 </ul>
                 <div class="chat">
                     <div class="header">
-                        <p><i class="fa-solid fa-user"></i> <span></span> <div class="loader"></div></p>
+                        <p><i class="fa-solid fa-user"></i> <span></span></p>
                         <button class="closeChat"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                     <div class="cbody">
@@ -124,26 +124,21 @@ export async function homePage(param) {
         asideNav()
 
         ws = new WebSocket(`/ws/messages`);
-        ws.onerror = function(event) {
-            popup(event.message, "failed");
+        ws.onerror = function (event) {
+             popup(event.message, "failed");
+            
         };
 
         ws.onclose = function (event) {
-            if(!event.wasClean){
-                popup("Connection closed unexpectedly.", "warning")
-            } else{
-                navigateTo("/login")
-            }
+            popup("Connection closed unexpectedly.", "warning")
         };
-        Typing()
 
         ws.onmessage = async function (event) {
-            const logged=await isLogged()
+            const logged = await isLogged()
             if (!logged) {
                 ws.close()
                 return
             }
-
 
             let user = document.querySelector('.chat .header span');
             let openChatUserId = user ? parseInt(user.dataset.id) : null;
@@ -156,7 +151,7 @@ export async function homePage(param) {
 
                 if (!friendLi) {
                     if (!msg.userName) return; // Defensive: ignore if info missing
-            
+
                     friendLi = document.createElement('li');
                     friendLi.setAttribute('data-id', msg.userID);
                     friendLi.innerHTML = /*html*/`
@@ -174,7 +169,7 @@ export async function homePage(param) {
                     }
                 }
 
-                
+
                 let isFriendListNotEmpty = document.querySelector('.listFriends li')
                 if (isFriendListNotEmpty) {
                     let noFriends = document.querySelector('.listFriends .noPost')
@@ -185,27 +180,27 @@ export async function homePage(param) {
 
                 sortFriendsList()
             }
-            
+
             if (msg.type === "unreadCounts") {
                 sortFriendsList()
             }
-            
+
             if (msg.type === "allMessages") {
-                
+
                 if (msg.data) {
-                    msg.data.map(m => displayMessage(m,   logged.username, m.username));
-             }
+                    msg.data.map(m => displayMessage(m, logged.username, m.username));
+                }
                 updateUnreadBadges(msg.counts, openChatUserId);
 
             } else if (msg.type === "newMessage") {
                 const senderId = msg.data.senderID;
                 const recipientId = msg.data.recipientID;
-                
-                const ul=document.querySelector(".listFriends")
-                const friend = document.querySelector(`.listFriends li[data-id="${recipientId!=logged.id?recipientId:senderId}"]`);
-                
-                ul.prepend(friend) 
-                if(!friend.classList.contains("has-messages")){
+
+                const ul = document.querySelector(".listFriends")
+                const friend = document.querySelector(`.listFriends li[data-id="${recipientId != logged.id ? recipientId : senderId}"]`);
+
+                ul.prepend(friend)
+                if (!friend.classList.contains("has-messages")) {
                     friend.classList.add('has-messages')
                 }
                 if (openChatUserId !== senderId) {
@@ -214,47 +209,64 @@ export async function homePage(param) {
                 if (user.dataset.id == recipientId || user.dataset.id == senderId) {
                     let receiverChat = document.querySelector('.chat .header p span')
                     displayMessage(msg.data, logged.username, receiverChat.textContent, msg.isSender, true);
-                    if( user.dataset.id == senderId){
+                    if (user.dataset.id == senderId) {
                         ws.send(
                             JSON.stringify({
-                                status : openChatUserId==senderId?"read":"unread",
+                                status: openChatUserId == senderId ? "read" : "unread",
                                 senderID: parseInt(senderId),
-                                recipientID: parseInt(recipientId) , 
+                                recipientID: parseInt(recipientId),
                                 type: "updateMessage",
                             })
                         );
                     }
-                } 
-                
-            } else if(msg.type=="errMessage"){
+                }
+
+            } else if (msg.type == "errMessage") {
                 // console.log("typing...");
                 popup(msg.message, "failed")
-                
-            } else if (msg.type=="isTyping"){
-                let receiverChat = document.querySelector('.chat .header div ')
-                let receiverChat2 = document.querySelector(`.loader-${msg.userId}`)
-                receiverChat.style.display="block"
-                receiverChat2.style.display="inline-block"
-                receiverChat2.style.marginLeft="20px"
-                console.log(receiverChat)
-                
-            }else if (msg.type=="isNotTyping"){
-                let receiverChat = document.querySelector('.chat .header div ')
 
-                let receiverChat2 = document.querySelector(`.loader-${msg.userId}`)
-                receiverChat.style.display="none"
-                receiverChat2.style.display="none"
+            } else if (msg.type == "isTyping") {
+                let receiverChat = document.querySelector('.chat .header p')
+                if (receiverChat.children[1].dataset.id == msg.senderID) {
+                    let loaderElement = receiverChat.querySelector('.loader')
+                    if (!loaderElement) {
+                        receiverChat.innerHTML += /*html*/`
+                        <div class="loader"></div>
+                    `
+                    }
+                } else {
+                    let sender = document.querySelector(`.listFriends li[data-id="${msg.senderID}"]`)
+                    let loaderElement = sender.querySelector('.loader')
+                    if (!loaderElement) {
+                        sender.innerHTML += /*html*/`
+                        <div class="loader"></div>
+                        `
+                    }
+                }
+
+            } else if (msg.type == "pauseTyping") {
+                let chattypingElement = document.querySelector('.chat .header p .loader');
+                if (chattypingElement) {
+                    chattypingElement.remove()
+                }
+
+                let listFriendstypingElement = document.querySelector(`.listFriends li[data-id="${msg.senderID}"] .loader`)
+                if (listFriendstypingElement) {
+                    listFriendstypingElement.remove()
+                }
+
             }
-            if ( !openChatUserId) {
+
+            if (!openChatUserId) {
                 updateUnreadBadges(msg.counts, openChatUserId);
-            } 
+            }
 
-           
+
         };
-        
-            
 
-        
+
+
+
     } else {
         let posts = document.querySelector('.posts')
         posts.innerHTML = `${await PostsPage(param)}`

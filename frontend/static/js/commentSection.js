@@ -47,7 +47,7 @@ export function AddComments(postId) {
 
       if (!res.ok) {
         const err = await res.json();
-        errorSpan.textContent = err.message || "Failed to add comment.";
+        popup(err.message, "failed")
         return;
       }
 

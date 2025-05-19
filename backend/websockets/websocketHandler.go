@@ -53,7 +53,21 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			})
 		}
 	}
-	defer removeConnection(userID, conn)
+
+	var lastRecipientID int
+
+	defer func() {
+		removeConnection(userID, conn)
+		for _, c := range userConnections[lastRecipientID] {
+			c.WriteJSON(map[string]any{
+				"message":     "puase Typing",
+				"status":      http.StatusOK,
+				"type":        "pauseTyping",
+				"recipientID": lastRecipientID,
+				"senderID": userID,
+			})
+		}
+	}()
 
 	for {
 		var message models.Message
@@ -152,12 +166,24 @@ func MessageWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				"data":    messages,
 			})
 		case "Typing":
+			lastRecipientID = message.RecipientID
 			for _, c := range userConnections[message.RecipientID] {
 				c.WriteJSON(map[string]any{
-					"message": "is Typing",
-					"status":  http.StatusOK,
-					"userId":  message.SenderID,
-					"type":    "isTyping",
+					"message":     "is Typing",
+					"status":      http.StatusOK,
+					"type":        "isTyping",
+					"recipientID": message.RecipientID,
+					"senderID":    message.SenderID,
+				})
+			}
+		case "pauseTyping":
+			for _, c := range userConnections[message.RecipientID] {
+				c.WriteJSON(map[string]any{
+					"message":     "pause Typing",
+					"status":      http.StatusOK,
+					"type":        "pauseTyping",
+					"recipientID": message.RecipientID,
+					"senderID":    userID,
 				})
 			}
 		case "StopTyping":

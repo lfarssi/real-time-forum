@@ -867,6 +867,8 @@ aside>.filter ul input:checked+label span::after {
     aspect-ratio: 1;
     border-radius: 50%;
     animation: l5 1s infinite linear alternate;
+    margin-left: 40px;
+    margin-top: 5px;
 }
 
 @keyframes l5 {
